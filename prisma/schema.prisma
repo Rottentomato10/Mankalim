@@ -1,0 +1,253 @@
+// prisma/schema.prisma
+// Unified schema for Menakalim - combining Assets (balance tracking) and Mankal (cashflow tracking)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// User & Authentication (NextAuth.js)
+// ============================================
+
+model User {
+  id              String    @id @default(cuid())
+  email           String    @unique
+  name            String?
+  image           String?
+  emailVerified   DateTime? @map("email_verified")
+
+  // Preferences (from Assets)
+  defaultCurrency String    @default("ILS")
+  dashboardLayout Json?     // Widget order and visibility
+  notifyEnabled   Boolean   @default(false)
+  notifyDay       Int       @default(1) // Day of month (1-28)
+  pushSubscription Json?    // Web Push subscription object
+
+  // Soft delete
+  deletedAt       DateTime?
+
+  // Timestamps
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  // Relations - Assets (Balance)
+  assetClasses    AssetClass[]
+  monthlyValues   MonthlyValue[]
+
+  // Relations - Mankal (Cashflow)
+  transactions    Transaction[]
+  categories      Category[]
+
+  // Relations - Auth
+  accounts        Account[]
+  sessions        Session[]
+
+  @@index([email])
+  @@index([deletedAt])
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+// ============================================
+// Assets - Balance Tracking (from Assets/Maazanim)
+// ============================================
+
+model AssetClass {
+  id           String       @id @default(cuid())
+  userId       String       @map("user_id")
+  name         String       // e.g., "נדל"ן", "פנסיוני", "נזיל", "שוק ההון"
+  displayOrder Int          @default(0) @map("display_order")
+
+  createdAt    DateTime     @default(now()) @map("created_at")
+  updatedAt    DateTime     @updatedAt @map("updated_at")
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  instruments  Instrument[]
+
+  @@unique([userId, name])
+  @@index([userId])
+  @@index([userId, displayOrder])
+  @@map("asset_classes")
+}
+
+model Instrument {
+  id           String      @id @default(cuid())
+  assetClassId String      @map("asset_class_id")
+  name         String      // e.g., "חשבון בנק", "קרן פנסיה", "קופת גמל להשקעה"
+  displayOrder Int         @default(0) @map("display_order")
+
+  createdAt    DateTime    @default(now()) @map("created_at")
+  updatedAt    DateTime    @updatedAt @map("updated_at")
+
+  assetClass   AssetClass  @relation(fields: [assetClassId], references: [id], onDelete: Cascade)
+  providers    Provider[]
+
+  @@unique([assetClassId, name])
+  @@index([assetClassId])
+  @@index([assetClassId, displayOrder])
+  @@map("instruments")
+}
+
+model Provider {
+  id           String     @id @default(cuid())
+  instrumentId String     @map("instrument_id")
+  name         String     // e.g., "בנק הפועלים", "מגדל", "אלטשולר שחם"
+  displayOrder Int        @default(0) @map("display_order")
+
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  instrument   Instrument @relation(fields: [instrumentId], references: [id], onDelete: Cascade)
+  assets       Asset[]
+
+  @@unique([instrumentId, name])
+  @@index([instrumentId])
+  @@index([instrumentId, displayOrder])
+  @@map("providers")
+}
+
+model Asset {
+  id           String         @id @default(cuid())
+  providerId   String         @map("provider_id")
+  name         String         // User-defined name
+  isLiquid     Boolean        @default(false) @map("is_liquid")
+  currency     String         @default("ILS") // ISO 4217 code
+  notes        String?        @db.Text
+  displayOrder Int            @default(0) @map("display_order")
+
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  provider     Provider       @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  monthlyValues MonthlyValue[]
+
+  @@unique([providerId, name])
+  @@index([providerId])
+  @@index([providerId, displayOrder])
+  @@index([currency])
+  @@index([isLiquid])
+  @@map("assets")
+}
+
+model MonthlyValue {
+  id        String   @id @default(cuid())
+  assetId   String   @map("asset_id")
+  userId    String   @map("user_id") // Denormalized for efficient user queries
+  month     Int      // 1-12
+  year      Int      // e.g., 2026
+  value     Decimal  @db.Decimal(15, 2) // Up to 999,999,999,999,999.99
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  asset     Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([assetId, month, year])
+  @@index([userId, year, month])
+  @@index([assetId, year, month])
+  @@index([userId])
+  @@map("monthly_values")
+}
+
+model ExchangeRate {
+  id           String   @id @default(cuid())
+  baseCurrency String   @default("ILS") @map("base_currency") // Base currency for conversion
+  rates        Json     // { "USD": 3.65, "EUR": 3.95, "GBP": 4.50 }
+  fetchedAt    DateTime @default(now()) @map("fetched_at")
+
+  @@index([baseCurrency, fetchedAt])
+  @@map("exchange_rates")
+}
+
+// ============================================
+// Transactions - Cashflow Tracking (from Mankal)
+// ============================================
+
+model Transaction {
+  id            String   @id @default(cuid())
+  userId        String   @map("user_id")
+  categoryId    String?  @map("category_id")
+  type          String   // "INCOME" or "EXPENSE"
+  amount        Decimal  @db.Decimal(15, 2)
+  date          DateTime
+  paymentMethod String?  @map("payment_method") // "CASH" or "CARD"
+  source        String?  // For income: salary, gift, freelance, etc.
+  description   String?
+
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+  syncedAt      DateTime? @map("synced_at")
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category Category? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  @@index([userId, date])
+  @@index([userId, type])
+  @@index([categoryId])
+  @@map("transactions")
+}
+
+model Category {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  name         String
+  displayOrder Int      @default(0) @map("display_order")
+  isArchived   Boolean  @default(false) @map("is_archived")
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions Transaction[]
+
+  @@index([userId])
+  @@index([userId, displayOrder])
+  @@map("categories")
+}

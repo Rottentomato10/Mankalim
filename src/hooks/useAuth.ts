@@ -1,0 +1,13 @@
+'use client'
+
+import { useAuthContext } from '@/components/providers/AuthProvider'
+
+/**
+ * Hook to access authentication state and actions
+ * Must be used within an AuthProvider
+ */
+export function useAuth() {
+  return useAuthContext()
+}
+
+export default useAuth
