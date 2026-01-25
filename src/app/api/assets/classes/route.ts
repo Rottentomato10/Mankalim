@@ -17,7 +17,7 @@ export async function GET() {
       return NextResponse.json(DEMO_ASSET_CLASSES)
     }
 
-    const assetClasses = await prisma.assetClass.findMany({
+    let assetClasses = await prisma.assetClass.findMany({
       where: { userId: authSession.user.id },
       orderBy: { displayOrder: 'asc' },
       include: {
@@ -36,6 +36,59 @@ export async function GET() {
         },
       },
     })
+
+    // Create default asset classes if user has none
+    if (assetClasses.length === 0) {
+      const defaults = [
+        { name: 'נדל״ן', instrument: 'דירה להשקעה', provider: 'כללי' },
+        { name: 'פנסיוני', instrument: 'קרן פנסיה', provider: 'כללי' },
+        { name: 'השקעות', instrument: 'תיק השקעות', provider: 'כללי' },
+      ]
+
+      for (let i = 0; i < defaults.length; i++) {
+        const def = defaults[i]
+        await prisma.assetClass.create({
+          data: {
+            userId: authSession.user.id,
+            name: def.name,
+            displayOrder: i,
+            instruments: {
+              create: {
+                name: def.instrument,
+                displayOrder: 0,
+                providers: {
+                  create: {
+                    name: def.provider,
+                    displayOrder: 0,
+                  },
+                },
+              },
+            },
+          },
+        })
+      }
+
+      // Fetch again with the created defaults
+      assetClasses = await prisma.assetClass.findMany({
+        where: { userId: authSession.user.id },
+        orderBy: { displayOrder: 'asc' },
+        include: {
+          instruments: {
+            orderBy: { displayOrder: 'asc' },
+            include: {
+              providers: {
+                orderBy: { displayOrder: 'asc' },
+                include: {
+                  assets: {
+                    orderBy: { displayOrder: 'asc' },
+                  },
+                },
+              },
+            },
+          },
+        },
+      })
+    }
 
     return NextResponse.json(assetClasses)
   } catch (error) {

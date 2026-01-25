@@ -41,7 +41,7 @@ export default function HomePage() {
   const [newItemCurrency, setNewItemCurrency] = useState('ILS')
   const [isAddingLoading, setIsAddingLoading] = useState(false)
 
-  const { assetClasses, isLoading: assetsLoading, createAsset, createAssetClass, createInstrument, createProvider } = useAssets()
+  const { assetClasses, isLoading: assetsLoading, createAsset, createAssetClass, createInstrument, createProvider, deleteAssetClass, deleteInstrument, deleteProvider } = useAssets()
 
   // Inline creation state
   const [newCategoryName, setNewCategoryName] = useState('')
@@ -291,27 +291,62 @@ export default function HomePage() {
                 </label>
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                   {categories.map(cat => (
-                    <button
-                      key={cat.id}
-                      type="button"
-                      onClick={() => {
-                        setSelectedCategoryId(cat.id)
-                        setSelectedProductId('')
-                        setNewItemParentId('')
-                      }}
-                      style={{
-                        padding: '10px 16px',
-                        borderRadius: '10px',
-                        border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
-                        background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
-                        color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
-                        fontWeight: selectedCategoryId === cat.id ? 600 : 400,
-                        cursor: 'pointer',
-                        fontSize: '0.9rem'
-                      }}
-                    >
-                      {cat.name}
-                    </button>
+                    <div key={cat.id} style={{ position: 'relative', display: 'inline-flex' }}>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedCategoryId(cat.id)
+                          setSelectedProductId('')
+                          setNewItemParentId('')
+                        }}
+                        style={{
+                          padding: '10px 16px',
+                          paddingLeft: '28px',
+                          borderRadius: '10px',
+                          border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
+                          background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                          color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
+                          fontWeight: selectedCategoryId === cat.id ? 600 : 400,
+                          cursor: 'pointer',
+                          fontSize: '0.9rem'
+                        }}
+                      >
+                        {cat.name}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={async (e) => {
+                          e.stopPropagation()
+                          if (confirm(`למחוק את "${cat.name}"?`)) {
+                            await deleteAssetClass(cat.id)
+                            if (selectedCategoryId === cat.id) {
+                              setSelectedCategoryId('')
+                              setSelectedProductId('')
+                            }
+                          }
+                        }}
+                        style={{
+                          position: 'absolute',
+                          right: '4px',
+                          top: '50%',
+                          transform: 'translateY(-50%)',
+                          width: '18px',
+                          height: '18px',
+                          borderRadius: '50%',
+                          border: 'none',
+                          background: 'rgba(251, 113, 133, 0.3)',
+                          color: 'var(--expense)',
+                          fontSize: '0.7rem',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 0
+                        }}
+                      >
+                        ×
+                      </button>
+                    </div>
                   ))}
                   {/* Add new category inline */}
                   <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
@@ -374,26 +409,61 @@ export default function HomePage() {
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                     {getProductsForCategory(selectedCategoryId).map(prod => (
-                      <button
-                        key={prod.id}
-                        type="button"
-                        onClick={() => {
-                          setSelectedProductId(prod.id)
-                          setNewItemParentId('')
-                        }}
-                        style={{
-                          padding: '10px 16px',
-                          borderRadius: '10px',
-                          border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
-                          background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
-                          color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
-                          fontWeight: selectedProductId === prod.id ? 600 : 400,
-                          cursor: 'pointer',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        {prod.name}
-                      </button>
+                      <div key={prod.id} style={{ position: 'relative', display: 'inline-flex' }}>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedProductId(prod.id)
+                            setNewItemParentId('')
+                          }}
+                          style={{
+                            padding: '10px 16px',
+                            paddingLeft: '28px',
+                            borderRadius: '10px',
+                            border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
+                            background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                            color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
+                            fontWeight: selectedProductId === prod.id ? 600 : 400,
+                            cursor: 'pointer',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          {prod.name}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            if (confirm(`למחוק את "${prod.name}"?`)) {
+                              await deleteInstrument(prod.id)
+                              if (selectedProductId === prod.id) {
+                                setSelectedProductId('')
+                                setNewItemParentId('')
+                              }
+                            }
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: '4px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            border: 'none',
+                            background: 'rgba(251, 113, 133, 0.3)',
+                            color: 'var(--expense)',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 0
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
                     ))}
                     {/* Add new product inline */}
                     <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
@@ -457,23 +527,57 @@ export default function HomePage() {
                   </label>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                     {getProvidersForProduct(selectedProductId).map(prov => (
-                      <button
-                        key={prov.id}
-                        type="button"
-                        onClick={() => setNewItemParentId(prov.id)}
-                        style={{
-                          padding: '10px 16px',
-                          borderRadius: '10px',
-                          border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid rgba(255,255,255,0.1)',
-                          background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'rgba(255,255,255,0.03)',
-                          color: newItemParentId === prov.id ? '#a78bfa' : '#fff',
-                          fontWeight: newItemParentId === prov.id ? 600 : 400,
-                          cursor: 'pointer',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        {prov.name}
-                      </button>
+                      <div key={prov.id} style={{ position: 'relative', display: 'inline-flex' }}>
+                        <button
+                          type="button"
+                          onClick={() => setNewItemParentId(prov.id)}
+                          style={{
+                            padding: '10px 16px',
+                            paddingLeft: '28px',
+                            borderRadius: '10px',
+                            border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid rgba(255,255,255,0.1)',
+                            background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'rgba(255,255,255,0.03)',
+                            color: newItemParentId === prov.id ? '#a78bfa' : '#fff',
+                            fontWeight: newItemParentId === prov.id ? 600 : 400,
+                            cursor: 'pointer',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          {prov.name}
+                        </button>
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            if (confirm(`למחוק את "${prov.name}"?`)) {
+                              await deleteProvider(prov.id)
+                              if (newItemParentId === prov.id) {
+                                setNewItemParentId('')
+                              }
+                            }
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: '4px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            border: 'none',
+                            background: 'rgba(251, 113, 133, 0.3)',
+                            color: 'var(--expense)',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 0
+                          }}
+                        >
+                          ×
+                        </button>
+                      </div>
                     ))}
                     {/* Add new provider inline */}
                     <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
