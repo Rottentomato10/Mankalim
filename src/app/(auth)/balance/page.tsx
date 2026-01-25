@@ -40,8 +40,11 @@ export default function HomePage() {
   const [newItemIsLiquid, setNewItemIsLiquid] = useState(true)
   const [newItemCurrency, setNewItemCurrency] = useState('ILS')
   const [isAddingLoading, setIsAddingLoading] = useState(false)
+  const [isEditMode, setIsEditMode] = useState(false)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [editingName, setEditingName] = useState('')
 
-  const { assetClasses, isLoading: assetsLoading, createAsset, createAssetClass, createInstrument, createProvider, deleteAssetClass, deleteInstrument, deleteProvider } = useAssets()
+  const { assetClasses, isLoading: assetsLoading, createAsset, createAssetClass, createInstrument, createProvider, deleteAssetClass, deleteInstrument, deleteProvider, updateAssetClass, updateInstrument, updateProvider } = useAssets()
 
   // Inline creation state
   const [newCategoryName, setNewCategoryName] = useState('')
@@ -264,20 +267,43 @@ export default function HomePage() {
               </button>
             )}
             {isAddingAsset && (
-              <button
-                onClick={() => setIsAddingAsset(false)}
-                style={{
-                  padding: '8px 14px',
-                  borderRadius: '8px',
-                  background: 'rgba(255,255,255,0.1)',
-                  border: 'none',
-                  color: '#fff',
-                  cursor: 'pointer',
-                  fontSize: '0.85rem'
-                }}
-              >
-                ביטול
-              </button>
+              <>
+                <button
+                  onClick={() => {
+                    setIsEditMode(!isEditMode)
+                    setEditingId(null)
+                  }}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    background: isEditMode ? 'rgba(251, 113, 133, 0.2)' : 'rgba(255,255,255,0.1)',
+                    border: isEditMode ? '1px solid var(--expense)' : 'none',
+                    color: isEditMode ? 'var(--expense)' : '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  {isEditMode ? 'סיום עריכה' : 'עריכה'}
+                </button>
+                <button
+                  onClick={() => {
+                    setIsAddingAsset(false)
+                    setIsEditMode(false)
+                    setEditingId(null)
+                  }}
+                  style={{
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    background: 'rgba(255,255,255,0.1)',
+                    border: 'none',
+                    color: '#fff',
+                    cursor: 'pointer',
+                    fontSize: '0.85rem'
+                  }}
+                >
+                  ביטול
+                </button>
+              </>
             )}
           </div>
 
@@ -292,60 +318,101 @@ export default function HomePage() {
                 <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                   {categories.map(cat => (
                     <div key={cat.id} style={{ position: 'relative', display: 'inline-flex' }}>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setSelectedCategoryId(cat.id)
-                          setSelectedProductId('')
-                          setNewItemParentId('')
-                        }}
-                        style={{
-                          padding: '10px 16px',
-                          paddingLeft: '28px',
-                          borderRadius: '10px',
-                          border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
-                          background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
-                          color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
-                          fontWeight: selectedCategoryId === cat.id ? 600 : 400,
-                          cursor: 'pointer',
-                          fontSize: '0.9rem'
-                        }}
-                      >
-                        {cat.name}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={async (e) => {
-                          e.stopPropagation()
-                          if (confirm(`למחוק את "${cat.name}"?`)) {
-                            await deleteAssetClass(cat.id)
-                            if (selectedCategoryId === cat.id) {
-                              setSelectedCategoryId('')
-                              setSelectedProductId('')
+                      {editingId === `cat-${cat.id}` ? (
+                        <input
+                          type="text"
+                          value={editingName}
+                          onChange={(e) => setEditingName(e.target.value)}
+                          onBlur={async () => {
+                            if (editingName.trim() && editingName !== cat.name) {
+                              await updateAssetClass(cat.id, { name: editingName.trim() })
                             }
-                          }
-                        }}
-                        style={{
-                          position: 'absolute',
-                          right: '4px',
-                          top: '50%',
-                          transform: 'translateY(-50%)',
-                          width: '18px',
-                          height: '18px',
-                          borderRadius: '50%',
-                          border: 'none',
-                          background: 'rgba(251, 113, 133, 0.3)',
-                          color: 'var(--expense)',
-                          fontSize: '0.7rem',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          padding: 0
-                        }}
-                      >
-                        ×
-                      </button>
+                            setEditingId(null)
+                          }}
+                          onKeyDown={async (e) => {
+                            if (e.key === 'Enter') {
+                              if (editingName.trim() && editingName !== cat.name) {
+                                await updateAssetClass(cat.id, { name: editingName.trim() })
+                              }
+                              setEditingId(null)
+                            } else if (e.key === 'Escape') {
+                              setEditingId(null)
+                            }
+                          }}
+                          autoFocus
+                          style={{
+                            padding: '10px 16px',
+                            borderRadius: '10px',
+                            border: '2px solid var(--accent)',
+                            background: 'rgba(56, 189, 248, 0.15)',
+                            color: '#fff',
+                            fontSize: '0.9rem',
+                            width: '120px'
+                          }}
+                        />
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (isEditMode) {
+                              setEditingId(`cat-${cat.id}`)
+                              setEditingName(cat.name)
+                            } else {
+                              setSelectedCategoryId(cat.id)
+                              setSelectedProductId('')
+                              setNewItemParentId('')
+                            }
+                          }}
+                          style={{
+                            padding: '10px 16px',
+                            paddingLeft: isEditMode ? '28px' : '16px',
+                            borderRadius: '10px',
+                            border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
+                            background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                            color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
+                            fontWeight: selectedCategoryId === cat.id ? 600 : 400,
+                            cursor: 'pointer',
+                            fontSize: '0.9rem'
+                          }}
+                        >
+                          {cat.name}
+                        </button>
+                      )}
+                      {isEditMode && editingId !== `cat-${cat.id}` && (
+                        <button
+                          type="button"
+                          onClick={async (e) => {
+                            e.stopPropagation()
+                            if (confirm(`למחוק את "${cat.name}"?`)) {
+                              await deleteAssetClass(cat.id)
+                              if (selectedCategoryId === cat.id) {
+                                setSelectedCategoryId('')
+                                setSelectedProductId('')
+                              }
+                            }
+                          }}
+                          style={{
+                            position: 'absolute',
+                            right: '4px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '18px',
+                            height: '18px',
+                            borderRadius: '50%',
+                            border: 'none',
+                            background: 'rgba(251, 113, 133, 0.3)',
+                            color: 'var(--expense)',
+                            fontSize: '0.7rem',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: 0
+                          }}
+                        >
+                          ×
+                        </button>
+                      )}
                     </div>
                   ))}
                   {/* Add new category inline */}
@@ -410,59 +477,100 @@ export default function HomePage() {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                     {getProductsForCategory(selectedCategoryId).map(prod => (
                       <div key={prod.id} style={{ position: 'relative', display: 'inline-flex' }}>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setSelectedProductId(prod.id)
-                            setNewItemParentId('')
-                          }}
-                          style={{
-                            padding: '10px 16px',
-                            paddingLeft: '28px',
-                            borderRadius: '10px',
-                            border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
-                            background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
-                            color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
-                            fontWeight: selectedProductId === prod.id ? 600 : 400,
-                            cursor: 'pointer',
-                            fontSize: '0.9rem'
-                          }}
-                        >
-                          {prod.name}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={async (e) => {
-                            e.stopPropagation()
-                            if (confirm(`למחוק את "${prod.name}"?`)) {
-                              await deleteInstrument(prod.id)
-                              if (selectedProductId === prod.id) {
-                                setSelectedProductId('')
+                        {editingId === `prod-${prod.id}` ? (
+                          <input
+                            type="text"
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onBlur={async () => {
+                              if (editingName.trim() && editingName !== prod.name) {
+                                await updateInstrument(prod.id, { name: editingName.trim() })
+                              }
+                              setEditingId(null)
+                            }}
+                            onKeyDown={async (e) => {
+                              if (e.key === 'Enter') {
+                                if (editingName.trim() && editingName !== prod.name) {
+                                  await updateInstrument(prod.id, { name: editingName.trim() })
+                                }
+                                setEditingId(null)
+                              } else if (e.key === 'Escape') {
+                                setEditingId(null)
+                              }
+                            }}
+                            autoFocus
+                            style={{
+                              padding: '10px 16px',
+                              borderRadius: '10px',
+                              border: '2px solid var(--income)',
+                              background: 'rgba(74, 222, 128, 0.15)',
+                              color: '#fff',
+                              fontSize: '0.9rem',
+                              width: '120px'
+                            }}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (isEditMode) {
+                                setEditingId(`prod-${prod.id}`)
+                                setEditingName(prod.name)
+                              } else {
+                                setSelectedProductId(prod.id)
                                 setNewItemParentId('')
                               }
-                            }
-                          }}
-                          style={{
-                            position: 'absolute',
-                            right: '4px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            border: 'none',
-                            background: 'rgba(251, 113, 133, 0.3)',
-                            color: 'var(--expense)',
-                            fontSize: '0.7rem',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: 0
-                          }}
-                        >
-                          ×
-                        </button>
+                            }}
+                            style={{
+                              padding: '10px 16px',
+                              paddingLeft: isEditMode ? '28px' : '16px',
+                              borderRadius: '10px',
+                              border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
+                              background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                              color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
+                              fontWeight: selectedProductId === prod.id ? 600 : 400,
+                              cursor: 'pointer',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            {prod.name}
+                          </button>
+                        )}
+                        {isEditMode && editingId !== `prod-${prod.id}` && (
+                          <button
+                            type="button"
+                            onClick={async (e) => {
+                              e.stopPropagation()
+                              if (confirm(`למחוק את "${prod.name}"?`)) {
+                                await deleteInstrument(prod.id)
+                                if (selectedProductId === prod.id) {
+                                  setSelectedProductId('')
+                                  setNewItemParentId('')
+                                }
+                              }
+                            }}
+                            style={{
+                              position: 'absolute',
+                              right: '4px',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              border: 'none',
+                              background: 'rgba(251, 113, 133, 0.3)',
+                              color: 'var(--expense)',
+                              fontSize: '0.7rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              padding: 0
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
                       </div>
                     ))}
                     {/* Add new product inline */}
@@ -528,55 +636,98 @@ export default function HomePage() {
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', alignItems: 'center' }}>
                     {getProvidersForProduct(selectedProductId).map(prov => (
                       <div key={prov.id} style={{ position: 'relative', display: 'inline-flex' }}>
-                        <button
-                          type="button"
-                          onClick={() => setNewItemParentId(prov.id)}
-                          style={{
-                            padding: '10px 16px',
-                            paddingLeft: '28px',
-                            borderRadius: '10px',
-                            border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid rgba(255,255,255,0.1)',
-                            background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'rgba(255,255,255,0.03)',
-                            color: newItemParentId === prov.id ? '#a78bfa' : '#fff',
-                            fontWeight: newItemParentId === prov.id ? 600 : 400,
-                            cursor: 'pointer',
-                            fontSize: '0.9rem'
-                          }}
-                        >
-                          {prov.name}
-                        </button>
-                        <button
-                          type="button"
-                          onClick={async (e) => {
-                            e.stopPropagation()
-                            if (confirm(`למחוק את "${prov.name}"?`)) {
-                              await deleteProvider(prov.id)
-                              if (newItemParentId === prov.id) {
-                                setNewItemParentId('')
+                        {editingId === `prov-${prov.id}` ? (
+                          <input
+                            type="text"
+                            value={editingName}
+                            onChange={(e) => setEditingName(e.target.value)}
+                            onBlur={async () => {
+                              if (editingName.trim() && editingName !== prov.name) {
+                                await updateProvider(prov.id, { name: editingName.trim() })
                               }
-                            }
-                          }}
-                          style={{
-                            position: 'absolute',
-                            right: '4px',
-                            top: '50%',
-                            transform: 'translateY(-50%)',
-                            width: '18px',
-                            height: '18px',
-                            borderRadius: '50%',
-                            border: 'none',
-                            background: 'rgba(251, 113, 133, 0.3)',
-                            color: 'var(--expense)',
-                            fontSize: '0.7rem',
-                            cursor: 'pointer',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            padding: 0
-                          }}
-                        >
-                          ×
-                        </button>
+                              setEditingId(null)
+                            }}
+                            onKeyDown={async (e) => {
+                              if (e.key === 'Enter') {
+                                if (editingName.trim() && editingName !== prov.name) {
+                                  await updateProvider(prov.id, { name: editingName.trim() })
+                                }
+                                setEditingId(null)
+                              } else if (e.key === 'Escape') {
+                                setEditingId(null)
+                              }
+                            }}
+                            autoFocus
+                            style={{
+                              padding: '10px 16px',
+                              borderRadius: '10px',
+                              border: '2px solid #a78bfa',
+                              background: 'rgba(167, 139, 250, 0.15)',
+                              color: '#fff',
+                              fontSize: '0.9rem',
+                              width: '120px'
+                            }}
+                          />
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (isEditMode) {
+                                setEditingId(`prov-${prov.id}`)
+                                setEditingName(prov.name)
+                              } else {
+                                setNewItemParentId(prov.id)
+                              }
+                            }}
+                            style={{
+                              padding: '10px 16px',
+                              paddingLeft: isEditMode ? '28px' : '16px',
+                              borderRadius: '10px',
+                              border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid rgba(255,255,255,0.1)',
+                              background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'rgba(255,255,255,0.03)',
+                              color: newItemParentId === prov.id ? '#a78bfa' : '#fff',
+                              fontWeight: newItemParentId === prov.id ? 600 : 400,
+                              cursor: 'pointer',
+                              fontSize: '0.9rem'
+                            }}
+                          >
+                            {prov.name}
+                          </button>
+                        )}
+                        {isEditMode && editingId !== `prov-${prov.id}` && (
+                          <button
+                            type="button"
+                            onClick={async (e) => {
+                              e.stopPropagation()
+                              if (confirm(`למחוק את "${prov.name}"?`)) {
+                                await deleteProvider(prov.id)
+                                if (newItemParentId === prov.id) {
+                                  setNewItemParentId('')
+                                }
+                              }
+                            }}
+                            style={{
+                              position: 'absolute',
+                              right: '4px',
+                              top: '50%',
+                              transform: 'translateY(-50%)',
+                              width: '18px',
+                              height: '18px',
+                              borderRadius: '50%',
+                              border: 'none',
+                              background: 'rgba(251, 113, 133, 0.3)',
+                              color: 'var(--expense)',
+                              fontSize: '0.7rem',
+                              cursor: 'pointer',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              padding: 0
+                            }}
+                          >
+                            ×
+                          </button>
+                        )}
                       </div>
                     ))}
                     {/* Add new provider inline */}

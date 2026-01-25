@@ -39,6 +39,7 @@ export async function GET() {
 
     // Create default asset classes if user has none
     if (assetClasses.length === 0) {
+      console.log('Creating default asset classes for user:', authSession.user.id)
       const defaults = [
         { name: 'נדל״ן', instrument: 'דירה להשקעה', provider: 'כללי' },
         { name: 'פנסיוני', instrument: 'קרן פנסיה', provider: 'כללי' },
