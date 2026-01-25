@@ -19,6 +19,9 @@ const CURRENCY_SYMBOLS: Record<string, string> = {
 
 // Format number with commas as thousands separator
 const formatWithCommas = (value: string): string => {
+  // Check for negative sign
+  const isNegative = value.startsWith('-')
+
   // Remove all non-digit and non-decimal characters
   const cleanValue = value.replace(/[^\d.]/g, '')
 
@@ -29,7 +32,8 @@ const formatWithCommas = (value: string): string => {
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',')
 
   // Return formatted value (with decimal if exists)
-  return parts.length > 1 ? parts.join('.') : parts[0]
+  const formatted = parts.length > 1 ? parts.join('.') : parts[0]
+  return isNegative ? '-' + formatted : formatted
 }
 
 // Get raw number from formatted string
@@ -63,10 +67,11 @@ export function ValueInput({ value, currency, isInherited, onChange, onBlur, dis
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = e.target.value
-    // Allow only digits, commas, and one decimal point
+    // Allow only digits, commas, decimal point, and minus at start
+    const isNegative = input.startsWith('-')
     const cleaned = input.replace(/[^\d.,]/g, '')
     // Format with commas
-    const formatted = formatWithCommas(cleaned)
+    const formatted = formatWithCommas((isNegative ? '-' : '') + cleaned)
     setLocalValue(formatted)
   }
 
@@ -94,7 +99,7 @@ export function ValueInput({ value, currency, isInherited, onChange, onBlur, dis
   const formatDisplayValue = (val: string) => {
     const num = parseFloat(val)
     if (isNaN(num)) return '0'
-    return new Intl.NumberFormat('he-IL').format(num)
+    return new Intl.NumberFormat('he-IL', { signDisplay: 'auto' }).format(num)
   }
 
   const symbol = CURRENCY_SYMBOLS[currency] || currency

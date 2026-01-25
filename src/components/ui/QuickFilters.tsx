@@ -19,12 +19,6 @@ interface QuickFiltersProps {
   }) => void
 }
 
-const CURRENCIES: FilterOption[] = [
-  { value: 'ILS', label: '₪ שקל' },
-  { value: 'USD', label: '$ דולר' },
-  { value: 'EUR', label: '€ יורו' },
-]
-
 const LIQUIDITY_OPTIONS: FilterOption[] = [
   { value: 'true', label: 'נזיל' },
   { value: 'false', label: 'לא נזיל' },
@@ -42,15 +36,11 @@ export function QuickFilters({ assetClasses, filters, onFilterChange }: QuickFil
     })
   }
 
-  const handleCurrencyChange = (value: string | null) => {
-    onFilterChange({ ...filters, currency: value })
-  }
-
   const clearFilters = () => {
     onFilterChange({ assetClass: null, isLiquid: null, currency: null })
   }
 
-  const hasActiveFilters = filters.assetClass || filters.isLiquid !== null || filters.currency
+  const hasActiveFilters = filters.assetClass || filters.isLiquid !== null
 
   const chipStyle = (isActive: boolean) => ({
     padding: '6px 12px',
@@ -120,7 +110,7 @@ export function QuickFilters({ assetClasses, filters, onFilterChange }: QuickFil
           ))}
         </div>
 
-        {/* Liquidity and Currency filters */}
+        {/* Liquidity filters */}
         <div style={{
           display: 'flex',
           gap: '8px',
@@ -135,18 +125,6 @@ export function QuickFilters({ assetClasses, filters, onFilterChange }: QuickFil
               style={chipStyle(filters.isLiquid === (opt.value === 'true'))}
             >
               {opt.label}
-            </button>
-          ))}
-          <div style={{ width: '1px', background: 'rgba(255,255,255,0.1)', margin: '0 4px' }} />
-          {CURRENCIES.map((curr) => (
-            <button
-              key={curr.value}
-              onClick={() => handleCurrencyChange(
-                filters.currency === curr.value ? null : curr.value
-              )}
-              style={chipStyle(filters.currency === curr.value)}
-            >
-              {curr.label}
             </button>
           ))}
         </div>

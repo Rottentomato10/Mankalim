@@ -600,28 +600,6 @@ export default function HomePage() {
                     </button>
                   </div>
 
-                  <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                    {['ILS', 'USD', 'EUR'].map(curr => (
-                      <button
-                        key={curr}
-                        type="button"
-                        onClick={() => setNewItemCurrency(curr)}
-                        style={{
-                          flex: 1,
-                          padding: '10px',
-                          borderRadius: '10px',
-                          border: newItemCurrency === curr ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
-                          background: newItemCurrency === curr ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
-                          color: newItemCurrency === curr ? 'var(--accent)' : 'var(--text-dim)',
-                          fontWeight: 600,
-                          cursor: 'pointer',
-                          fontSize: '0.85rem'
-                        }}
-                      >
-                        {curr === 'ILS' ? '₪ שקל' : curr === 'USD' ? '$ דולר' : '€ יורו'}
-                      </button>
-                    ))}
-                  </div>
 
                   {/* Submit */}
                   <button
