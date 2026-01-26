@@ -34,6 +34,8 @@ export default function SettingsPage() {
   const [exportStatus, setExportStatus] = useState<'idle' | 'exporting' | 'success' | 'error'>('idle')
   const [newCategoryName, setNewCategoryName] = useState('')
   const [isAddingCategory, setIsAddingCategory] = useState(false)
+  const [isResetting, setIsResetting] = useState(false)
+  const [showResetDialog, setShowResetDialog] = useState(false)
 
   // Wait until we know if user is in demo mode or has a session
   const authReady = sessionStatus !== 'loading' && !demoLoading
@@ -173,6 +175,24 @@ export default function SettingsPage() {
     }
   }
 
+  const handleResetToDefaults = async () => {
+    if (isDemo) return
+    setIsResetting(true)
+    try {
+      // Delete all existing asset classes
+      for (const ac of assetClasses) {
+        await fetch(`/api/assets/classes/${ac.id}`, { method: 'DELETE' })
+      }
+      // Refetch will trigger default creation in the API
+      window.location.reload()
+    } catch {
+      setError('שגיאה באיפוס הנתונים')
+    } finally {
+      setIsResetting(false)
+      setShowResetDialog(false)
+    }
+  }
+
   const getDaysUntilDeletion = () => {
     if (!preferences?.deletionDate) return 0
     const deletionDate = new Date(preferences.deletionDate)
@@ -200,7 +220,24 @@ export default function SettingsPage() {
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px', position: 'relative' }}>
+        <button
+          onClick={handleSignOut}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'var(--text-dim)',
+            padding: '8px 16px',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            cursor: 'pointer'
+          }}
+        >
+          יציאה
+        </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
         <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>הגדרות</h1>
         {isDemo && (
@@ -466,22 +503,25 @@ export default function SettingsPage() {
       <div className="glass-card">
         <h3 style={{ margin: '0 0 16px 0', fontSize: '1rem', fontWeight: 700, color: 'var(--expense)' }}>אזור מסוכן</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          <button
-            onClick={handleSignOut}
-            style={{
-              width: '100%',
-              padding: '14px',
-              borderRadius: '12px',
-              background: 'rgba(255,255,255,0.05)',
-              border: '1px solid rgba(255,255,255,0.1)',
-              color: '#fff',
-              fontSize: '0.95rem',
-              fontWeight: 600,
-              cursor: 'pointer'
-            }}
-          >
-            התנתקות
-          </button>
+          {!isDemo && (
+            <button
+              onClick={() => setShowResetDialog(true)}
+              disabled={isResetting}
+              style={{
+                width: '100%',
+                padding: '14px',
+                borderRadius: '12px',
+                background: 'rgba(251, 191, 36, 0.15)',
+                border: '1px solid #f59e0b',
+                color: '#f59e0b',
+                fontSize: '0.95rem',
+                fontWeight: 600,
+                cursor: isResetting ? 'wait' : 'pointer'
+              }}
+            >
+              {isResetting ? 'מאפס...' : 'איפוס לברירת מחדל'}
+            </button>
+          )}
           {!isDemo && (
             <button
               onClick={() => setShowDeleteDialog(true)}
@@ -526,6 +566,18 @@ export default function SettingsPage() {
         cancelText="ביטול"
         variant="danger"
         isLoading={isDeleting}
+      />
+
+      <ConfirmDialog
+        isOpen={showResetDialog}
+        onClose={() => setShowResetDialog(false)}
+        onConfirm={handleResetToDefaults}
+        title="איפוס לברירת מחדל"
+        message="האם אתה בטוח? כל הקטגוריות, המוצרים והספקים יימחקו ויוחלפו בברירות המחדל (נדל״ן, פנסיוני, השקעות)."
+        confirmText="אפס"
+        cancelText="ביטול"
+        variant="danger"
+        isLoading={isResetting}
       />
     </div>
   )

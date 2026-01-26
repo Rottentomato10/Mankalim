@@ -7,8 +7,7 @@ import { QuickFilters } from '@/components/ui/QuickFilters'
 import { ValueInput } from '@/components/ui/ValueInput'
 import { useMonthlyValues } from '@/hooks/useMonthlyValues'
 import { useAssets } from '@/hooks/useAssets'
-import { useDemoSession } from '@/hooks/useDemoSession'
-import { useSession } from 'next-auth/react'
+import { useAuth } from '@/hooks/useAuth'
 
 interface FilterState {
   assetClass: string | null
@@ -17,9 +16,11 @@ interface FilterState {
 }
 
 export default function HomePage() {
-  const { data: session } = useSession()
-  const { demoUser } = useDemoSession()
-  const isDemo = !session?.user && !!demoUser
+  const { logout, isDemo } = useAuth()
+
+  const handleLogout = async () => {
+    await logout()
+  }
 
   const currentDate = new Date()
   const [month, setMonth] = useState(currentDate.getMonth() + 1)
@@ -216,7 +217,25 @@ export default function HomePage() {
       )}
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '24px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '24px', position: 'relative' }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: '50%',
+            transform: 'translateY(-50%)',
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'var(--text-dim)',
+            padding: '8px 16px',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            cursor: 'pointer'
+          }}
+        >
+          יציאה
+        </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
         <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>מאזן</h1>
         {isDemo && (

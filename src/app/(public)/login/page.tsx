@@ -139,7 +139,7 @@ function LoginContent() {
           {isDemoLoading ? (
             <div style={{ width: '20px', height: '20px', border: '2px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
           ) : (
-            <span style={{ fontSize: '1.2rem' }}>👀</span>
+            <span style={{ fontSize: '1.2rem' }}>$</span>
           )}
           <span>כניסה למצב דמו</span>
         </button>
@@ -147,9 +147,9 @@ function LoginContent() {
         {/* Terms */}
         <p style={{ margin: '20px 0 0 0', fontSize: '0.75rem', color: 'var(--text-dim)', textAlign: 'center' }}>
           בהתחברות אתה מסכים ל
-          <a href="#" style={{ color: 'var(--accent)', margin: '0 4px' }}>תנאי השימוש</a>
+          <a href="https://www.porsimkanaf.com/תנאי-שימוש" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>תנאי השימוש</a>
           ול
-          <a href="#" style={{ color: 'var(--accent)', margin: '0 4px' }}>מדיניות הפרטיות</a>
+          <a href="https://www.porsimkanaf.com/מדיניות-פרטיות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>מדיניות הפרטיות</a>
         </p>
       </div>
 
@@ -164,9 +164,10 @@ function LoginContent() {
             background: 'var(--card-bg)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            color: 'var(--income)'
           }}>
-            <span style={{ fontSize: '1.2rem' }}>🔒</span>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מאובטח</p>
         </div>
@@ -179,9 +180,10 @@ function LoginContent() {
             background: 'var(--card-bg)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            color: 'var(--accent)'
           }}>
-            <span style={{ fontSize: '1.2rem' }}>📱</span>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מותאם למובייל</p>
         </div>
@@ -194,11 +196,12 @@ function LoginContent() {
             background: 'var(--card-bg)',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center'
+            justifyContent: 'center',
+            color: '#f59e0b'
           }}>
-            <span style={{ fontSize: '1.2rem' }}>📊</span>
+            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
           </div>
-          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>אנליטיקס</p>
+          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>דשבורד</p>
         </div>
       </div>
     </div>

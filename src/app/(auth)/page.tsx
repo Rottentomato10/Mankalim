@@ -1,13 +1,14 @@
 'use client'
 
 import Link from 'next/link'
-import { useSession } from 'next-auth/react'
-import { useDemoSession } from '@/hooks/useDemoSession'
+import { useAuth } from '@/hooks/useAuth'
 
 export default function HomePage() {
-  const { data: session } = useSession()
-  const { demoUser } = useDemoSession()
-  const isDemo = !session?.user && !!demoUser
+  const { logout, isDemo } = useAuth()
+
+  const handleLogout = async () => {
+    await logout()
+  }
 
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
@@ -28,7 +29,24 @@ export default function HomePage() {
       )}
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '32px', position: 'relative' }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'var(--text-dim)',
+            padding: '8px 16px',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            cursor: 'pointer'
+          }}
+        >
+          יציאה
+        </button>
         <img src="/logo-6.png" alt="פורשים כנף" style={{ width: '64px', height: '64px', marginBottom: '12px', borderRadius: '16px' }} />
         <h1 style={{
           margin: '0 0 8px 0',

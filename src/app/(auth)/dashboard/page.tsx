@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useDashboardData } from '@/hooks/useDashboardData'
+import { useAuth } from '@/hooks/useAuth'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
   PieChart, Pie, Cell, BarChart, Bar, AreaChart, Area
@@ -82,6 +83,11 @@ export default function DashboardPage() {
   const [timeRange, setTimeRange] = useState(12)
   const { analytics, isLoading, error } = useDashboardData(timeRange)
   const { data: cashflow, isLoading: cashflowLoading } = useCashflowData()
+  const { logout } = useAuth()
+
+  const handleLogout = async () => {
+    await logout()
+  }
 
   const formatNumber = (num: number) => {
     return new Intl.NumberFormat('he-IL', {
@@ -146,7 +152,24 @@ export default function DashboardPage() {
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto' }}>
       {/* Branding */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '20px', position: 'relative' }}>
+        <button
+          onClick={handleLogout}
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            background: 'transparent',
+            border: '1px solid rgba(255,255,255,0.1)',
+            color: 'var(--text-dim)',
+            padding: '8px 16px',
+            borderRadius: '12px',
+            fontSize: '0.9rem',
+            cursor: 'pointer'
+          }}
+        >
+          יציאה
+        </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
         <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>דשבורד</h1>
       </div>
