@@ -180,17 +180,17 @@ export default function HomePage() {
             zIndex: 100,
             boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
           }}>
-            {/* Year Navigation */}
+            {/* Year Navigation - RTL: right arrow goes back, left arrow goes forward */}
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <button
-                onClick={() => setSelectedYear(y => y + 1)}
+                onClick={() => setSelectedYear(y => y - 1)}
                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: '#fff' }}
               >
                 →
               </button>
               <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{selectedYear}</span>
               <button
-                onClick={() => setSelectedYear(y => y - 1)}
+                onClick={() => setSelectedYear(y => y + 1)}
                 style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: '#fff' }}
               >
                 ←
