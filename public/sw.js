@@ -1,4 +1,4 @@
-const CACHE_NAME = 'menakalim-v1';
+const CACHE_NAME = 'menakalim-v2';
 const OFFLINE_URL = '/';
 
 // Assets to cache immediately
