@@ -49,18 +49,20 @@ function useCashflowData(): { data: CashflowData | null; isLoading: boolean } {
         const currentData = currentRes.ok ? await currentRes.json() : { transactions: [] }
         const prevData = prevRes.ok ? await prevRes.json() : { transactions: [] }
 
-        // Calculate YTD by fetching all months this year
+        // Calculate YTD by fetching all months in parallel
+        const ytdPromises = Array.from({ length: currentMonth }, (_, i) =>
+          fetch(`/api/transactions?month=${i + 1}&year=${currentYear}&limit=1000`)
+        )
+        const ytdResponses = await Promise.all(ytdPromises)
+        const ytdDataList = await Promise.all(ytdResponses.map(r => r.ok ? r.json() : { transactions: [] }))
+
         let ytdIncome = 0
         let ytdExpenses = 0
-        for (let m = 1; m <= currentMonth; m++) {
-          const res = await fetch(`/api/transactions?month=${m}&year=${currentYear}&limit=1000`)
-          if (res.ok) {
-            const d = await res.json()
-            const totals = calculateTotals(d.transactions || [])
-            ytdIncome += totals.income
-            ytdExpenses += totals.expenses
-          }
-        }
+        ytdDataList.forEach(d => {
+          const totals = calculateTotals(d.transactions || [])
+          ytdIncome += totals.income
+          ytdExpenses += totals.expenses
+        })
 
         setData({
           currentMonth: calculateTotals(currentData.transactions || []),
