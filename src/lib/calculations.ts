@@ -1,5 +1,4 @@
 import type { Asset, MonthlyValue } from '@/types'
-import { convertCurrency } from './exchange-rates'
 
 interface AssetWithValue extends Asset {
   currentValue?: string
@@ -13,17 +12,12 @@ interface CalculationResult {
 }
 
 /**
- * Calculates total balance from assets with optional currency conversion
+ * Calculates total balance from assets (ILS only)
  */
-export function calculateTotalBalance(
-  assets: AssetWithValue[],
-  targetCurrency: string,
-  exchangeRates: Record<string, number>
-): number {
+export function calculateTotalBalance(assets: AssetWithValue[]): number {
   return assets.reduce((total, asset) => {
     const value = parseFloat(asset.currentValue || '0')
-    const convertedValue = convertCurrency(value, asset.currency, targetCurrency, exchangeRates)
-    return total + convertedValue
+    return total + value
   }, 0)
 }
 
@@ -32,9 +26,7 @@ export function calculateTotalBalance(
  */
 export function calculateMonthlyChange(
   currentValues: AssetWithValue[],
-  previousValues: Map<string, string>,
-  targetCurrency: string,
-  exchangeRates: Record<string, number>
+  previousValues: Map<string, string>
 ): CalculationResult {
   let currentTotal = 0
   let previousTotal = 0
@@ -43,8 +35,8 @@ export function calculateMonthlyChange(
     const currentValue = parseFloat(asset.currentValue || '0')
     const previousValue = parseFloat(previousValues.get(asset.id) || '0')
 
-    currentTotal += convertCurrency(currentValue, asset.currency, targetCurrency, exchangeRates)
-    previousTotal += convertCurrency(previousValue, asset.currency, targetCurrency, exchangeRates)
+    currentTotal += currentValue
+    previousTotal += previousValue
   }
 
   const changeAbsolute = currentTotal - previousTotal
@@ -62,11 +54,9 @@ export function calculateMonthlyChange(
  */
 export function calculateYearlyChange(
   currentValues: AssetWithValue[],
-  yearAgoValues: Map<string, string>,
-  targetCurrency: string,
-  exchangeRates: Record<string, number>
+  yearAgoValues: Map<string, string>
 ): CalculationResult {
-  return calculateMonthlyChange(currentValues, yearAgoValues, targetCurrency, exchangeRates)
+  return calculateMonthlyChange(currentValues, yearAgoValues)
 }
 
 /**
@@ -74,11 +64,9 @@ export function calculateYearlyChange(
  */
 export function calculateYTDChange(
   currentValues: AssetWithValue[],
-  januaryValues: Map<string, string>,
-  targetCurrency: string,
-  exchangeRates: Record<string, number>
+  januaryValues: Map<string, string>
 ): CalculationResult {
-  return calculateMonthlyChange(currentValues, januaryValues, targetCurrency, exchangeRates)
+  return calculateMonthlyChange(currentValues, januaryValues)
 }
 
 /**
@@ -175,9 +163,7 @@ export function getValueWithInheritance(
  * Finds the largest asset by value
  */
 export function findLargestAsset(
-  assets: AssetWithValue[],
-  targetCurrency: string,
-  exchangeRates: Record<string, number>
+  assets: AssetWithValue[]
 ): { id: string; name: string; value: number } | null {
   if (assets.length === 0) return null
 
@@ -185,10 +171,9 @@ export function findLargestAsset(
 
   for (const asset of assets) {
     const value = parseFloat(asset.currentValue || '0')
-    const convertedValue = convertCurrency(value, asset.currency, targetCurrency, exchangeRates)
 
-    if (!largest || convertedValue > largest.value) {
-      largest = { id: asset.id, name: asset.name, value: convertedValue }
+    if (!largest || value > largest.value) {
+      largest = { id: asset.id, name: asset.name, value }
     }
   }
 

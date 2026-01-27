@@ -52,7 +52,7 @@ export default function HomePage() {
   const [newProductName, setNewProductName] = useState('')
   const [newProviderName, setNewProviderName] = useState('')
   const [isCreating, setIsCreating] = useState(false)
-  const { data, exchangeRates, isLoading: valuesLoading, error, setValue } = useMonthlyValues(month, year)
+  const { data, isLoading: valuesLoading, error, setValue } = useMonthlyValues(month, year)
 
   const handleMonthChange = (newMonth: number, newYear: number) => {
     setMonth(newMonth)
@@ -918,7 +918,6 @@ export default function HomePage() {
             totalBalance={hasActiveFilters ? String(filteredTotal) : data.totalBalance}
             currency={data.totalBalanceCurrency}
             monthlyChange={hasActiveFilters ? { absolute: '0', percentage: 0 } : data.changeFromPrevious}
-            isStaleRates={exchangeRates?.isStale}
           />
           {hasActiveFilters && (
             <div style={{

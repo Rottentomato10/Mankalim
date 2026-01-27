@@ -9,10 +9,9 @@ interface BalanceSummaryProps {
     absolute: string
     percentage: number
   }
-  isStaleRates?: boolean
 }
 
-export function BalanceSummary({ totalBalance, currency, monthlyChange, isStaleRates }: BalanceSummaryProps) {
+export function BalanceSummary({ totalBalance, currency, monthlyChange }: BalanceSummaryProps) {
   const changePercentage = monthlyChange.percentage
   const changeAbsolute = parseFloat(monthlyChange.absolute)
   const balance = parseFloat(totalBalance)
@@ -83,25 +82,6 @@ export function BalanceSummary({ totalBalance, currency, monthlyChange, isStaleR
           </span>
         </div>
       </div>
-
-      {/* Stale rates warning */}
-      {isStaleRates && (
-        <div style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          gap: '8px',
-          marginTop: '16px',
-          padding: '10px 16px',
-          borderRadius: '12px',
-          background: 'rgba(251, 191, 36, 0.1)',
-          color: '#fbbf24',
-          fontSize: '0.85rem'
-        }}>
-          <span>⚠️</span>
-          <span>שערי המרה לא עודכנו מעל 48 שעות</span>
-        </div>
-      )}
     </div>
   )
 }

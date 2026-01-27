@@ -23,16 +23,8 @@ interface MonthlyValuesResponse {
   values: ValueData[]
 }
 
-interface ExchangeRatesResponse {
-  baseCurrency: string
-  rates: Record<string, number>
-  fetchedAt: string
-  isStale: boolean
-}
-
 interface UseMonthlyValuesReturn {
   data: MonthlyValuesResponse | null
-  exchangeRates: ExchangeRatesResponse | null
   isLoading: boolean
   error: string | null
   setValue: (assetId: string, value: string) => Promise<void>
@@ -41,7 +33,6 @@ interface UseMonthlyValuesReturn {
 
 export function useMonthlyValues(month: number, year: number): UseMonthlyValuesReturn {
   const [data, setData] = useState<MonthlyValuesResponse | null>(null)
-  const [exchangeRates, setExchangeRates] = useState<ExchangeRatesResponse | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -52,19 +43,13 @@ export function useMonthlyValues(month: number, year: number): UseMonthlyValuesR
       setError(null)
       setIsLoading(true)
 
-      const [valuesRes, ratesRes] = await Promise.all([
-        fetch(`/api/values?month=${month}&year=${year}`),
-        fetch('/api/exchange-rates'),
-      ])
+      const valuesRes = await fetch(`/api/values?month=${month}&year=${year}`)
 
       if (!valuesRes.ok) throw new Error('Failed to fetch values')
-      if (!ratesRes.ok) throw new Error('Failed to fetch exchange rates')
 
       const valuesData = await valuesRes.json()
-      const ratesData = await ratesRes.json()
 
       setData(valuesData)
-      setExchangeRates(ratesData)
     } catch (e) {
       setError(e instanceof Error ? e.message : 'Unknown error')
     } finally {
@@ -110,7 +95,6 @@ export function useMonthlyValues(month: number, year: number): UseMonthlyValuesR
 
   return {
     data,
-    exchangeRates,
     isLoading,
     error,
     setValue,
