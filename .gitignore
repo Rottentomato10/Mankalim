@@ -40,8 +40,7 @@ Thumbs.db
 prisma/*.db
 prisma/*.db-journal
 
-# PWA
-public/sw.js
+# PWA (workbox auto-generated)
 public/workbox-*.js
 
 # Misc
