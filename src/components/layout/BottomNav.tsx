@@ -23,7 +23,7 @@ export function BottomNav() {
       background: 'var(--card-bg)',
       borderTop: '1px solid rgba(255,255,255,0.1)',
       padding: '12px 0',
-      paddingBottom: 'max(12px, env(safe-area-inset-bottom))',
+      paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
       zIndex: 100
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-around', maxWidth: '480px', margin: '0 auto' }}>
