@@ -2,6 +2,79 @@
 
 import Link from 'next/link'
 import { useAuth } from '@/hooks/useAuth'
+import { useState, useEffect } from 'react'
+
+function InstallBanner() {
+  const [show, setShow] = useState(false)
+
+  useEffect(() => {
+    // Check if already installed (standalone) or dismissed
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+    const isDismissed = localStorage.getItem('pwa-install-dismissed')
+    const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent)
+
+    if (!isStandalone && !isDismissed && isIOS) {
+      setShow(true)
+    }
+  }, [])
+
+  if (!show) return null
+
+  return (
+    <div style={{
+      background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15))',
+      border: '1px solid rgba(56, 189, 248, 0.3)',
+      borderRadius: '16px',
+      padding: '16px',
+      marginBottom: '20px',
+      position: 'relative'
+    }}>
+      <button
+        onClick={() => {
+          localStorage.setItem('pwa-install-dismissed', 'true')
+          setShow(false)
+        }}
+        style={{
+          position: 'absolute',
+          top: '8px',
+          left: '8px',
+          background: 'none',
+          border: 'none',
+          color: 'var(--text-dim)',
+          fontSize: '1.2rem',
+          cursor: 'pointer',
+          padding: '4px'
+        }}
+      >
+        ×
+      </button>
+      <div style={{ textAlign: 'center' }}>
+        <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📲</div>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700 }}>
+          התקן את האפליקציה
+        </h3>
+        <p style={{ margin: '0 0 12px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+          לחץ על
+          <span style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            margin: '0 6px',
+            padding: '2px 8px',
+            background: 'rgba(255,255,255,0.1)',
+            borderRadius: '6px'
+          }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
+              <polyline points="16 6 12 2 8 6"/>
+              <line x1="12" y1="2" x2="12" y2="15"/>
+            </svg>
+          </span>
+          ואז <strong>הוסף למסך הבית</strong>
+        </p>
+      </div>
+    </div>
+  )
+}
 
 export default function HomePage() {
   const { logout, isDemo } = useAuth()
@@ -12,6 +85,9 @@ export default function HomePage() {
 
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
+      {/* Install PWA Banner */}
+      <InstallBanner />
+
       {/* Demo Warning Banner */}
       {isDemo && (
         <div style={{
