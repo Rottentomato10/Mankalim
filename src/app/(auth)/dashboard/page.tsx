@@ -40,7 +40,7 @@ function useCashflowData(): { data: CashflowData | null; isLoading: boolean } {
           let income = 0
           let expenses = 0
           transactions.forEach((t: any) => {
-            if (t.type === 'income') income += parseFloat(t.amount)
+            if (t.type === 'INCOME') income += parseFloat(t.amount)
             else expenses += parseFloat(t.amount)
           })
           return { income, expenses, balance: income - expenses }
