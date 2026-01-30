@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Cosmic Concept</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-deep: #030014;
+            --accent-cyan: #00f3ff;
+            --accent-purple: #bd00ff;
+            --text-main: #ffffff;
+            --text-dim: rgba(255, 255, 255, 0.5);
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-highlight: rgba(255, 255, 255, 0.15);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            font-family: 'Heebo', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            /* Nebula Background Effect */
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(189, 0, 255, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(0, 243, 255, 0.1) 0%, transparent 40%);
+            overflow-x: hidden;
+        }
+
+        .phone-frame {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(3, 0, 20, 0.5);
+            border-radius: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Glass Card Utility */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            box-shadow: 
+                0 4px 24px -1px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 0 var(--glass-highlight);
+            border-radius: 24px;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            padding: 40px 20px 20px;
+        }
+
+        .brand-subtitle {
+            color: var(--accent-cyan);
+            font-size: 0.7rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-shadow: 0 0 10px rgba(0, 243, 255, 0.4);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 4px;
+        }
+
+        /* Balance Card */
+        .balance-card {
+            margin: 0 20px 24px;
+            padding: 32px 24px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .balance-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 150px;
+            height: 150px;
+            background: var(--accent-purple);
+            opacity: 0.15;
+            filter: blur(60px);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .balance-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+        }
+
+        .balance-amount {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 24px;
+            letter-spacing: -1px;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
+        }
+
+        .stats-row {
+            display: flex;
+            gap: 12px;
+        }
+
+        .stat-item {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            padding: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .stat-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .income { color: #4ade80; text-shadow: 0 0 10px rgba(74, 222, 128, 0.2); }
+        .expense { color: #f43f5e; text-shadow: 0 0 10px rgba(244, 63, 94, 0.2); }
+
+        /* Actions */
+        .actions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            padding: 0 20px 30px;
+        }
+
+        .action-btn {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            color: #fff;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 243, 255, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px -5px rgba(0, 243, 255, 0.15);
+        }
+
+        .icon-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.05) 0%, rgba(189, 0, 255, 0.05) 100%);
+            border-color: rgba(255,255,255,0.15);
+        }
+        
+        .action-btn.primary:hover {
+             border-color: var(--accent-purple);
+             box-shadow: 0 10px 20px -5px rgba(189, 0, 255, 0.2);
+        }
+
+        /* List */
+        .list-container {
+            padding: 0 20px;
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding: 0 4px;
+        }
+
+        .list-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .list-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            margin-bottom: 8px;
+            transition: transform 0.2s;
+        }
+        
+        .list-item:hover {
+            background: rgba(255, 255, 255, 0.06);
+        }
+
+        .item-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            margin-left: 14px;
+        }
+
+        .item-details h4 {
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+        }
+
+        .item-details p {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+        }
+
+        /* Bottom Nav (Mockup) */
+        .bottom-nav {
+            margin-top: 40px;
+            background: rgba(3, 0, 20, 0.85);
+            backdrop-filter: blur(20px);
+            padding: 20px;
+            display: flex;
+            justify-content: space-around;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            border-radius: 0 0 30px 30px;
+        }
+
+        .nav-item {
+            opacity: 0.5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.7rem;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .nav-item.active {
+            opacity: 1;
+            color: var(--accent-cyan);
+            text-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="phone-frame">
+        <header>
+            <div class="brand-subtitle">MENAKALIM FINANCE</div>
+            <h1>דשבורד</h1>
+            <p style="color: var(--text-dim); font-size: 0.9rem;">צהריים טובים, דקל</p>
+        </header>
+
+        <!-- Balance Card -->
+        <div class="glass balance-card animate-float">
+            <div class="balance-glow"></div>
+            <div class="balance-label">יתרה כוללת</div>
+            <div class="balance-amount">₪14,520</div>
+            
+            <div class="stats-row">
+                <div class="stat-item">
+                    <span class="stat-label">הכנסות</span>
+                    <span class="stat-value income">₪22,500</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">הוצאות</span>
+                    <span class="stat-value expense">₪7,980</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="actions-grid">
+            <button class="action-btn">
+                <div class="icon-circle" style="color: var(--accent-cyan)">+</div>
+                הכנסה
+            </button>
+            <button class="action-btn primary">
+                <div class="icon-circle" style="color: var(--accent-purple)">-</div>
+                הוצאה
+            </button>
+        </div>
+
+        <!-- Recent Transactions -->
+        <div class="list-container">
+            <div class="list-header">
+                <span class="list-title">פעולות אחרונות</span>
+                <span style="color: var(--accent-cyan); font-size: 0.8rem; cursor: pointer;">הכל ></span>
+            </div>
+
+            <div class="glass list-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="item-icon">🛒</div>
+                    <div class="item-details">
+                        <h4>קניות בסופר</h4>
+                        <p>היום, 14:30</p>
+                    </div>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-weight: 700;">-₪450</div>
+                </div>
+            </div>
+
+            <div class="glass list-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="item-icon">⛽</div>
+                    <div class="item-details">
+                        <h4>תדלוק רכב</h4>
+                        <p>אתמול, 09:15</p>
+                    </div>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-weight: 700;">-₪220</div>
+                </div>
+            </div>
+
+             <div class="glass list-item">
+                <div style="display: flex; align-items: center;">
+                    <div class="item-icon">💼</div>
+                    <div class="item-details">
+                        <h4>משכורת</h4>
+                        <p>10 בינואר</p>
+                    </div>
+                </div>
+                <div style="text-align: left;">
+                    <div style="font-weight: 700; color: #4ade80;">+₪12,500</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom Nav -->
+        <div class="bottom-nav">
+            <div class="nav-item active">
+                <span style="font-size: 1.2rem;">🏠</span>
+                <span>ראשי</span>
+            </div>
+            <div class="nav-item">
+                <span style="font-size: 1.2rem;">💸</span>
+                <span>תזרים</span>
+            </div>
+            <div class="nav-item">
+                <span style="font-size: 1.2rem;">⚖️</span>
+                <span>מאזן</span>
+            </div>
+            <div class="nav-item">
+                <span style="font-size: 1.2rem;">⚙️</span>
+                <span>הגדרות</span>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

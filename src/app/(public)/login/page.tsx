@@ -3,6 +3,7 @@
 import { signIn } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, Suspense } from 'react'
+import Image from 'next/image'
 
 function LoginContent() {
   const searchParams = useSearchParams()
@@ -38,16 +39,17 @@ function LoginContent() {
     <div style={{ width: '100%', maxWidth: '360px' }}>
       {/* Logo and title */}
       <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-        <img
+        <Image
           src="/logo-6.png"
           alt="פורשים כנף"
+          width={80}
+          height={80}
           style={{
-            width: '80px',
-            height: '80px',
             margin: '0 auto 16px',
             borderRadius: '20px',
             objectFit: 'contain'
           }}
+          priority
         />
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
         <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>מנכ״לים</h1>
