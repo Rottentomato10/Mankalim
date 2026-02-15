@@ -16,6 +16,9 @@ import {
   ShieldAlert,
   Wallet,
   BarChart3,
+  Lock,
+  Eye,
+  EyeOff,
 } from 'lucide-react'
 
 const ADMIN_EMAIL = 'spread.a.wing@gmail.com'
@@ -70,6 +73,21 @@ export default function AdminPage() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
+  // Password protection
+  const [isVerified, setIsVerified] = useState(false)
+  const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+  const [passwordError, setPasswordError] = useState('')
+  const [isVerifying, setIsVerifying] = useState(false)
+
+  useEffect(() => {
+    // Check if already verified in this session
+    const verified = sessionStorage.getItem('admin_verified')
+    if (verified === 'true') {
+      setIsVerified(true)
+    }
+  }, [])
+
   useEffect(() => {
     if (status === 'loading') return
 
@@ -78,8 +96,10 @@ export default function AdminPage() {
       return
     }
 
-    fetchStats()
-  }, [session, status, router])
+    if (isVerified) {
+      fetchStats()
+    }
+  }, [session, status, router, isVerified])
 
   const fetchStats = async () => {
     try {
@@ -95,7 +115,38 @@ export default function AdminPage() {
     }
   }
 
-  if (status === 'loading' || isLoading) {
+  const verifyPassword = async () => {
+    if (!password.trim()) {
+      setPasswordError('נא להזין סיסמה')
+      return
+    }
+
+    setIsVerifying(true)
+    setPasswordError('')
+
+    try {
+      const res = await fetch('/api/admin/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ password }),
+      })
+
+      const data = await res.json()
+
+      if (data.verified) {
+        sessionStorage.setItem('admin_verified', 'true')
+        setIsVerified(true)
+      } else {
+        setPasswordError(data.error || 'סיסמה שגויה')
+      }
+    } catch {
+      setPasswordError('שגיאה באימות')
+    } finally {
+      setIsVerifying(false)
+    }
+  }
+
+  if (status === 'loading') {
     return (
       <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
         <Loader2 size={32} className="spin" style={{ color: 'var(--accent)' }} />
@@ -108,6 +159,128 @@ export default function AdminPage() {
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '16px' }}>
         <ShieldAlert size={48} style={{ color: 'var(--expense)' }} />
         <p style={{ color: 'var(--text-dim)' }}>אין גישה לדף זה</p>
+      </div>
+    )
+  }
+
+  // Password protection screen
+  if (!isVerified) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        background: 'var(--bg)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        zIndex: 9999,
+      }}>
+        <div className="glass-card" style={{
+          padding: '32px',
+          maxWidth: '320px',
+          width: '90%',
+          textAlign: 'center',
+        }}>
+          <div style={{
+            width: '64px',
+            height: '64px',
+            borderRadius: '50%',
+            background: 'rgba(56, 189, 248, 0.15)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            margin: '0 auto 20px',
+          }}>
+            <Lock size={28} style={{ color: 'var(--accent)' }} />
+          </div>
+
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '8px' }}>
+            אזור מוגן
+          </h2>
+          <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', marginBottom: '24px' }}>
+            נא להזין סיסמת אדמין
+          </p>
+
+          <div style={{ position: 'relative', marginBottom: '16px' }}>
+            <input
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && verifyPassword()}
+              placeholder="סיסמה"
+              style={{
+                width: '100%',
+                padding: '14px 44px 14px 16px',
+                background: 'rgba(255,255,255,0.05)',
+                border: passwordError ? '1px solid var(--expense)' : '1px solid rgba(255,255,255,0.1)',
+                borderRadius: '12px',
+                color: '#fff',
+                fontSize: '1rem',
+                textAlign: 'right',
+                direction: 'ltr',
+              }}
+              autoFocus
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              style={{
+                position: 'absolute',
+                left: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: 'var(--text-dim)',
+                cursor: 'pointer',
+                padding: '4px',
+              }}
+            >
+              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+            </button>
+          </div>
+
+          {passwordError && (
+            <p style={{ color: 'var(--expense)', fontSize: '0.85rem', marginBottom: '16px' }}>
+              {passwordError}
+            </p>
+          )}
+
+          <button
+            onClick={verifyPassword}
+            disabled={isVerifying}
+            style={{
+              width: '100%',
+              padding: '14px',
+              background: 'var(--accent)',
+              border: 'none',
+              borderRadius: '12px',
+              color: '#000',
+              fontSize: '1rem',
+              fontWeight: 600,
+              cursor: isVerifying ? 'not-allowed' : 'pointer',
+              opacity: isVerifying ? 0.7 : 1,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+            }}
+          >
+            {isVerifying ? (
+              <Loader2 size={18} className="spin" />
+            ) : (
+              'כניסה'
+            )}
+          </button>
+        </div>
+      </div>
+    )
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Loader2 size={32} className="spin" style={{ color: 'var(--accent)' }} />
       </div>
     )
   }
@@ -213,14 +386,14 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Registration Chart */}
-      {stats.registrationsByDay.length > 0 && (
+      {/* Registration Chart - only show if more than 3 days with registrations */}
+      {stats.registrationsByDay.filter(d => d.count > 0).length > 3 && (
         <div className="glass-card" style={{ marginBottom: '24px' }}>
           <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
             <Calendar size={18} />
             הרשמות (30 יום אחרונים)
           </h2>
-          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '4px', height: '80px' }}>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2px', height: '60px', padding: '0 4px' }}>
             {stats.registrationsByDay.map((day, i) => {
               const maxCount = Math.max(...stats.registrationsByDay.map(d => d.count), 1)
               const height = (day.count / maxCount) * 100
@@ -229,11 +402,11 @@ export default function AdminPage() {
                   key={i}
                   style={{
                     flex: 1,
-                    background: 'var(--accent)',
-                    borderRadius: '4px 4px 0 0',
-                    height: `${Math.max(height, 5)}%`,
-                    opacity: day.count > 0 ? 1 : 0.3,
-                    minWidth: '8px',
+                    background: day.count > 0 ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
+                    borderRadius: '2px 2px 0 0',
+                    height: day.count > 0 ? `${Math.max(height, 10)}%` : '4px',
+                    minWidth: '4px',
+                    maxWidth: '20px',
                   }}
                   title={`${formatDate(day.date)}: ${day.count} הרשמות`}
                 />
@@ -255,7 +428,7 @@ export default function AdminPage() {
               <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)', textAlign: 'right' }}>
                 <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>משתמש</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>הצטרף</th>
-                <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>פעילות</th>
+                <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>כניסה אחרונה</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>עסקאות</th>
                 <th style={{ padding: '12px 8px', fontWeight: 600, color: 'var(--text-dim)' }}>נכסים</th>
               </tr>

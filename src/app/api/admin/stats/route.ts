@@ -139,25 +139,30 @@ export async function GET() {
           COUNT(*) as count
         FROM users
         WHERE created_at >= ${new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)}
-          AND deleted_at IS NULL
         GROUP BY DATE(created_at)
         ORDER BY date ASC
       ` as Promise<{ date: Date; count: bigint }[]>,
     ])
 
-    // Calculate total managed value
-    const currentMonth = now.getMonth() + 1
-    const currentYear = now.getFullYear()
-
+    // Calculate total managed value - get sum of all latest values per asset
     const totalManagedValue = await prisma.monthlyValue.aggregate({
-      where: {
-        month: currentMonth,
-        year: currentYear,
-      },
       _sum: {
         value: true,
       },
     })
+
+    // Get latest values per user for more accurate total
+    const latestValuesByUser = await prisma.$queryRaw`
+      SELECT user_id, SUM(value) as total
+      FROM (
+        SELECT DISTINCT ON (asset_id) user_id, value
+        FROM monthly_values
+        ORDER BY asset_id, year DESC, month DESC
+      ) latest
+      GROUP BY user_id
+    ` as { user_id: string; total: number }[]
+
+    const actualTotalManaged = latestValuesByUser.reduce((sum, u) => sum + Number(u.total || 0), 0)
 
     return NextResponse.json({
       users: {
@@ -177,7 +182,7 @@ export async function GET() {
         totalMonthlyValues,
       },
       financials: {
-        totalManagedValue: totalManagedValue._sum.value?.toString() || '0',
+        totalManagedValue: actualTotalManaged.toString(),
       },
       userList: users.map((u) => ({
         id: u.id,
