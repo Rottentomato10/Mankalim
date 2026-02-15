@@ -1,6 +1,7 @@
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { BottomNav } from '@/components/layout/BottomNav'
 import { HelpButton } from '@/components/HelpButton'
+import { ActivityTracker } from '@/components/ActivityTracker'
 
 export default function AuthLayout({
   children,
@@ -9,6 +10,7 @@ export default function AuthLayout({
 }) {
   return (
     <AuthProvider>
+      <ActivityTracker />
       <div style={{ minHeight: '100vh' }}>
         <main style={{ paddingBottom: '80px' }}>
           {children}
