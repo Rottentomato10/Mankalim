@@ -29,12 +29,8 @@ function useCashflowData(): { data: CashflowData | null; isLoading: boolean } {
         const now = new Date()
         const currentMonth = now.getMonth() + 1
         const currentYear = now.getFullYear()
-
-        // Fetch current month, previous month, and YTD
-        const [currentRes, prevRes] = await Promise.all([
-          fetch(`/api/transactions?month=${currentMonth}&year=${currentYear}&limit=1000`),
-          fetch(`/api/transactions?month=${currentMonth - 1 || 12}&year=${currentMonth === 1 ? currentYear - 1 : currentYear}&limit=1000`),
-        ])
+        const prevMonth = currentMonth === 1 ? 12 : currentMonth - 1
+        const prevYear = currentMonth === 1 ? currentYear - 1 : currentYear
 
         const calculateTotals = (transactions: any[]) => {
           let income = 0
@@ -46,15 +42,21 @@ function useCashflowData(): { data: CashflowData | null; isLoading: boolean } {
           return { income, expenses, balance: income - expenses }
         }
 
-        const currentData = currentRes.ok ? await currentRes.json() : { transactions: [] }
-        const prevData = prevRes.ok ? await prevRes.json() : { transactions: [] }
+        // Fetch current month, previous month, AND all YTD months in ONE parallel call
+        const allFetches = [
+          fetch(`/api/transactions?month=${currentMonth}&year=${currentYear}&limit=1000`),
+          fetch(`/api/transactions?month=${prevMonth}&year=${prevYear}&limit=1000`),
+          ...Array.from({ length: currentMonth }, (_, i) =>
+            fetch(`/api/transactions?month=${i + 1}&year=${currentYear}&limit=1000`)
+          )
+        ]
 
-        // Calculate YTD by fetching all months in parallel
-        const ytdPromises = Array.from({ length: currentMonth }, (_, i) =>
-          fetch(`/api/transactions?month=${i + 1}&year=${currentYear}&limit=1000`)
-        )
-        const ytdResponses = await Promise.all(ytdPromises)
-        const ytdDataList = await Promise.all(ytdResponses.map(r => r.ok ? r.json() : { transactions: [] }))
+        const allResponses = await Promise.all(allFetches)
+        const allData = await Promise.all(allResponses.map(r => r.ok ? r.json() : { transactions: [] }))
+
+        const currentData = allData[0]
+        const prevData = allData[1]
+        const ytdDataList = allData.slice(2)
 
         let ytdIncome = 0
         let ytdExpenses = 0

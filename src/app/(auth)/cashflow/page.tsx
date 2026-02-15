@@ -3,6 +3,30 @@
 import { useState, useEffect, useCallback } from 'react'
 import { useAuth } from '@/hooks/useAuth'
 import { formatCurrency } from '@/utils/format'
+import {
+  Plus, Minus, Pencil, Trash2, LogOut,
+  Home, Utensils, Bus, PartyPopper, ShoppingBag, Gift, PiggyBank, Package,
+  Banknote, CreditCard, Coins, FileText, Heart, GraduationCap, type LucideIcon
+} from 'lucide-react'
+
+// Category icon mapping
+const CATEGORY_ICONS: Record<string, LucideIcon> = {
+  'דיור': Home,
+  'מזון': Utensils,
+  'תחבורה': Bus,
+  'בילויים': PartyPopper,
+  'קניות': ShoppingBag,
+  'מתנות': Gift,
+  'חסכון': PiggyBank,
+  'חשבונות': FileText,
+  'בריאות': Heart,
+  'לימודים': GraduationCap,
+  'אחר': Package,
+}
+
+const getCategoryIconComponent = (categoryName?: string): LucideIcon => {
+  return CATEGORY_ICONS[categoryName || ''] || Package
+}
 
 interface Transaction {
   id: string
@@ -78,13 +102,10 @@ export default function HomePage() {
     return `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-15`
   }
 
-  // Get category icon
-  const getCategoryIcon = (categoryName?: string) => {
-    const icons: Record<string, string> = {
-      'דיור': '🏠', 'מזון': '🍽️', 'תחבורה': '🚌', 'בילויים': '🎉',
-      'קניות': '🛍️', 'מתנות': '🎁', 'חסכון': '💰', 'אחר': '📦'
-    }
-    return icons[categoryName || ''] || '📦'
+  // Get category icon component
+  const CategoryIcon = ({ name, size = 22 }: { name?: string; size?: number }) => {
+    const Icon = getCategoryIconComponent(name)
+    return <Icon size={size} strokeWidth={1.5} />
   }
 
   // Delete transaction
@@ -113,7 +134,7 @@ export default function HomePage() {
           textAlign: 'center'
         }}>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
-            👀 מצב צפייה בלבד - התחבר עם Google כדי לנהל את הכספים שלך
+            👀 מצב צפייה בלבד - התחברו עם Google כדי לנהל את הכספים שלכם
           </p>
         </div>
       )}
@@ -132,9 +153,13 @@ export default function HomePage() {
             color: 'var(--text-dim)',
             padding: '8px 16px',
             borderRadius: '12px',
-            fontSize: '0.9rem'
+            fontSize: '0.9rem',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
           }}
         >
+          <LogOut size={16} strokeWidth={1.5} />
           יציאה
         </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
@@ -281,10 +306,14 @@ export default function HomePage() {
             fontSize: '1rem',
             fontWeight: 600,
             cursor: isDemo ? 'not-allowed' : 'pointer',
-            opacity: isDemo ? 0.5 : 1
+            opacity: isDemo ? 0.5 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          ➖ הוצאה
+          <Minus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
+          הוצאה
         </button>
         <button
           onClick={() => !isDemo && setShowIncomeModal(true)}
@@ -299,10 +328,14 @@ export default function HomePage() {
             fontSize: '1rem',
             fontWeight: 600,
             cursor: isDemo ? 'not-allowed' : 'pointer',
-            opacity: isDemo ? 0.5 : 1
+            opacity: isDemo ? 0.5 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          ➕ הכנסה
+          <Plus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
+          הכנסה
         </button>
       </div>
 
@@ -317,7 +350,7 @@ export default function HomePage() {
           border: '1px solid rgba(56, 189, 248, 0.3)'
         }}>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent)' }}>
-            💡 להוספת הוצאות והכנסות, התחבר עם Google
+            💡 להוספת הוצאות והכנסות, התחברו עם Google
           </p>
         </div>
       )}
@@ -347,9 +380,18 @@ export default function HomePage() {
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <span style={{ fontSize: '1.3rem' }}>
-                    {t.type === 'INCOME' ? '💰' : getCategoryIcon(t.category?.name)}
-                  </span>
+                  <div style={{
+                    width: '40px',
+                    height: '40px',
+                    borderRadius: '12px',
+                    background: t.type === 'INCOME' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(251, 113, 133, 0.15)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: t.type === 'INCOME' ? 'var(--income)' : 'var(--expense)'
+                  }}>
+                    {t.type === 'INCOME' ? <Coins size={20} strokeWidth={1.5} /> : <CategoryIcon name={t.category?.name} size={20} />}
+                  </div>
                   <div>
                     <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>
                       {t.type === 'INCOME' ? t.source : t.category?.name || 'אחר'}
@@ -378,11 +420,13 @@ export default function HomePage() {
                           borderRadius: '8px',
                           padding: '6px 8px',
                           color: 'var(--accent)',
-                          fontSize: '0.8rem',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                       >
-                        ✏️
+                        <Pencil size={14} strokeWidth={2} />
                       </button>
                       <button
                         onClick={() => handleDeleteTransaction(t.id)}
@@ -392,11 +436,13 @@ export default function HomePage() {
                           borderRadius: '8px',
                           padding: '6px 8px',
                           color: 'var(--expense)',
-                          fontSize: '0.8rem',
-                          cursor: 'pointer'
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center'
                         }}
                       >
-                        🗑️
+                        <Trash2 size={14} strokeWidth={2} />
                       </button>
                     </>
                   )}
@@ -456,11 +502,6 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
       .then(d => d.categories && setCategories(d.categories))
       .catch(console.error)
   }, [])
-
-  const categoryIcons: Record<string, string> = {
-    'דיור': '🏠', 'מזון': '🍽️', 'תחבורה': '🚌', 'בילויים': '🎉',
-    'קניות': '🛍️', 'מתנות': '🎁', 'חסכון': '💰', 'אחר': '📦'
-  }
 
   const categoryExamples: Record<string, string> = {
     'דיור': 'שכירות, ארנונה, חשמל',
@@ -576,11 +617,15 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
                   background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
                   border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                   textAlign: 'center',
-                  color: '#fff'
+                  color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  gap: '4px'
                 }}
               >
-                <span style={{ display: 'block', fontSize: '1.5rem', marginBottom: '4px' }}>{categoryIcons[cat.name] || '📦'}</span>
-                <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-dim)' }}>{cat.name}</span>
+                {(() => { const Icon = getCategoryIconComponent(cat.name); return <Icon size={24} strokeWidth={1.5} /> })()}
+                <span style={{ fontSize: '0.75rem' }}>{cat.name}</span>
               </button>
             ))}
           </div>
@@ -605,7 +650,8 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
                 gap: '8px'
               }}
             >
-              💵 מזומן
+              <Banknote size={20} strokeWidth={1.5} />
+              מזומן
             </button>
             <button
               type="button"
@@ -622,7 +668,8 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
                 gap: '8px'
               }}
             >
-              💳 כרטיס
+              <CreditCard size={20} strokeWidth={1.5} />
+              כרטיס
             </button>
           </div>
         </div>
@@ -859,11 +906,6 @@ function EditTransactionModal({
     }
   }, [isExpense])
 
-  const categoryIcons: Record<string, string> = {
-    'אוכל': '🍽️', 'תחבורה': '🚌', 'בילויים': '🎉', 'קניות': '🛍️',
-    'חשבונות': '📄', 'בריאות': '💊', 'לימודים': '📚', 'אחר': '📦'
-  }
-
   const handleAmountChange = (value: string) => {
     const digits = value.replace(/[^\d]/g, '')
     setAmount(digits)
@@ -974,11 +1016,15 @@ function EditTransactionModal({
                     background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
                     border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                     textAlign: 'center',
-                    color: '#fff'
+                    color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px'
                   }}
                 >
-                  <span style={{ display: 'block', fontSize: '1.5rem', marginBottom: '4px' }}>{categoryIcons[cat.name] || '📦'}</span>
-                  <span style={{ display: 'block', fontSize: '0.75rem', color: 'var(--text-dim)' }}>{cat.name}</span>
+                  {(() => { const Icon = getCategoryIconComponent(cat.name); return <Icon size={24} strokeWidth={1.5} /> })()}
+                  <span style={{ fontSize: '0.75rem' }}>{cat.name}</span>
                 </button>
               ))}
             </div>
@@ -1005,7 +1051,8 @@ function EditTransactionModal({
                   gap: '8px'
                 }}
               >
-                💵 מזומן
+                <Banknote size={20} strokeWidth={1.5} />
+                מזומן
               </button>
               <button
                 type="button"
@@ -1022,7 +1069,8 @@ function EditTransactionModal({
                   gap: '8px'
                 }}
               >
-                💳 כרטיס
+                <CreditCard size={20} strokeWidth={1.5} />
+                כרטיס
               </button>
             </div>
           </div>

@@ -211,7 +211,7 @@ export default function HomePage() {
           textAlign: 'center'
         }}>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
-            מצב צפייה בלבד - התחבר עם Google כדי לנהל את הנכסים שלך
+            מצב צפייה בלבד - התחברו עם Google כדי לנהל את הנכסים שלכם
           </p>
         </div>
       )}
@@ -902,7 +902,7 @@ export default function HomePage() {
           {/* Empty state */}
           {!isAddingAsset && isDemo && (
             <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-              התחבר כדי להוסיף נכסים
+              התחברו כדי להוסיף נכסים
             </p>
           )}
         </div>

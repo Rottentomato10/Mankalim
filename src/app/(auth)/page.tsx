@@ -1,8 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useEffect } from 'react'
+import { ArrowLeftRight, Scale, BarChart3, Settings, Smartphone, ExternalLink, LogOut, Share, X } from 'lucide-react'
+import { Onboarding } from '@/components/Onboarding'
 
 function InstallBanner() {
   const [show, setShow] = useState(false)
@@ -41,15 +44,19 @@ function InstallBanner() {
           background: 'none',
           border: 'none',
           color: 'var(--text-dim)',
-          fontSize: '1.2rem',
           cursor: 'pointer',
-          padding: '4px'
+          padding: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
         }}
       >
-        ×
+        <X size={18} strokeWidth={2} />
       </button>
       <div style={{ textAlign: 'center' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '8px' }}>📲</div>
+        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
+          <Smartphone size={32} strokeWidth={1.5} style={{ color: 'var(--accent)' }} />
+        </div>
         <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700 }}>
           התקן את האפליקציה
         </h3>
@@ -63,11 +70,7 @@ function InstallBanner() {
             background: 'rgba(255,255,255,0.1)',
             borderRadius: '6px'
           }}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-              <polyline points="16 6 12 2 8 6"/>
-              <line x1="12" y1="2" x2="12" y2="15"/>
-            </svg>
+            <Share size={18} strokeWidth={2} />
           </span>
           ואז <strong>הוסף למסך הבית</strong>
         </p>
@@ -78,13 +81,29 @@ function InstallBanner() {
 
 export default function HomePage() {
   const { logout, isDemo } = useAuth()
+  const [showOnboarding, setShowOnboarding] = useState(false)
+
+  useEffect(() => {
+    // Check if user has completed onboarding
+    const hasCompletedOnboarding = localStorage.getItem('onboarding-completed')
+    if (!hasCompletedOnboarding) {
+      setShowOnboarding(true)
+    }
+  }, [])
 
   const handleLogout = async () => {
     await logout()
   }
 
+  const handleOnboardingComplete = () => {
+    setShowOnboarding(false)
+  }
+
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
+      {/* Onboarding for first-time users */}
+      {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
+
       {/* Install PWA Banner */}
       <InstallBanner />
 
@@ -99,7 +118,7 @@ export default function HomePage() {
           textAlign: 'center'
         }}>
           <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
-            מצב צפייה בלבד - התחבר עם Google כדי לנהל את הכספים שלך
+            מצב צפייה בלבד - התחברו עם Google כדי לנהל את הכספים שלכם
           </p>
         </div>
       )}
@@ -118,12 +137,23 @@ export default function HomePage() {
             padding: '8px 16px',
             borderRadius: '12px',
             fontSize: '0.9rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
           }}
         >
+          <LogOut size={16} strokeWidth={1.5} />
           יציאה
         </button>
-        <img src="/logo-6.png" alt="פורשים כנף" style={{ width: '64px', height: '64px', marginBottom: '12px', borderRadius: '16px' }} />
+        <Image
+          src="/logo-6.png"
+          alt="פורשים כנף"
+          width={64}
+          height={64}
+          style={{ marginBottom: '12px', borderRadius: '16px' }}
+          priority
+        />
         <h1 style={{
           margin: '0 0 8px 0',
           fontSize: '2.5rem',
@@ -155,7 +185,7 @@ export default function HomePage() {
           fontWeight: 700,
           color: '#fff'
         }}>
-          ניהול הכספים האישיים שלך
+          ניהול הכספים האישיים שלכם
         </h2>
         <p style={{
           margin: 0,
@@ -165,7 +195,7 @@ export default function HomePage() {
         }}>
           עקוב אחרי ההוצאות וההכנסות החודשיות,
           <br />
-          נהל את כל הנכסים שלך במקום אחד,
+          נהלו את כל הנכסים שלכם במקום אחד,
           <br />
           וקבל תמונה ברורה של המצב הפיננסי.
         </p>
@@ -185,10 +215,13 @@ export default function HomePage() {
             cursor: 'pointer',
           }}>
             <div style={{
-              fontSize: '1.8rem',
               marginBottom: '8px',
+              display: 'flex',
+              justifyContent: 'center',
               color: 'var(--income)'
-            }}>$</div>
+            }}>
+              <ArrowLeftRight size={28} strokeWidth={1.5} />
+            </div>
             <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>תזרים</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>הכנסות והוצאות</div>
           </div>
@@ -201,10 +234,13 @@ export default function HomePage() {
             cursor: 'pointer',
           }}>
             <div style={{
-              fontSize: '1.8rem',
               marginBottom: '8px',
+              display: 'flex',
+              justifyContent: 'center',
               color: 'var(--accent)'
-            }}>$</div>
+            }}>
+              <Scale size={28} strokeWidth={1.5} />
+            </div>
             <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>מאזן</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>נכסים והתחייבויות</div>
           </div>
@@ -217,10 +253,13 @@ export default function HomePage() {
             cursor: 'pointer',
           }}>
             <div style={{
-              fontSize: '1.8rem',
               marginBottom: '8px',
+              display: 'flex',
+              justifyContent: 'center',
               color: '#f59e0b'
-            }}>$</div>
+            }}>
+              <BarChart3 size={28} strokeWidth={1.5} />
+            </div>
             <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>דשבורד</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>סיכום וגרפים</div>
           </div>
@@ -233,10 +272,13 @@ export default function HomePage() {
             cursor: 'pointer',
           }}>
             <div style={{
-              fontSize: '1.8rem',
               marginBottom: '8px',
+              display: 'flex',
+              justifyContent: 'center',
               color: 'var(--text-dim)'
-            }}>$</div>
+            }}>
+              <Settings size={28} strokeWidth={1.5} />
+            </div>
             <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>הגדרות</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ניהול וקטגוריות</div>
           </div>
@@ -250,7 +292,9 @@ export default function HomePage() {
           target="_blank"
           rel="noopener noreferrer"
           style={{
-            display: 'inline-block',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
             padding: '12px 24px',
             background: 'rgba(56, 189, 248, 0.1)',
             border: '1px solid rgba(56, 189, 248, 0.3)',
@@ -261,6 +305,7 @@ export default function HomePage() {
             fontWeight: 500,
           }}
         >
+          <ExternalLink size={16} strokeWidth={1.5} />
           לאתר פורשים כנף
         </a>
       </div>

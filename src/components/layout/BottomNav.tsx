@@ -2,13 +2,20 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Home, ArrowLeftRight, Scale, BarChart3, Settings, type LucideIcon } from 'lucide-react'
 
-const navItems = [
-  { href: '/', label: 'בית', icon: '🏠' },
-  { href: '/cashflow', label: 'תזרים', icon: '💸' },
-  { href: '/balance', label: 'מאזן', icon: '⚖️' },
-  { href: '/dashboard', label: 'דשבורד', icon: '📊' },
-  { href: '/settings', label: 'הגדרות', icon: '⚙️' },
+interface NavItem {
+  href: string
+  label: string
+  icon: LucideIcon
+}
+
+const navItems: NavItem[] = [
+  { href: '/', label: 'בית', icon: Home },
+  { href: '/cashflow', label: 'תזרים', icon: ArrowLeftRight },
+  { href: '/balance', label: 'מאזן', icon: Scale },
+  { href: '/dashboard', label: 'דשבורד', icon: BarChart3 },
+  { href: '/settings', label: 'הגדרות', icon: Settings },
 ]
 
 export function BottomNav() {
@@ -29,6 +36,7 @@ export function BottomNav() {
       <div style={{ display: 'flex', justifyContent: 'space-around', maxWidth: '480px', margin: '0 auto' }}>
         {navItems.map(item => {
           const isActive = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
+          const Icon = item.icon
           return (
             <Link
               key={item.href}
@@ -45,7 +53,7 @@ export function BottomNav() {
                 transition: 'color 0.2s'
               }}
             >
-              <span style={{ fontSize: '1.3rem' }}>{item.icon}</span>
+              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
               <span>{item.label}</span>
             </Link>
           )

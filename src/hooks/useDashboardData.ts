@@ -110,10 +110,12 @@ export function useDashboardData(timeRange: number = 12): DashboardData {
         })
       })
 
-      // Fetch values for each month in the range
+      // Fetch values for each month in the range - IN PARALLEL for performance
       const monthlyTotals: MonthlyTotal[] = []
       const allMonthlyValues: Record<string, Record<string, number>> = {} // month-year -> assetId -> value
 
+      // Build list of months to fetch
+      const monthsToFetch: { month: number; year: number; key: string }[] = []
       for (let i = timeRange - 1; i >= 0; i--) {
         let month = currentMonth - i
         let year = currentYear
@@ -123,8 +125,18 @@ export function useDashboardData(timeRange: number = 12): DashboardData {
           year--
         }
 
-        const key = `${month}-${year}`
-        const res = await fetch(`/api/values?month=${month}&year=${year}`)
+        monthsToFetch.push({ month, year, key: `${month}-${year}` })
+      }
+
+      // Fetch all months in parallel
+      const responses = await Promise.all(
+        monthsToFetch.map(m => fetch(`/api/values?month=${m.month}&year=${m.year}`))
+      )
+
+      // Process responses
+      for (let i = 0; i < responses.length; i++) {
+        const res = responses[i]
+        const { month, year, key } = monthsToFetch[i]
 
         if (res.ok) {
           const data = await res.json()
@@ -153,6 +165,9 @@ export function useDashboardData(timeRange: number = 12): DashboardData {
           })
         }
       }
+
+      // Sort by date
+      monthlyTotals.sort((a, b) => a.year === b.year ? a.month - b.month : a.year - b.year)
 
       // Current month data
       const currentKey = `${currentMonth}-${currentYear}`

@@ -24,7 +24,7 @@ export function NotificationToggle({
 
     // Check if notifications are supported
     if (!('Notification' in window)) {
-      alert('הדפדפן שלך לא תומך בהתראות')
+      alert('הדפדפן שלכם לא תומך בהתראות')
       return
     }
 

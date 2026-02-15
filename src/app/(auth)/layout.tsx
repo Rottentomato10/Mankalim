@@ -1,5 +1,6 @@
 import { AuthProvider } from '@/components/providers/AuthProvider'
 import { BottomNav } from '@/components/layout/BottomNav'
+import { HelpButton } from '@/components/HelpButton'
 
 export default function AuthLayout({
   children,
@@ -13,6 +14,7 @@ export default function AuthLayout({
           {children}
         </main>
         <BottomNav />
+        <HelpButton />
       </div>
     </AuthProvider>
   )

@@ -3,6 +3,8 @@
 import { useState, useEffect } from 'react'
 import { useSession, signOut } from 'next-auth/react'
 import Link from 'next/link'
+import Image from 'next/image'
+import { LogOut, ExternalLink } from 'lucide-react'
 import { NotificationToggle } from '@/components/ui/NotificationToggle'
 import { ConfirmDialog } from '@/components/ui/ConfirmDialog'
 import { useDemoSession } from '@/hooks/useDemoSession'
@@ -233,11 +235,23 @@ export default function SettingsPage() {
             padding: '8px 16px',
             borderRadius: '12px',
             fontSize: '0.9rem',
-            cursor: 'pointer'
+            cursor: 'pointer',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px'
           }}
         >
+          <LogOut size={16} strokeWidth={1.5} />
           יציאה
         </button>
+        <Image
+          src="/logo-6.png"
+          alt="פורשים כנף"
+          width={48}
+          height={48}
+          style={{ marginBottom: '8px', borderRadius: '12px' }}
+          priority
+        />
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
         <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>הגדרות</h1>
         {isDemo && (
@@ -255,9 +269,10 @@ export default function SettingsPage() {
           justifyContent: 'center',
           gap: '8px',
           padding: '16px',
-          cursor: 'pointer'
+          cursor: 'pointer',
+          color: 'var(--accent)'
         }}>
-          <span style={{ fontSize: '1.2rem' }}>🌐</span>
+          <ExternalLink size={18} strokeWidth={1.5} />
           <span style={{ fontWeight: 600 }}>לאתר פורשים כנף</span>
         </div>
       </a>
@@ -470,7 +485,7 @@ export default function SettingsPage() {
       <div className="glass-card" style={{ marginBottom: '16px' }}>
         <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700 }}>ייצוא נתונים</h3>
         <p style={{ margin: '0 0 16px 0', color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-          הורד את כל הנתונים שלך כקובץ JSON
+          הורידו את כל הנתונים שלכם כקובץ JSON
         </p>
         <button
           onClick={handleExportData}
@@ -561,7 +576,7 @@ export default function SettingsPage() {
         onClose={() => setShowDeleteDialog(false)}
         onConfirm={handleDeleteAccount}
         title="מחיקת חשבון"
-        message="האם אתה בטוח שברצונך למחוק את החשבון? כל הנתונים יימחקו לצמיתות."
+        message="האם אתם בטוחים שברצונכם למחוק את החשבון? כל הנתונים יימחקו לצמיתות."
         confirmText="מחק חשבון"
         cancelText="ביטול"
         variant="danger"
@@ -573,7 +588,7 @@ export default function SettingsPage() {
         onClose={() => setShowResetDialog(false)}
         onConfirm={handleResetToDefaults}
         title="איפוס לברירת מחדל"
-        message="האם אתה בטוח? כל הקטגוריות, המוצרים והספקים יימחקו ויוחלפו בברירות המחדל (נדל״ן, פנסיוני, השקעות)."
+        message="האם אתם בטוחים? כל הקטגוריות, המוצרים והספקים יימחקו ויוחלפו בברירות המחדל (נדל״ן, פנסיוני, השקעות)."
         confirmText="אפס"
         cancelText="ביטול"
         variant="danger"

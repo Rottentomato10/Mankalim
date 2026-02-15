@@ -4,6 +4,7 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, Suspense } from 'react'
 import Image from 'next/image'
+import { Shield, Smartphone, BarChart3, Eye } from 'lucide-react'
 
 function LoginContent() {
   const searchParams = useSearchParams()
@@ -71,7 +72,7 @@ function LoginContent() {
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
               {error === 'OAuthAccountNotLinked'
                 ? 'חשבון Google זה כבר מקושר לחשבון אחר'
-                : 'אירעה שגיאה בהתחברות. נסה שנית.'}
+                : 'אירעה שגיאה בהתחברות. נסו שנית.'}
             </p>
           </div>
         )}
@@ -141,14 +142,14 @@ function LoginContent() {
           {isDemoLoading ? (
             <div style={{ width: '20px', height: '20px', border: '2px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
           ) : (
-            <span style={{ fontSize: '1.2rem' }}>$</span>
+            <Eye size={20} strokeWidth={1.5} />
           )}
           <span>כניסה למצב דמו</span>
         </button>
 
         {/* Terms */}
         <p style={{ margin: '20px 0 0 0', fontSize: '0.75rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-          בהתחברות אתה מסכים ל
+          בהתחברות אתם מסכימים ל
           <a href="https://www.porsimkanaf.com/תנאי-שימוש" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>תנאי השימוש</a>
           ול
           <a href="https://www.porsimkanaf.com/מדיניות-פרטיות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>מדיניות הפרטיות</a>
@@ -169,7 +170,7 @@ function LoginContent() {
             justifyContent: 'center',
             color: 'var(--income)'
           }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
+            <Shield size={20} strokeWidth={1.5} />
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מאובטח</p>
         </div>
@@ -185,7 +186,7 @@ function LoginContent() {
             justifyContent: 'center',
             color: 'var(--accent)'
           }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
+            <Smartphone size={20} strokeWidth={1.5} />
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מותאם למובייל</p>
         </div>
@@ -201,7 +202,7 @@ function LoginContent() {
             justifyContent: 'center',
             color: '#f59e0b'
           }}>
-            <span style={{ fontSize: '1.2rem', fontWeight: 700 }}>$</span>
+            <BarChart3 size={20} strokeWidth={1.5} />
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>דשבורד</p>
         </div>
