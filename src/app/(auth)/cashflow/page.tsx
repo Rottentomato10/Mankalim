@@ -294,28 +294,6 @@ export default function HomePage() {
       {/* Quick Actions */}
       <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
         <button
-          onClick={() => !isDemo && setShowExpenseModal(true)}
-          disabled={isDemo}
-          style={{
-            flex: 1,
-            padding: '16px',
-            borderRadius: '16px',
-            background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(251, 113, 133, 0.15)',
-            border: `1px solid ${isDemo ? 'rgba(255,255,255,0.1)' : 'var(--expense)'}`,
-            color: isDemo ? 'var(--text-dim)' : 'var(--expense)',
-            fontSize: '1rem',
-            fontWeight: 600,
-            cursor: isDemo ? 'not-allowed' : 'pointer',
-            opacity: isDemo ? 0.5 : 1,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-        >
-          <Minus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
-          הוצאה
-        </button>
-        <button
           onClick={() => !isDemo && setShowIncomeModal(true)}
           disabled={isDemo}
           style={{
@@ -336,6 +314,28 @@ export default function HomePage() {
         >
           <Plus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
           הכנסה
+        </button>
+        <button
+          onClick={() => !isDemo && setShowExpenseModal(true)}
+          disabled={isDemo}
+          style={{
+            flex: 1,
+            padding: '16px',
+            borderRadius: '16px',
+            background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(251, 113, 133, 0.15)',
+            border: `1px solid ${isDemo ? 'rgba(255,255,255,0.1)' : 'var(--expense)'}`,
+            color: isDemo ? 'var(--text-dim)' : 'var(--expense)',
+            fontSize: '1rem',
+            fontWeight: 600,
+            cursor: isDemo ? 'not-allowed' : 'pointer',
+            opacity: isDemo ? 0.5 : 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <Minus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
+          הוצאה
         </button>
       </div>
 
