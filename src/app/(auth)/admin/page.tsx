@@ -19,6 +19,13 @@ import {
   Lock,
   Eye,
   EyeOff,
+  X,
+  Download,
+  PiggyBank,
+  CreditCard,
+  TrendingDown,
+  ChevronDown,
+  ChevronUp,
 } from 'lucide-react'
 
 const ADMIN_EMAIL = 'spread.a.wing@gmail.com'
@@ -58,12 +65,78 @@ interface RegistrationDay {
   count: number
 }
 
+interface CategoryAverage {
+  name: string
+  total: number
+  count: number
+  avgPerUser: number
+}
+
+interface MonthlyTrend {
+  year: number
+  month: number
+  type: string
+  total: number
+  count: number
+}
+
+interface Aggregates {
+  avgIncomePerUser: number
+  avgExpensePerUser: number
+  avgNetWorth: number
+  totalIncome: number
+  totalExpenses: number
+  activeUsersCount: number
+  usersWithAssets: number
+  categoryAverages: CategoryAverage[]
+  monthlyTrends: MonthlyTrend[]
+}
+
 interface AdminStats {
   users: UserStats
   activity: ActivityStats
   financials: { totalManagedValue: string }
   userList: UserInfo[]
   registrationsByDay: RegistrationDay[]
+  aggregates: Aggregates
+}
+
+interface UserDetails {
+  user: {
+    id: string
+    email: string
+    name: string | null
+    createdAt: string
+    lastActiveAt: string | null
+  }
+  summary: {
+    totalIncome: number
+    totalExpense: number
+    netCashflow: number
+    totalAssetValue: number
+    transactionCount: number
+    assetCount: number
+  }
+  monthlySummary: {
+    month: string
+    income: number
+    expense: number
+    net: number
+    transactionCount: number
+  }[]
+  assets: {
+    name: string
+    class: string
+    instrument: string
+    provider: string
+    value: number
+    currency: string
+  }[]
+  categorySummary: {
+    name: string
+    total: number
+    count: number
+  }[]
 }
 
 export default function AdminPage() {
@@ -79,6 +152,11 @@ export default function AdminPage() {
   const [showPassword, setShowPassword] = useState(false)
   const [passwordError, setPasswordError] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
+
+  // User details modal
+  const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null)
+  const [isLoadingUser, setIsLoadingUser] = useState(false)
+  const [showAggregates, setShowAggregates] = useState(true)
 
   useEffect(() => {
     // Check if already verified in this session
@@ -113,6 +191,50 @@ export default function AdminPage() {
     } finally {
       setIsLoading(false)
     }
+  }
+
+  const fetchUserDetails = async (userId: string) => {
+    try {
+      setIsLoadingUser(true)
+      const res = await fetch(`/api/admin/user/${userId}`)
+      if (!res.ok) throw new Error('Failed to fetch user details')
+      const data = await res.json()
+      setSelectedUser(data)
+    } catch (e) {
+      console.error('Error fetching user:', e)
+    } finally {
+      setIsLoadingUser(false)
+    }
+  }
+
+  const exportToExcel = () => {
+    if (!stats) return
+
+    // Create CSV content
+    const headers = ['שם', 'אימייל', 'תאריך הצטרפות', 'כניסה אחרונה', 'עסקאות', 'נכסים']
+    const rows = stats.userList.map(u => [
+      u.name || 'ללא שם',
+      u.email,
+      formatDate(u.createdAt),
+      u.lastActiveAt ? formatDate(u.lastActiveAt) : 'לא פעיל',
+      u.transactions.toString(),
+      u.assetClasses.toString(),
+    ])
+
+    const csvContent = [
+      headers.join(','),
+      ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+    ].join('\n')
+
+    // Add BOM for Hebrew support
+    const BOM = '\uFEFF'
+    const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `users_export_${new Date().toISOString().split('T')[0]}.csv`
+    a.click()
+    URL.revokeObjectURL(url)
   }
 
   const verifyPassword = async () => {
@@ -386,6 +508,83 @@ export default function AdminPage() {
         </div>
       </div>
 
+      {/* Aggregate Statistics */}
+      <div className="glass-card" style={{ marginBottom: '24px' }}>
+        <button
+          onClick={() => setShowAggregates(!showAggregates)}
+          style={{
+            width: '100%',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: 'none',
+            border: 'none',
+            color: '#fff',
+            cursor: 'pointer',
+            padding: 0,
+          }}
+        >
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+            <PiggyBank size={18} />
+            ממוצעים וסטטיסטיקות
+          </h2>
+          {showAggregates ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
+        </button>
+
+        {showAggregates && (
+          <div style={{ marginTop: '16px' }}>
+            {/* Main averages */}
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '20px' }}>
+              <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+                <ArrowUpRight size={20} style={{ color: 'var(--income)', marginBottom: '4px' }} />
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--income)' }}>
+                  {formatNumber(stats.aggregates.avgIncomePerUser)} ₪
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ממוצע הכנסה למשתמש</div>
+              </div>
+              <div style={{ background: 'rgba(251, 113, 133, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+                <ArrowDownRight size={20} style={{ color: 'var(--expense)', marginBottom: '4px' }} />
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--expense)' }}>
+                  {formatNumber(stats.aggregates.avgExpensePerUser)} ₪
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ממוצע הוצאות למשתמש</div>
+              </div>
+              <div style={{ background: 'rgba(167, 139, 250, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+                <Wallet size={20} style={{ color: '#a78bfa', marginBottom: '4px' }} />
+                <div style={{ fontSize: '1.25rem', fontWeight: 700, color: '#a78bfa' }}>
+                  {formatNumber(stats.aggregates.avgNetWorth)} ₪
+                </div>
+                <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ממוצע שווי נכסים</div>
+              </div>
+            </div>
+
+            {/* Category breakdown */}
+            {stats.aggregates.categoryAverages.length > 0 && (
+              <div>
+                <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '12px', color: 'var(--text-dim)' }}>
+                  ממוצע הוצאות לפי קטגוריה
+                </h3>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
+                  {stats.aggregates.categoryAverages.slice(0, 8).map((cat, i) => (
+                    <div key={i} style={{
+                      background: 'rgba(255,255,255,0.03)',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)' }}>{cat.name}</span>
+                      <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{formatNumber(Math.round(cat.avgPerUser))} ₪</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+
       {/* Registration Chart - only show if more than 3 days with registrations */}
       {stats.registrationsByDay.filter(d => d.count > 0).length > 3 && (
         <div className="glass-card" style={{ marginBottom: '24px' }}>
@@ -418,10 +617,34 @@ export default function AdminPage() {
 
       {/* Users Table */}
       <div className="glass-card">
-        <h2 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <Mail size={18} />
-          משתמשים רשומים ({stats.userList.length})
-        </h2>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+          <h2 style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', margin: 0 }}>
+            <Mail size={18} />
+            משתמשים רשומים ({stats.userList.length})
+          </h2>
+          <button
+            onClick={exportToExcel}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '8px 12px',
+              background: 'rgba(56, 189, 248, 0.15)',
+              border: '1px solid var(--accent)',
+              borderRadius: '8px',
+              color: 'var(--accent)',
+              fontSize: '0.8rem',
+              fontWeight: 500,
+              cursor: 'pointer',
+            }}
+          >
+            <Download size={14} />
+            ייצוא
+          </button>
+        </div>
+        <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '12px' }}>
+          לחץ על משתמש לצפייה בפרטים
+        </p>
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem' }}>
             <thead>
@@ -435,7 +658,17 @@ export default function AdminPage() {
             </thead>
             <tbody>
               {stats.userList.map((user) => (
-                <tr key={user.id} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                <tr
+                  key={user.id}
+                  onClick={() => fetchUserDetails(user.id)}
+                  style={{
+                    borderBottom: '1px solid rgba(255,255,255,0.05)',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.03)'}
+                  onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                >
                   <td style={{ padding: '12px 8px' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <div style={{
@@ -469,6 +702,189 @@ export default function AdminPage() {
           </table>
         </div>
       </div>
+
+      {/* User Detail Modal */}
+      {(selectedUser || isLoadingUser) && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            background: 'rgba(0,0,0,0.7)',
+            backdropFilter: 'blur(4px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 1000,
+            padding: '20px',
+          }}
+          onClick={() => setSelectedUser(null)}
+        >
+          <div
+            className="glass-card"
+            style={{
+              maxWidth: '600px',
+              width: '100%',
+              maxHeight: '80vh',
+              overflow: 'auto',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              onClick={() => setSelectedUser(null)}
+              style={{
+                position: 'absolute',
+                top: '16px',
+                left: '16px',
+                background: 'rgba(255,255,255,0.1)',
+                border: 'none',
+                borderRadius: '50%',
+                width: '32px',
+                height: '32px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#fff',
+              }}
+            >
+              <X size={18} />
+            </button>
+
+            {isLoadingUser ? (
+              <div style={{ padding: '40px', textAlign: 'center' }}>
+                <Loader2 size={32} className="spin" style={{ color: 'var(--accent)' }} />
+              </div>
+            ) : selectedUser && (
+              <>
+                {/* User header */}
+                <div style={{ marginBottom: '20px' }}>
+                  <h2 style={{ fontSize: '1.25rem', fontWeight: 600, marginBottom: '4px' }}>
+                    {selectedUser.user.name || 'ללא שם'}
+                  </h2>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--text-dim)', margin: 0 }}>
+                    {selectedUser.user.email}
+                  </p>
+                </div>
+
+                {/* Summary cards */}
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '20px' }}>
+                  <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--income)' }}>
+                      {formatNumber(selectedUser.summary.totalIncome)} ₪
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>סה״כ הכנסות</div>
+                  </div>
+                  <div style={{ background: 'rgba(251, 113, 133, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--expense)' }}>
+                      {formatNumber(selectedUser.summary.totalExpense)} ₪
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>סה״כ הוצאות</div>
+                  </div>
+                  <div style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }}>
+                      {formatNumber(selectedUser.summary.netCashflow)} ₪
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>תזרים נטו</div>
+                  </div>
+                  <div style={{ background: 'rgba(167, 139, 250, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                    <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#a78bfa' }}>
+                      {formatNumber(selectedUser.summary.totalAssetValue)} ₪
+                    </div>
+                    <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>שווי נכסים</div>
+                  </div>
+                </div>
+
+                {/* Monthly cashflow table */}
+                {selectedUser.monthlySummary.length > 0 && (
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '10px' }}>
+                      תזרים חודשי
+                    </h3>
+                    <div style={{ overflowX: 'auto' }}>
+                      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.8rem' }}>
+                        <thead>
+                          <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.1)' }}>
+                            <th style={{ padding: '8px', textAlign: 'right', color: 'var(--text-dim)' }}>חודש</th>
+                            <th style={{ padding: '8px', textAlign: 'right', color: 'var(--text-dim)' }}>הכנסות</th>
+                            <th style={{ padding: '8px', textAlign: 'right', color: 'var(--text-dim)' }}>הוצאות</th>
+                            <th style={{ padding: '8px', textAlign: 'right', color: 'var(--text-dim)' }}>נטו</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {selectedUser.monthlySummary.slice(0, 12).map((m, i) => (
+                            <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
+                              <td style={{ padding: '8px' }}>{m.month}</td>
+                              <td style={{ padding: '8px', color: 'var(--income)' }}>{formatNumber(m.income)}</td>
+                              <td style={{ padding: '8px', color: 'var(--expense)' }}>{formatNumber(m.expense)}</td>
+                              <td style={{ padding: '8px', color: m.net >= 0 ? 'var(--income)' : 'var(--expense)' }}>
+                                {formatNumber(m.net)}
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
+
+                {/* Category breakdown */}
+                {selectedUser.categorySummary.length > 0 && (
+                  <div style={{ marginBottom: '20px' }}>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '10px' }}>
+                      הוצאות לפי קטגוריה
+                    </h3>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                      {selectedUser.categorySummary.slice(0, 8).map((cat, i) => (
+                        <div key={i} style={{
+                          background: 'rgba(255,255,255,0.05)',
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          fontSize: '0.8rem',
+                        }}>
+                          <span style={{ color: 'var(--text-dim)' }}>{cat.name}: </span>
+                          <span style={{ fontWeight: 600 }}>{formatNumber(cat.total)} ₪</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Assets */}
+                {selectedUser.assets.length > 0 && (
+                  <div>
+                    <h3 style={{ fontSize: '0.9rem', fontWeight: 600, marginBottom: '10px' }}>
+                      נכסים ({selectedUser.assets.length})
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {selectedUser.assets.slice(0, 10).map((asset, i) => (
+                        <div key={i} style={{
+                          background: 'rgba(255,255,255,0.03)',
+                          padding: '10px 12px',
+                          borderRadius: '8px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}>
+                          <div>
+                            <div style={{ fontSize: '0.85rem', fontWeight: 500 }}>{asset.name}</div>
+                            <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
+                              {asset.class} • {asset.provider}
+                            </div>
+                          </div>
+                          <div style={{ fontSize: '0.9rem', fontWeight: 600 }}>
+                            {formatNumber(asset.value)} {asset.currency === 'ILS' ? '₪' : asset.currency}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
