@@ -468,6 +468,15 @@ export default function HomePage() {
         >
           מדיניות פרטיות
         </a>
+        <span>|</span>
+        <a
+          href="https://www.porsimkanaf.com/הצהרת-נגישות"
+          target="_blank"
+          rel="noopener noreferrer"
+          style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
+        >
+          הצהרת נגישות
+        </a>
       </div>
     </div>
   )
