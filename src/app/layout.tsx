@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from 'next'
-import Script from 'next/script'
 import './globals.css'
 import { PWAInstaller } from '@/components/PWAInstaller'
+import { AccessibilityWidget } from '@/components/AccessibilityWidget'
 
 export const metadata: Metadata = {
   title: 'מנכ״לים | פורשים כנף - חינוך פיננסי',
@@ -37,29 +37,7 @@ export default function RootLayout({
       <body className="min-h-screen antialiased">
         <PWAInstaller />
         {children}
-
-        {/* Vee Accessibility Widget */}
-        <Script
-          id="vee-accessibility-config"
-          strategy="lazyOnload"
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.args = {
-                sitekey: '181d06572796d6f989fba2a284691636',
-                position: 'Right',
-                language: 'HE',
-                container: '',
-                icon: '',
-                access: 'https://vee-crm.com',
-              };
-            `,
-          }}
-        />
-        <Script
-          src="https://vee-crm.com/js/"
-          strategy="lazyOnload"
-          crossOrigin="anonymous"
-        />
+        <AccessibilityWidget />
       </body>
     </html>
   )
