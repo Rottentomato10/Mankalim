@@ -155,29 +155,38 @@ export function AccessibilityWidget() {
 
   return (
     <>
-      {/* Accessibility Button */}
+      {/* Accessibility Button - positioned next to Help button */}
       <button
         onClick={() => setIsOpen(true)}
         aria-label="פתח תפריט נגישות"
         style={{
           position: 'fixed',
-          top: '100px',
-          right: '0',
-          width: '48px',
-          height: '48px',
-          background: 'linear-gradient(135deg, #177fab, #b586ff)',
-          border: 'none',
-          borderRadius: '12px 0 0 12px',
-          color: '#fff',
+          bottom: 'calc(90px + env(safe-area-inset-bottom, 0px))',
+          left: '66px',
+          width: '44px',
+          height: '44px',
+          background: 'var(--card-bg)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '50%',
+          color: '#b586ff',
           cursor: 'pointer',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          zIndex: 9998,
-          boxShadow: '-2px 2px 10px rgba(0,0,0,0.3)',
+          zIndex: 1000,
+          boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+          transition: 'all 0.2s',
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.borderColor = '#b586ff'
+          e.currentTarget.style.color = '#b586ff'
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.15)'
+          e.currentTarget.style.color = '#b586ff'
         }}
       >
-        <Accessibility size={24} />
+        <Accessibility size={22} strokeWidth={1.5} />
       </button>
 
       {/* Accessibility Panel */}
@@ -446,7 +455,7 @@ export function AccessibilityWidget() {
             position: 'fixed',
             inset: 0,
             background: 'rgba(0,0,0,0.5)',
-            zIndex: 9998,
+            zIndex: 9997,
           }}
         />
       )}
