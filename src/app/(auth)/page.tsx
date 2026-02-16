@@ -4,7 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useEffect } from 'react'
-import { ArrowLeftRight, Scale, BarChart3, Settings, Smartphone, ExternalLink, LogOut, Share, X } from 'lucide-react'
+import { ArrowLeftRight, Scale, BarChart3, Settings, Smartphone, ExternalLink, LogOut, Share, X, Download } from 'lucide-react'
 import { Onboarding } from '@/components/Onboarding'
 
 function InstallBanner() {
@@ -82,12 +82,26 @@ function InstallBanner() {
 export default function HomePage() {
   const { logout, isDemo } = useAuth()
   const [showOnboarding, setShowOnboarding] = useState(false)
+  const [showInstallTip, setShowInstallTip] = useState(false)
+  const [isStandalone, setIsStandalone] = useState(true) // Hide by default until checked
 
   useEffect(() => {
     // Check if user has completed onboarding
     const hasCompletedOnboarding = localStorage.getItem('onboarding-completed')
     if (!hasCompletedOnboarding) {
       setShowOnboarding(true)
+    }
+
+    // Check if already installed (standalone mode)
+    const standalone = window.matchMedia('(display-mode: standalone)').matches
+    setIsStandalone(standalone)
+
+    // Auto-show install tip on first visit (if not standalone and not dismissed)
+    if (!standalone) {
+      const installTipDismissed = localStorage.getItem('install-tip-dismissed')
+      if (!installTipDismissed) {
+        setShowInstallTip(true)
+      }
     }
   }, [])
 
@@ -125,27 +139,139 @@ export default function HomePage() {
 
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: '32px', position: 'relative' }}>
-        <button
-          onClick={handleLogout}
-          style={{
+        {/* Left buttons - Logout and Install */}
+        <div style={{
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          display: 'flex',
+          gap: '8px'
+        }}>
+          <button
+            onClick={handleLogout}
+            style={{
+              background: 'transparent',
+              border: '1px solid rgba(255,255,255,0.1)',
+              color: 'var(--text-dim)',
+              padding: '8px 12px',
+              borderRadius: '12px',
+              fontSize: '0.85rem',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px'
+            }}
+          >
+            <LogOut size={16} strokeWidth={1.5} />
+            יציאה
+          </button>
+
+          {/* Install button - only show if not in standalone mode */}
+          {!isStandalone && (
+            <button
+              onClick={() => setShowInstallTip(!showInstallTip)}
+              style={{
+                background: showInstallTip ? 'rgba(56, 189, 248, 0.2)' : 'rgba(56, 189, 248, 0.1)',
+                border: '1px solid rgba(56, 189, 248, 0.4)',
+                color: 'var(--accent)',
+                padding: '8px 12px',
+                borderRadius: '12px',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                fontWeight: 500
+              }}
+            >
+              <Download size={16} strokeWidth={1.5} />
+              התקנה
+            </button>
+          )}
+        </div>
+
+        {/* Install Tip Popup */}
+        {showInstallTip && !isStandalone && (
+          <div style={{
             position: 'absolute',
             left: 0,
-            top: 0,
-            background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)',
-            color: 'var(--text-dim)',
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <LogOut size={16} strokeWidth={1.5} />
-          יציאה
-        </button>
+            top: '50px',
+            background: 'var(--card-bg)',
+            border: '1px solid rgba(56, 189, 248, 0.4)',
+            borderRadius: '16px',
+            padding: '20px',
+            width: '260px',
+            zIndex: 100,
+            textAlign: 'right',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+              <button
+                onClick={() => {
+                  localStorage.setItem('install-tip-dismissed', 'true')
+                  setShowInstallTip(false)
+                }}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: 'var(--text-dim)',
+                  cursor: 'pointer',
+                  padding: '2px'
+                }}
+              >
+                <X size={18} />
+              </button>
+              <span style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Download size={18} style={{ color: 'var(--accent)' }} />
+                התקינו כאפליקציה
+              </span>
+            </div>
+            <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+              הוסיפו את האפליקציה למסך הבית לגישה מהירה וחוויה טובה יותר
+            </p>
+            <div style={{ fontSize: '0.85rem', color: '#fff', lineHeight: 1.8 }}>
+              <div style={{
+                marginBottom: '12px',
+                padding: '12px',
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '10px'
+              }}>
+                <span style={{
+                  background: 'rgba(56, 189, 248, 0.2)',
+                  color: 'var(--accent)',
+                  borderRadius: '6px',
+                  padding: '3px 8px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600
+                }}>iPhone</span>
+                <div style={{ marginTop: '8px', color: 'var(--text-dim)' }}>
+                  לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 4px', color: 'var(--accent)' }} /> למטה
+                  <br />
+                  ואז ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                </div>
+              </div>
+              <div style={{
+                padding: '12px',
+                background: 'rgba(255,255,255,0.05)',
+                borderRadius: '10px'
+              }}>
+                <span style={{
+                  background: 'rgba(74, 222, 128, 0.2)',
+                  color: 'var(--income)',
+                  borderRadius: '6px',
+                  padding: '3px 8px',
+                  fontSize: '0.75rem',
+                  fontWeight: 600
+                }}>Android</span>
+                <div style={{ marginTop: '8px', color: 'var(--text-dim)' }}>
+                  לחצו על <strong style={{ color: '#fff' }}>⋮</strong> למעלה
+                  <br />
+                  ואז ״<strong style={{ color: '#fff' }}>הוספה למסך הבית</strong>״
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         <Image
           src="/logo-6.png"
           alt="פורשים כנף"

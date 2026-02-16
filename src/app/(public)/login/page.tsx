@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, Suspense } from 'react'
 import Image from 'next/image'
-import { Shield, Smartphone, BarChart3, Eye } from 'lucide-react'
+import { Shield, Smartphone, BarChart3, Eye, Download, Share } from 'lucide-react'
 
 function LoginContent() {
   const searchParams = useSearchParams()
@@ -205,6 +205,44 @@ function LoginContent() {
             <BarChart3 size={20} strokeWidth={1.5} />
           </div>
           <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>דשבורד</p>
+        </div>
+      </div>
+
+      {/* Install Instructions */}
+      <div style={{
+        marginTop: '24px',
+        padding: '16px',
+        background: 'rgba(56, 189, 248, 0.08)',
+        borderRadius: '16px',
+        border: '1px solid rgba(56, 189, 248, 0.2)',
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+          <Download size={18} style={{ color: 'var(--accent)' }} />
+          <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>התקינו כאפליקציה</span>
+        </div>
+        <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+            <span style={{
+              background: 'var(--card-bg)',
+              borderRadius: '4px',
+              padding: '2px 6px',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              flexShrink: 0
+            }}>iPhone</span>
+            <span>לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px' }} /> ואז ״הוסף למסך הבית״</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+            <span style={{
+              background: 'var(--card-bg)',
+              borderRadius: '4px',
+              padding: '2px 6px',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              flexShrink: 0
+            }}>Android</span>
+            <span>לחצו על ⋮ ואז ״הוספה למסך הבית״</span>
+          </div>
         </div>
       </div>
     </div>
