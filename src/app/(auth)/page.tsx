@@ -244,10 +244,14 @@ export default function HomePage() {
                   fontSize: '0.75rem',
                   fontWeight: 600
                 }}>iPhone</span>
-                <div style={{ marginTop: '8px', color: 'var(--text-dim)' }}>
-                  לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 4px', color: 'var(--accent)' }} /> למטה
+                <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
+                  1. לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px', color: 'var(--accent)' }} /> <strong style={{ color: '#fff' }}>בתחתית המסך</strong>
                   <br />
-                  ואז ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                  2. גללו למטה ברשימה
+                  <br />
+                  3. לחצו ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                  <br />
+                  4. לחצו ״<strong style={{ color: '#fff' }}>הוסף</strong>״
                 </div>
               </div>
               <div style={{
@@ -263,10 +267,12 @@ export default function HomePage() {
                   fontSize: '0.75rem',
                   fontWeight: 600
                 }}>Android</span>
-                <div style={{ marginTop: '8px', color: 'var(--text-dim)' }}>
-                  לחצו על <strong style={{ color: '#fff' }}>⋮</strong> למעלה
+                <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
+                  1. לחצו על <strong style={{ color: '#fff' }}>⋮</strong> (3 נקודות) <strong style={{ color: '#fff' }}>למעלה</strong>
                   <br />
-                  ואז ״<strong style={{ color: '#fff' }}>הוספה למסך הבית</strong>״
+                  2. לחצו ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                  <br />
+                  3. לחצו ״<strong style={{ color: '#fff' }}>הוסף</strong>״
                 </div>
               </div>
             </div>

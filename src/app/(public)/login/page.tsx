@@ -220,28 +220,40 @@ function LoginContent() {
           <Download size={18} style={{ color: 'var(--accent)' }} />
           <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>התקינו כאפליקציה</span>
         </div>
-        <div style={{ fontSize: '0.8rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px', marginBottom: '8px' }}>
+        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+          <div style={{ marginBottom: '12px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
             <span style={{
-              background: 'var(--card-bg)',
+              background: 'rgba(56, 189, 248, 0.15)',
+              color: 'var(--accent)',
               borderRadius: '4px',
               padding: '2px 6px',
               fontSize: '0.7rem',
-              fontWeight: 600,
-              flexShrink: 0
+              fontWeight: 600
             }}>iPhone</span>
-            <span>לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px' }} /> ואז ״הוסף למסך הבית״</span>
+            <div style={{ marginTop: '6px' }}>
+              1. לחצו <Share size={12} style={{ verticalAlign: 'middle', margin: '0 2px' }} /> בתחתית המסך
+              <br />
+              2. גללו למטה → ״הוסף למסך הבית״
+              <br />
+              3. לחצו ״הוסף״
+            </div>
           </div>
-          <div style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
             <span style={{
-              background: 'var(--card-bg)',
+              background: 'rgba(74, 222, 128, 0.15)',
+              color: 'var(--income)',
               borderRadius: '4px',
               padding: '2px 6px',
               fontSize: '0.7rem',
-              fontWeight: 600,
-              flexShrink: 0
+              fontWeight: 600
             }}>Android</span>
-            <span>לחצו על ⋮ ואז ״הוספה למסך הבית״</span>
+            <div style={{ marginTop: '6px' }}>
+              1. לחצו ⋮ (3 נקודות) למעלה
+              <br />
+              2. לחצו ״הוסף למסך הבית״
+              <br />
+              3. לחצו ״הוסף״
+            </div>
           </div>
         </div>
       </div>
