@@ -56,7 +56,7 @@ export async function createDemoSession(user: {
 
   cookieStore.set(DEMO_COOKIE_NAME, JSON.stringify(sessionData), {
     httpOnly: true,
-    secure: false,
+    secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
     maxAge: 7 * 24 * 60 * 60, // 7 days
     path: '/',

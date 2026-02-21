@@ -1,8 +1,47 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
+// Simple in-memory rate limiter for Edge runtime
+const rateLimitMap = new Map<string, { count: number; resetTime: number }>()
+
+function checkRateLimit(ip: string, limit: number, windowMs: number): boolean {
+  const now = Date.now()
+  const entry = rateLimitMap.get(ip)
+
+  if (!entry || now > entry.resetTime) {
+    rateLimitMap.set(ip, { count: 1, resetTime: now + windowMs })
+    return true
+  }
+
+  if (entry.count >= limit) {
+    return false
+  }
+
+  entry.count++
+  return true
+}
+
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl
+
+  // Rate limiting for API routes
+  if (pathname.startsWith('/api')) {
+    const ip = req.headers.get('x-forwarded-for')?.split(',')[0] ||
+               req.headers.get('x-real-ip') ||
+               'anonymous'
+
+    // Stricter limits for sensitive endpoints
+    const isAuthEndpoint = pathname.startsWith('/api/admin')
+    const limit = isAuthEndpoint ? 20 : 100  // 20/min for admin, 100/min for general
+    const windowMs = 60 * 1000
+
+    if (!checkRateLimit(`${ip}:${isAuthEndpoint ? 'admin' : 'api'}`, limit, windowMs)) {
+      return NextResponse.json(
+        { error: 'Too many requests. Please try again later.' },
+        { status: 429 }
+      )
+    }
+  }
 
   // Check for auth session cookie (next-auth v5 uses authjs.session-token)
   const authSessionToken = req.cookies.get('authjs.session-token') || req.cookies.get('__Secure-authjs.session-token')
