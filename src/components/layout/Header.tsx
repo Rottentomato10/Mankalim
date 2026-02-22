@@ -21,11 +21,13 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
   const user = session?.user || demoUser
   const isDemo = !session?.user && !!demoUser
 
-  const handleSignOut = () => {
+  const handleSignOut = async (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setIsMenuOpen(false)
     if (isDemo) {
-      signOutDemo()
+      await signOutDemo()
     } else {
-      signOut({ callbackUrl: '/login' })
+      await signOut({ callbackUrl: '/login' })
     }
   }
 
@@ -83,7 +85,7 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
                         הגדרות
                       </Link>
                       <button
-                        onClick={handleSignOut}
+                        onClick={(e) => handleSignOut(e)}
                         className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#ff7e8e] hover:bg-[#ff7e8e]/5 transition-colors"
                       >
                         <LogOut size={16} strokeWidth={1.5} />
