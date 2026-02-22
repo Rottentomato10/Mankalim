@@ -97,9 +97,18 @@ export default function HomePage() {
     setIsLoading(true)
   }
 
-  // Get date for selected month (for modals)
+  // Get default date for modals - today's date if in selected month, otherwise first day of selected month
   const getSelectedMonthDate = () => {
-    return `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-15`
+    const today = new Date()
+    const todayYear = today.getFullYear()
+    const todayMonth = today.getMonth() + 1
+
+    // If viewing current month, use today's date
+    if (selectedYear === todayYear && selectedMonth === todayMonth) {
+      return today.toISOString().split('T')[0]
+    }
+    // Otherwise use the first day of the selected month
+    return `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-01`
   }
 
   // Get category icon component
@@ -498,9 +507,23 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
 
   useEffect(() => {
     fetch('/api/categories')
-      .then(r => r.json())
-      .then(d => d.categories && setCategories(d.categories))
-      .catch(console.error)
+      .then(r => {
+        if (!r.ok) {
+          throw new Error(`HTTP ${r.status}`)
+        }
+        return r.json()
+      })
+      .then(d => {
+        if (d.categories) {
+          setCategories(d.categories)
+        } else {
+          console.error('No categories in response:', d)
+        }
+      })
+      .catch(err => {
+        console.error('Failed to fetch categories:', err)
+        setError('שגיאה בטעינת קטגוריות')
+      })
   }, [])
 
   const categoryExamples: Record<string, string> = {
@@ -566,7 +589,11 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
       }
     } catch (err) {
       console.error('Network error:', err)
-      setError('שגיאה בחיבור לשרת')
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('שגיאת רשת - בדוק את החיבור לאינטרנט')
+      } else {
+        setError('שגיאה בחיבור לשרת - נסה שוב')
+      }
     } finally {
       setIsSubmitting(false)
     }
@@ -778,7 +805,11 @@ function IncomeModal({ onClose, onSuccess, defaultDate }: { onClose: () => void;
       }
     } catch (err) {
       console.error('Network error:', err)
-      setError('שגיאה בחיבור לשרת')
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('שגיאת רשת - בדוק את החיבור לאינטרנט')
+      } else {
+        setError('שגיאה בחיבור לשרת - נסה שוב')
+      }
     } finally {
       setIsSubmitting(false)
     }
