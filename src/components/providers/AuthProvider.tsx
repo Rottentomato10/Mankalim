@@ -55,17 +55,23 @@ function AuthProviderInner({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     try {
+      setUser(null)
+      setIsDemo(false)
+
       if (isDemo) {
-        // Demo logout - just clear the cookie
+        // Demo logout - clear the cookie
         await fetch('/api/auth/logout', { method: 'POST' })
       } else {
         // NextAuth logout
         await nextAuthSignOut({ redirect: false })
       }
-      setUser(null)
-      setIsDemo(false)
+
+      // Force redirect to login
+      window.location.href = '/login'
     } catch (error) {
       console.error('Logout failed:', error)
+      // Even if logout fails, redirect to login
+      window.location.href = '/login'
     }
   }
 

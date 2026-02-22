@@ -83,7 +83,6 @@ export default function HomePage() {
 
   const handleLogout = async () => {
     await logout()
-    window.location.href = '/login'
   }
 
   // Get month name in Hebrew
