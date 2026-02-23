@@ -57,7 +57,7 @@ function InstallBanner() {
         <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
           <Smartphone size={32} strokeWidth={1.5} style={{ color: 'var(--accent)' }} />
         </div>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700 }}>
+        <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>
           התקן את האפליקציה
         </h3>
         <p style={{ margin: '0 0 12px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
@@ -67,7 +67,7 @@ function InstallBanner() {
             alignItems: 'center',
             margin: '0 6px',
             padding: '2px 8px',
-            background: 'rgba(255,255,255,0.1)',
+            background: 'var(--active-bg)',
             borderRadius: '6px'
           }}>
             <Share size={18} strokeWidth={2} />
@@ -151,7 +151,7 @@ export default function HomePage() {
             onClick={handleLogout}
             style={{
               background: 'transparent',
-              border: '1px solid rgba(255,255,255,0.1)',
+              border: '1px solid var(--active-bg)',
               color: 'var(--text-dim)',
               padding: '8px 12px',
               borderRadius: '12px',
@@ -221,7 +221,7 @@ export default function HomePage() {
               >
                 <X size={18} />
               </button>
-              <span style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-main)' }}>
                 <Download size={18} style={{ color: 'var(--accent)' }} />
                 התקינו כאפליקציה
               </span>
@@ -229,11 +229,11 @@ export default function HomePage() {
             <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
               הוסיפו את האפליקציה למסך הבית לגישה מהירה וחוויה טובה יותר
             </p>
-            <div style={{ fontSize: '0.85rem', color: '#fff', lineHeight: 1.8 }}>
+            <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.8 }}>
               <div style={{
                 marginBottom: '12px',
                 padding: '12px',
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
                 borderRadius: '10px'
               }}>
                 <span style={{
@@ -245,18 +245,18 @@ export default function HomePage() {
                   fontWeight: 600
                 }}>iPhone</span>
                 <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
-                  1. לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px', color: 'var(--accent)' }} /> <strong style={{ color: '#fff' }}>בתחתית המסך</strong>
+                  1. לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px', color: 'var(--accent)' }} /> <strong style={{ color: 'var(--text-main)' }}>בתחתית המסך</strong>
                   <br />
                   2. גללו למטה ברשימה
                   <br />
-                  3. לחצו ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                  3. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף למסך הבית</strong>״
                   <br />
-                  4. לחצו ״<strong style={{ color: '#fff' }}>הוסף</strong>״
+                  4. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף</strong>״
                 </div>
               </div>
               <div style={{
                 padding: '12px',
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
                 borderRadius: '10px'
               }}>
                 <span style={{
@@ -268,11 +268,11 @@ export default function HomePage() {
                   fontWeight: 600
                 }}>Android</span>
                 <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
-                  1. לחצו על <strong style={{ color: '#fff' }}>⋮</strong> (3 נקודות) <strong style={{ color: '#fff' }}>למעלה</strong>
+                  1. לחצו על <strong style={{ color: 'var(--text-main)' }}>⋮</strong> (3 נקודות) <strong style={{ color: 'var(--text-main)' }}>למעלה</strong>
                   <br />
-                  2. לחצו ״<strong style={{ color: '#fff' }}>הוסף למסך הבית</strong>״
+                  2. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף למסך הבית</strong>״
                   <br />
-                  3. לחצו ״<strong style={{ color: '#fff' }}>הוסף</strong>״
+                  3. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף</strong>״
                 </div>
               </div>
             </div>
@@ -299,7 +299,7 @@ export default function HomePage() {
           מנכ״לים
         </h1>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-          מבית <strong style={{ color: '#fff' }}>פורשים כנף</strong> - חינוך פיננסי
+          מבית <strong style={{ color: 'var(--text-main)' }}>פורשים כנף</strong> - חינוך פיננסי
         </p>
       </div>
 
@@ -315,7 +315,7 @@ export default function HomePage() {
           margin: '0 0 16px 0',
           fontSize: '1.3rem',
           fontWeight: 700,
-          color: '#fff'
+          color: 'var(--text-main)'
         }}>
           ניהול הכספים האישיים שלכם
         </h2>
@@ -354,7 +354,7 @@ export default function HomePage() {
             }}>
               <ArrowLeftRight size={28} strokeWidth={1.5} />
             </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>תזרים</div>
+            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>תזרים</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>הכנסות והוצאות</div>
           </div>
         </Link>
@@ -373,7 +373,7 @@ export default function HomePage() {
             }}>
               <Scale size={28} strokeWidth={1.5} />
             </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>מאזן</div>
+            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>מאזן</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>נכסים והתחייבויות</div>
           </div>
         </Link>
@@ -392,7 +392,7 @@ export default function HomePage() {
             }}>
               <BarChart3 size={28} strokeWidth={1.5} />
             </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>דשבורד</div>
+            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>דשבורד</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>סיכום וגרפים</div>
           </div>
         </Link>
@@ -411,7 +411,7 @@ export default function HomePage() {
             }}>
               <Settings size={28} strokeWidth={1.5} />
             </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px' }}>הגדרות</div>
+            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>הגדרות</div>
             <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ניהול וקטגוריות</div>
           </div>
         </Link>

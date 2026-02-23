@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { PWAInstaller } from '@/components/PWAInstaller'
 import { AccessibilityWidget } from '@/components/AccessibilityWidget'
+import { ThemeProvider } from '@/components/providers/ThemeProvider'
 
 export const metadata: Metadata = {
   title: 'מנכ״לים | פורשים כנף - חינוך פיננסי',
@@ -35,9 +36,11 @@ export default function RootLayout({
   return (
     <html lang="he" dir="rtl">
       <body className="min-h-screen antialiased">
-        <PWAInstaller />
-        {children}
-        <AccessibilityWidget />
+        <ThemeProvider>
+          <PWAInstaller />
+          {children}
+          <AccessibilityWidget />
+        </ThemeProvider>
       </body>
     </html>
   )

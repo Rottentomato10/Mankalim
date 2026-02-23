@@ -230,7 +230,7 @@ export default function SettingsPage() {
             left: 0,
             top: 0,
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--active-bg)',
             color: 'var(--text-dim)',
             padding: '8px 16px',
             borderRadius: '12px',
@@ -253,7 +253,7 @@ export default function SettingsPage() {
           priority
         />
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>הגדרות</h1>
+        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>הגדרות</h1>
         {isDemo && (
           <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
             מצב צפייה
@@ -360,7 +360,7 @@ export default function SettingsPage() {
         <div style={{
           marginTop: '16px',
           paddingTop: '16px',
-          borderTop: '1px solid rgba(255,255,255,0.1)',
+          borderTop: '1px solid var(--active-bg)',
           display: 'flex',
           justifyContent: 'space-around',
           textAlign: 'center'
@@ -401,8 +401,8 @@ export default function SettingsPage() {
                 gap: '8px',
                 padding: '8px 12px',
                 borderRadius: '10px',
-                background: 'rgba(255,255,255,0.05)',
-                border: '1px solid rgba(255,255,255,0.1)',
+                background: 'var(--hover-bg)',
+                border: '1px solid var(--active-bg)',
                 fontSize: '0.9rem',
               }}
             >
@@ -437,9 +437,9 @@ export default function SettingsPage() {
                 flex: 1,
                 padding: '10px 14px',
                 borderRadius: '10px',
-                border: '1px solid rgba(255,255,255,0.1)',
-                background: 'rgba(255,255,255,0.05)',
-                color: '#fff',
+                border: '1px solid var(--active-bg)',
+                background: 'var(--hover-bg)',
+                color: 'var(--text-main)',
                 fontSize: '0.9rem',
               }}
               onKeyDown={(e) => {

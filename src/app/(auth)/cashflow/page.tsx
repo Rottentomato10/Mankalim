@@ -157,7 +157,7 @@ export default function HomePage() {
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--border)',
             color: 'var(--text-dim)',
             padding: '8px 16px',
             borderRadius: '12px',
@@ -171,7 +171,7 @@ export default function HomePage() {
           יציאה
         </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>תזרים</h1>
+        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>תזרים</h1>
         {isDemo && (
           <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
             מצב צפייה • Demo Mode
@@ -186,7 +186,7 @@ export default function HomePage() {
           style={{
             width: '100%',
             background: 'var(--card-bg)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--active-bg)',
             borderRadius: '16px',
             padding: '14px 20px',
             textAlign: 'center',
@@ -207,7 +207,7 @@ export default function HomePage() {
             right: 0,
             marginTop: '8px',
             background: 'var(--card-bg)',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--active-bg)',
             borderRadius: '16px',
             padding: '16px',
             zIndex: 100,
@@ -217,14 +217,14 @@ export default function HomePage() {
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
               <button
                 onClick={() => setSelectedYear(y => y - 1)}
-                style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: '#fff' }}
+                style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: 'var(--text-main)' }}
               >
                 →
               </button>
               <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{selectedYear}</span>
               <button
                 onClick={() => setSelectedYear(y => y + 1)}
-                style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: '#fff' }}
+                style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: 'var(--text-main)' }}
               >
                 ←
               </button>
@@ -239,7 +239,7 @@ export default function HomePage() {
                   style={{
                     padding: '12px 8px',
                     borderRadius: '12px',
-                    background: selectedMonth === index + 1 ? 'var(--accent)' : 'rgba(255,255,255,0.05)',
+                    background: selectedMonth === index + 1 ? 'var(--accent)' : 'var(--hover-bg)',
                     border: 'none',
                     color: selectedMonth === index + 1 ? 'var(--bg)' : '#fff',
                     fontWeight: selectedMonth === index + 1 ? 700 : 400,
@@ -263,7 +263,7 @@ export default function HomePage() {
             <div style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>
               יתרה נטו ({percentage}% נותר)
             </div>
-            <div style={{ fontSize: '2.8rem', fontWeight: 800, margin: '5px 0', color: balance >= 0 ? '#fff' : 'var(--expense)' }}>
+            <div style={{ fontSize: '2.8rem', fontWeight: 800, margin: '5px 0', color: balance >= 0 ? 'var(--text-main)' : 'var(--expense)' }}>
               {formatCurrency(balance)}
             </div>
 
@@ -272,8 +272,8 @@ export default function HomePage() {
                 flex: 1,
                 padding: '16px',
                 borderRadius: '20px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
+                border: '1px solid var(--hover-bg)',
                 textAlign: 'center'
               }}>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', display: 'block' }}>הכנסות</span>
@@ -285,8 +285,8 @@ export default function HomePage() {
                 flex: 1,
                 padding: '16px',
                 borderRadius: '20px',
-                background: 'rgba(255,255,255,0.03)',
-                border: '1px solid rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
+                border: '1px solid var(--hover-bg)',
                 textAlign: 'center'
               }}>
                 <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', display: 'block' }}>הוצאות</span>
@@ -309,7 +309,7 @@ export default function HomePage() {
             padding: '16px',
             borderRadius: '16px',
             background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(74, 222, 128, 0.15)',
-            border: `1px solid ${isDemo ? 'rgba(255,255,255,0.1)' : 'var(--income)'}`,
+            border: `1px solid ${isDemo ? 'var(--active-bg)' : 'var(--income)'}`,
             color: isDemo ? 'var(--text-dim)' : 'var(--income)',
             fontSize: '1rem',
             fontWeight: 600,
@@ -331,7 +331,7 @@ export default function HomePage() {
             padding: '16px',
             borderRadius: '16px',
             background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(251, 113, 133, 0.15)',
-            border: `1px solid ${isDemo ? 'rgba(255,255,255,0.1)' : 'var(--expense)'}`,
+            border: `1px solid ${isDemo ? 'var(--active-bg)' : 'var(--expense)'}`,
             color: isDemo ? 'var(--text-dim)' : 'var(--expense)',
             fontSize: '1rem',
             fontWeight: 600,
@@ -382,9 +382,9 @@ export default function HomePage() {
                   justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '12px 16px',
-                  background: 'rgba(255,255,255,0.03)',
+                  background: 'var(--hover-bg)',
                   borderRadius: '12px',
-                  border: '1px solid rgba(255,255,255,0.05)'
+                  border: '1px solid var(--hover-bg)'
                 }}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
@@ -609,7 +609,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700 }}>הוסף הוצאה</h2>
-          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: '#fff', fontSize: '1.2rem' }}>×</button>
+          <button onClick={onClose} style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: 'var(--text-main)', fontSize: '1.2rem' }}>×</button>
         </div>
 
         {/* Amount */}
@@ -640,7 +640,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
                 style={{
                   padding: '12px 8px',
                   borderRadius: '16px',
-                  background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                  background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                   border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                   textAlign: 'center',
                   color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
@@ -667,9 +667,9 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
               style={{
                 padding: '16px',
                 borderRadius: '16px',
-                background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
                 border: paymentMethod === 'CASH' ? '2px solid var(--income)' : '2px solid transparent',
-                color: '#fff',
+                color: 'var(--text-main)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -685,9 +685,9 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
               style={{
                 padding: '16px',
                 borderRadius: '16px',
-                background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                 border: paymentMethod === 'CARD' ? '2px solid var(--accent)' : '2px solid transparent',
-                color: '#fff',
+                color: 'var(--text-main)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
@@ -736,7 +736,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
             borderRadius: '16px',
             background: 'var(--expense)',
             border: 'none',
-            color: '#fff',
+            color: 'var(--text-main)',
             fontSize: '1.1rem',
             fontWeight: 600
           }}
@@ -825,7 +825,7 @@ function IncomeModal({ onClose, onSuccess, defaultDate }: { onClose: () => void;
       }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: 'var(--income)' }}>הוסף הכנסה</h2>
-          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: '#fff', fontSize: '1.2rem' }}>×</button>
+          <button onClick={onClose} style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: 'var(--text-main)', fontSize: '1.2rem' }}>×</button>
         </div>
 
         {/* Amount */}
@@ -1011,7 +1011,7 @@ function EditTransactionModal({
           <h2 style={{ margin: 0, fontSize: '1.3rem', fontWeight: 700, color: isExpense ? 'var(--expense)' : 'var(--income)' }}>
             עריכת {isExpense ? 'הוצאה' : 'הכנסה'}
           </h2>
-          <button onClick={onClose} style={{ background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: '#fff', fontSize: '1.2rem' }}>×</button>
+          <button onClick={onClose} style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '50%', width: '36px', height: '36px', color: 'var(--text-main)', fontSize: '1.2rem' }}>×</button>
         </div>
 
         {/* Amount */}
@@ -1043,7 +1043,7 @@ function EditTransactionModal({
                   style={{
                     padding: '12px 8px',
                     borderRadius: '16px',
-                    background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                    background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                     border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                     textAlign: 'center',
                     color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
@@ -1072,9 +1072,9 @@ function EditTransactionModal({
                 style={{
                   padding: '16px',
                   borderRadius: '16px',
-                  background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                  background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
                   border: paymentMethod === 'CASH' ? '2px solid var(--income)' : '2px solid transparent',
-                  color: '#fff',
+                  color: 'var(--text-main)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -1090,9 +1090,9 @@ function EditTransactionModal({
                 style={{
                   padding: '16px',
                   borderRadius: '16px',
-                  background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                  background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                   border: paymentMethod === 'CARD' ? '2px solid var(--accent)' : '2px solid transparent',
-                  color: '#fff',
+                  color: 'var(--text-main)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

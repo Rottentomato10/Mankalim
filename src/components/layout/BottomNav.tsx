@@ -28,7 +28,7 @@ export function BottomNav() {
       left: 0,
       right: 0,
       background: 'var(--card-bg)',
-      borderTop: '1px solid rgba(255,255,255,0.1)',
+      borderTop: '1px solid var(--border)',
       padding: '12px 0',
       paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
       zIndex: 100

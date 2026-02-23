@@ -164,7 +164,7 @@ export default function DashboardPage() {
             left: 0,
             top: 0,
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--active-bg)',
             color: 'var(--text-dim)',
             padding: '8px 16px',
             borderRadius: '12px',
@@ -175,7 +175,7 @@ export default function DashboardPage() {
           יציאה
         </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>דשבורד</h1>
+        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>דשבורד</h1>
       </div>
 
       {/* Header */}
@@ -193,8 +193,8 @@ export default function DashboardPage() {
               style={{
                 padding: '8px 12px',
                 borderRadius: '10px',
-                border: timeRange === opt.value ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
-                background: timeRange === opt.value ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                border: timeRange === opt.value ? '2px solid var(--accent)' : '1px solid var(--active-bg)',
+                background: timeRange === opt.value ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                 color: timeRange === opt.value ? 'var(--accent)' : 'var(--text-dim)',
                 fontWeight: timeRange === opt.value ? 600 : 400,
                 cursor: 'pointer',
@@ -243,7 +243,7 @@ export default function DashboardPage() {
             </div>
           </div>
           {/* YTD Cashflow */}
-          <div style={{ padding: '12px', background: 'rgba(255,255,255,0.03)', borderRadius: '12px' }}>
+          <div style={{ padding: '12px', background: 'var(--hover-bg)', borderRadius: '12px' }}>
             <p style={{ margin: '0 0 8px 0', fontSize: '0.8rem', color: 'var(--text-dim)' }}>מתחילת השנה (YTD)</p>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div>
@@ -347,15 +347,15 @@ export default function DashboardPage() {
                     <stop offset="95%" stopColor="#38bdf8" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--active-bg)" />
                 <XAxis
                   dataKey="label"
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 10 }}
+                  stroke="var(--text-dim)"
+                  tick={{ fill: 'var(--text-dim)', fontSize: 10 }}
                 />
                 <YAxis
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 10 }}
+                  stroke="var(--text-dim)"
+                  tick={{ fill: 'var(--text-dim)', fontSize: 10 }}
                   tickFormatter={(value) => `${(value / 1000000).toFixed(1)}M`}
                 />
                 <Tooltip content={<CustomTooltip />} />
@@ -518,15 +518,15 @@ export default function DashboardPage() {
           <div style={{ height: '180px' }}>
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={analytics.monthlyContributions}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.1)" />
+                <CartesianGrid strokeDasharray="3 3" stroke="var(--active-bg)" />
                 <XAxis
                   dataKey="label"
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 10 }}
+                  stroke="var(--text-dim)"
+                  tick={{ fill: 'var(--text-dim)', fontSize: 10 }}
                 />
                 <YAxis
-                  stroke="rgba(255,255,255,0.5)"
-                  tick={{ fill: 'rgba(255,255,255,0.5)', fontSize: 10 }}
+                  stroke="var(--text-dim)"
+                  tick={{ fill: 'var(--text-dim)', fontSize: 10 }}
                   tickFormatter={(value) => `${(value / 1000).toFixed(0)}K`}
                 />
                 <Tooltip content={<CustomTooltip />} />

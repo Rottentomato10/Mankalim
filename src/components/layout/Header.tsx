@@ -6,6 +6,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useDemoSession } from '@/hooks/useDemoSession'
 import { ChevronRight, Settings, LogOut } from 'lucide-react'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 interface HeaderProps {
   title?: string
@@ -32,13 +33,14 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#111827]/90 backdrop-blur-xl border-b border-[#2d3748]">
+    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b" style={{ background: 'var(--card-bg)', borderColor: 'var(--border)' }}>
       <div className="flex items-center justify-between h-14 px-4 max-w-lg mx-auto">
         <div className="w-10 flex items-center justify-start">
           {showBackButton && (
             <button
               onClick={onBackClick}
-              className="p-2 -m-2 text-[#9ca3af] hover:text-white transition-colors"
+              className="p-2 -m-2 transition-colors"
+              style={{ color: 'var(--text-dim)' }}
               aria-label="חזרה"
             >
               <ChevronRight size={20} strokeWidth={2} />
@@ -46,19 +48,21 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
           )}
         </div>
 
-        <h1 className="text-lg font-semibold text-white">{title}</h1>
+        <h1 className="text-lg font-semibold" style={{ color: 'var(--text-main)' }}>{title}</h1>
 
-        <div className="w-10 flex items-center justify-end relative">
+        <div className="flex items-center gap-2 justify-end relative">
+          <ThemeToggle />
           {user && (
             <>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="w-8 h-8 rounded-full overflow-hidden ring-2 ring-[#2d3748] hover:ring-[#38bdf8]/50 transition-all"
+                className="w-8 h-8 rounded-full overflow-hidden ring-2 transition-all"
+                style={{ '--tw-ring-color': 'var(--border)' } as React.CSSProperties}
               >
                 {user.image ? (
                   <Image src={user.image} alt={user.name || 'משתמש'} width={32} height={32} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full bg-[#38bdf8]/20 flex items-center justify-center text-[#38bdf8] text-sm font-medium">
+                  <div className="w-full h-full flex items-center justify-center text-sm font-medium" style={{ background: 'var(--accent)', opacity: 0.2, color: 'var(--accent)' }}>
                     {user.name?.charAt(0) || user.email?.charAt(0) || '?'}
                   </div>
                 )}
@@ -67,18 +71,19 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
               {isMenuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-48 bg-[#1f2937] border border-[#2d3748] rounded-2xl shadow-lg shadow-black/30 overflow-hidden z-50">
-                    <div className="p-3 border-b border-[#2d3748]">
-                      <p className="text-sm text-white font-medium truncate">
+                  <div className="absolute left-0 top-full mt-2 w-48 rounded-2xl shadow-lg overflow-hidden z-50" style={{ background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
+                    <div className="p-3" style={{ borderBottom: '1px solid var(--border)' }}>
+                      <p className="text-sm font-medium truncate" style={{ color: 'var(--text-main)' }}>
                         {user.name || 'משתמש'}
-                        {isDemo && <span className="text-[#38bdf8] text-xs mr-1">(דמו)</span>}
+                        {isDemo && <span style={{ color: 'var(--accent)' }} className="text-xs mr-1">(דמו)</span>}
                       </p>
-                      <p className="text-xs text-[#6b7280] truncate">{user.email}</p>
+                      <p className="text-xs truncate" style={{ color: 'var(--text-dim)' }}>{user.email}</p>
                     </div>
                     <nav className="py-1">
                       <Link
                         href="/settings"
-                        className="flex items-center gap-3 px-3 py-2 text-sm text-[#9ca3af] hover:bg-white/5 transition-colors"
+                        className="flex items-center gap-3 px-3 py-2 text-sm hover:opacity-80 transition-colors"
+                        style={{ color: 'var(--text-dim)' }}
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <Settings size={16} strokeWidth={1.5} />
@@ -86,7 +91,8 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
                       </Link>
                       <button
                         onClick={(e) => handleSignOut(e)}
-                        className="w-full flex items-center gap-3 px-3 py-2 text-sm text-[#ff7e8e] hover:bg-[#ff7e8e]/5 transition-colors"
+                        className="w-full flex items-center gap-3 px-3 py-2 text-sm hover:opacity-80 transition-colors"
+                        style={{ color: 'var(--expense)' }}
                       >
                         <LogOut size={16} strokeWidth={1.5} />
                         התנתקות

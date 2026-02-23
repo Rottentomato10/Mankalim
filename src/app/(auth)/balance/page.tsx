@@ -226,7 +226,7 @@ export default function HomePage() {
             top: '50%',
             transform: 'translateY(-50%)',
             background: 'transparent',
-            border: '1px solid rgba(255,255,255,0.1)',
+            border: '1px solid var(--active-bg)',
             color: 'var(--text-dim)',
             padding: '8px 16px',
             borderRadius: '12px',
@@ -237,7 +237,7 @@ export default function HomePage() {
           יציאה
         </button>
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>מאזן</h1>
+        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>מאזן</h1>
         {isDemo && (
           <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
             מצב צפייה
@@ -295,7 +295,7 @@ export default function HomePage() {
                   style={{
                     padding: '8px 14px',
                     borderRadius: '8px',
-                    background: isEditMode ? 'rgba(251, 113, 133, 0.2)' : 'rgba(255,255,255,0.1)',
+                    background: isEditMode ? 'rgba(251, 113, 133, 0.2)' : 'var(--active-bg)',
                     border: isEditMode ? '1px solid var(--expense)' : 'none',
                     color: isEditMode ? 'var(--expense)' : '#fff',
                     cursor: 'pointer',
@@ -313,9 +313,9 @@ export default function HomePage() {
                   style={{
                     padding: '8px 14px',
                     borderRadius: '8px',
-                    background: 'rgba(255,255,255,0.1)',
+                    background: 'var(--active-bg)',
                     border: 'none',
-                    color: '#fff',
+                    color: 'var(--text-main)',
                     cursor: 'pointer',
                     fontSize: '0.85rem'
                   }}
@@ -364,7 +364,7 @@ export default function HomePage() {
                             borderRadius: '10px',
                             border: '2px solid var(--accent)',
                             background: 'rgba(56, 189, 248, 0.15)',
-                            color: '#fff',
+                            color: 'var(--text-main)',
                             fontSize: '0.9rem',
                             width: '120px'
                           }}
@@ -386,8 +386,8 @@ export default function HomePage() {
                             padding: '10px 16px',
                             paddingLeft: isEditMode ? '28px' : '16px',
                             borderRadius: '10px',
-                            border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid rgba(255,255,255,0.1)',
-                            background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.03)',
+                            border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid var(--active-bg)',
+                            background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
                             color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
                             fontWeight: selectedCategoryId === cat.id ? 600 : 400,
                             cursor: 'pointer',
@@ -445,8 +445,8 @@ export default function HomePage() {
                         padding: '10px 12px',
                         borderRadius: '10px',
                         border: '1px dashed rgba(56, 189, 248, 0.5)',
-                        background: 'rgba(255,255,255,0.03)',
-                        color: '#fff',
+                        background: 'var(--hover-bg)',
+                        color: 'var(--text-main)',
                         fontSize: '0.85rem',
                         width: '120px'
                       }}
@@ -523,7 +523,7 @@ export default function HomePage() {
                               borderRadius: '10px',
                               border: '2px solid var(--income)',
                               background: 'rgba(74, 222, 128, 0.15)',
-                              color: '#fff',
+                              color: 'var(--text-main)',
                               fontSize: '0.9rem',
                               width: '120px'
                             }}
@@ -544,8 +544,8 @@ export default function HomePage() {
                               padding: '10px 16px',
                               paddingLeft: isEditMode ? '28px' : '16px',
                               borderRadius: '10px',
-                              border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
-                              background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                              border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid var(--active-bg)',
+                              background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
                               color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
                               fontWeight: selectedProductId === prod.id ? 600 : 400,
                               cursor: 'pointer',
@@ -603,8 +603,8 @@ export default function HomePage() {
                           padding: '10px 12px',
                           borderRadius: '10px',
                           border: '1px dashed rgba(74, 222, 128, 0.5)',
-                          background: 'rgba(255,255,255,0.03)',
-                          color: '#fff',
+                          background: 'var(--hover-bg)',
+                          color: 'var(--text-main)',
                           fontSize: '0.85rem',
                           width: '120px'
                         }}
@@ -682,7 +682,7 @@ export default function HomePage() {
                               borderRadius: '10px',
                               border: '2px solid #a78bfa',
                               background: 'rgba(167, 139, 250, 0.15)',
-                              color: '#fff',
+                              color: 'var(--text-main)',
                               fontSize: '0.9rem',
                               width: '120px'
                             }}
@@ -702,8 +702,8 @@ export default function HomePage() {
                               padding: '10px 16px',
                               paddingLeft: isEditMode ? '28px' : '16px',
                               borderRadius: '10px',
-                              border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid rgba(255,255,255,0.1)',
-                              background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'rgba(255,255,255,0.03)',
+                              border: newItemParentId === prov.id ? '2px solid #a78bfa' : '1px solid var(--active-bg)',
+                              background: newItemParentId === prov.id ? 'rgba(167, 139, 250, 0.15)' : 'var(--hover-bg)',
                               color: newItemParentId === prov.id ? '#a78bfa' : '#fff',
                               fontWeight: newItemParentId === prov.id ? 600 : 400,
                               cursor: 'pointer',
@@ -760,8 +760,8 @@ export default function HomePage() {
                           padding: '10px 12px',
                           borderRadius: '10px',
                           border: '1px dashed rgba(167, 139, 250, 0.5)',
-                          background: 'rgba(255,255,255,0.03)',
-                          color: '#fff',
+                          background: 'var(--hover-bg)',
+                          color: 'var(--text-main)',
                           fontSize: '0.85rem',
                           width: '120px'
                         }}
@@ -829,9 +829,9 @@ export default function HomePage() {
                       padding: '12px 14px',
                       marginBottom: '12px',
                       borderRadius: '10px',
-                      border: '1px solid rgba(255,255,255,0.15)',
-                      background: 'rgba(255,255,255,0.03)',
-                      color: '#fff',
+                      border: '1px solid var(--active-bg)',
+                      background: 'var(--hover-bg)',
+                      color: 'var(--text-main)',
                       fontSize: '0.9rem'
                     }}
                   />
@@ -845,8 +845,8 @@ export default function HomePage() {
                         flex: 1,
                         padding: '12px',
                         borderRadius: '10px',
-                        border: newItemIsLiquid ? '2px solid var(--income)' : '1px solid rgba(255,255,255,0.1)',
-                        background: newItemIsLiquid ? 'rgba(74, 222, 128, 0.15)' : 'rgba(255,255,255,0.03)',
+                        border: newItemIsLiquid ? '2px solid var(--income)' : '1px solid var(--active-bg)',
+                        background: newItemIsLiquid ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
                         color: newItemIsLiquid ? 'var(--income)' : 'var(--text-dim)',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -862,8 +862,8 @@ export default function HomePage() {
                         flex: 1,
                         padding: '12px',
                         borderRadius: '10px',
-                        border: !newItemIsLiquid ? '2px solid var(--expense)' : '1px solid rgba(255,255,255,0.1)',
-                        background: !newItemIsLiquid ? 'rgba(251, 113, 133, 0.15)' : 'rgba(255,255,255,0.03)',
+                        border: !newItemIsLiquid ? '2px solid var(--expense)' : '1px solid var(--active-bg)',
+                        background: !newItemIsLiquid ? 'rgba(251, 113, 133, 0.15)' : 'var(--hover-bg)',
                         color: !newItemIsLiquid ? 'var(--expense)' : 'var(--text-dim)',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -973,7 +973,7 @@ export default function HomePage() {
                 height: '64px',
                 margin: '0 auto 16px',
                 borderRadius: '20px',
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -992,7 +992,7 @@ export default function HomePage() {
                 height: '64px',
                 margin: '0 auto 16px',
                 borderRadius: '20px',
-                background: 'rgba(255,255,255,0.05)',
+                background: 'var(--hover-bg)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center'
@@ -1065,7 +1065,7 @@ export default function HomePage() {
 
                 {/* Expanded Assets */}
                 {isExpanded && (
-                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div style={{ borderTop: '1px solid var(--hover-bg)' }}>
                     {ac.instruments.map(inst => (
                       <div key={inst.id}>
                         {/* Instrument/Product Header - Level 1 (indented) - Green like in add form */}
@@ -1076,7 +1076,7 @@ export default function HomePage() {
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
-                          borderBottom: '1px solid rgba(255,255,255,0.03)'
+                          borderBottom: '1px solid var(--hover-bg)'
                         }}>
                           <span style={{ color: 'var(--income)', fontSize: '0.7rem' }}>┗</span>
                           <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--income)' }}>{inst.name}</span>
