@@ -53,7 +53,7 @@ function LoginContent() {
           priority
         />
         <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px' }}>מנכ״לים</h1>
+        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>מנכ״לים</h1>
         <p style={{ margin: '8px 0 0 0', color: 'var(--text-dim)', fontSize: '0.9rem' }}>ניהול פיננסי אישי - תזרים ונכסים</p>
       </div>
 
@@ -89,13 +89,14 @@ function LoginContent() {
             gap: '12px',
             padding: '14px 20px',
             background: '#fff',
-            border: 'none',
+            border: '2px solid #e5e7eb',
             borderRadius: '16px',
             color: '#1f2937',
             fontSize: '1rem',
             fontWeight: 600,
             cursor: isLoading ? 'not-allowed' : 'pointer',
-            opacity: isLoading ? 0.5 : 1
+            opacity: isLoading ? 0.5 : 1,
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
           }}
         >
           {isLoading ? (
@@ -113,9 +114,9 @@ function LoginContent() {
 
         {/* Divider */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+          <div style={{ flex: 1, height: '1px', background: 'var(--active-bg)' }} />
           <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>או</span>
-          <div style={{ flex: 1, height: '1px', background: 'rgba(255,255,255,0.1)' }} />
+          <div style={{ flex: 1, height: '1px', background: 'var(--active-bg)' }} />
         </div>
 
         {/* Demo login button */}
@@ -220,10 +221,10 @@ function LoginContent() {
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
           <Download size={18} style={{ color: 'var(--accent)' }} />
-          <span style={{ fontSize: '0.9rem', fontWeight: 600 }}>התקינו כאפליקציה</span>
+          <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}>התקינו כאפליקציה</span>
         </div>
         <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-          <div style={{ marginBottom: '12px', padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+          <div style={{ marginBottom: '12px', padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px' }}>
             <span style={{
               background: 'rgba(56, 189, 248, 0.15)',
               color: 'var(--accent)',
@@ -240,7 +241,7 @@ function LoginContent() {
               3. לחצו ״הוסף״
             </div>
           </div>
-          <div style={{ padding: '10px', background: 'rgba(255,255,255,0.03)', borderRadius: '8px' }}>
+          <div style={{ padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px' }}>
             <span style={{
               background: 'rgba(74, 222, 128, 0.15)',
               color: 'var(--income)',
