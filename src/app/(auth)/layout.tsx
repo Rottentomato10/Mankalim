@@ -17,7 +17,7 @@ export default function AuthLayout({
         <div style={{
           position: 'fixed',
           top: '16px',
-          left: '16px',
+          right: '16px',
           zIndex: 1000
         }}>
           <ThemeToggle />
