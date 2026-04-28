@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { getAuthSession } from '@/lib/demo-auth'
 
-const ADMIN_EMAIL = 'spread.a.wing@gmail.com'
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 
 // GET /api/admin/user/[id]
 export async function GET(

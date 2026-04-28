@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getCurrentUserId } from '@/lib/auth/session'
+import { getCurrentUserId, isDemoUser } from '@/lib/auth/session'
 import { updateCategorySchema } from '@/types/schemas'
 
 /**
@@ -15,6 +15,10 @@ export async function PATCH(
     const userId = await getCurrentUserId()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    if (isDemoUser(userId)) {
+      return NextResponse.json({ error: 'Demo mode - cannot update categories' }, { status: 403 })
     }
 
     const { id } = await params
@@ -75,6 +79,10 @@ export async function DELETE(
     const userId = await getCurrentUserId()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
+    if (isDemoUser(userId)) {
+      return NextResponse.json({ error: 'Demo mode - cannot delete categories' }, { status: 403 })
     }
 
     const { id } = await params

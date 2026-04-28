@@ -134,116 +134,87 @@ export default function HomePage() {
       {/* Demo Warning Banner */}
       {isDemo && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
-          border: '1px solid var(--expense)',
-          borderRadius: '12px',
-          padding: '12px 16px',
-          marginBottom: '20px',
+          background: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.2)',
+          borderRadius: '10px',
+          padding: '10px 14px',
+          marginBottom: '16px',
           textAlign: 'center'
         }}>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
-            👀 מצב צפייה בלבד - התחברו עם Google כדי לנהל את הכספים שלכם
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--expense)' }}>
+            מצב צפייה — התחברו עם Google לניהול מלא
           </p>
         </div>
       )}
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '30px', position: 'relative' }}>
-        <button
-          onClick={handleLogout}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'transparent',
-            border: '1px solid var(--border)',
-            color: 'var(--text-dim)',
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <LogOut size={16} strokeWidth={1.5} />
-          יציאה
-        </button>
-        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>תזרים</h1>
-        {isDemo && (
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
-            מצב צפייה • Demo Mode
-          </span>
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <h1 style={{ margin: '0 0 2px 0', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-main)' }}>תזרים</h1>
+        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.8rem' }}>הכנסות והוצאות</p>
       </div>
 
-      {/* Month Selector - Clickable */}
-      <div style={{ position: 'relative', marginBottom: '25px' }}>
+      {/* Month Selector */}
+      <div style={{ position: 'relative', marginBottom: '16px' }}>
         <button
           onClick={() => setShowMonthPicker(!showMonthPicker)}
           style={{
             width: '100%',
             background: 'var(--card-bg)',
-            border: '1px solid var(--active-bg)',
-            borderRadius: '16px',
-            padding: '14px 20px',
+            border: '1px solid var(--border)',
+            borderRadius: '10px',
+            padding: '12px 16px',
             textAlign: 'center',
             cursor: 'pointer',
             color: 'inherit'
           }}
         >
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem', display: 'block' }}>תקופה נבחרת ▼</span>
-          <span style={{ fontWeight: 700, fontSize: '1.1rem', marginTop: '4px', display: 'block' }}>{displayMonth} {selectedYear}</span>
+          <span style={{ fontWeight: 600, fontSize: '0.95rem' }}>{displayMonth} {selectedYear}</span>
+          <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', marginRight: '6px' }}>▼</span>
         </button>
 
-        {/* Month Dropdown */}
         {showMonthPicker && (
           <div style={{
             position: 'absolute',
             top: '100%',
             left: 0,
             right: 0,
-            marginTop: '8px',
+            marginTop: '4px',
             background: 'var(--card-bg)',
-            border: '1px solid var(--active-bg)',
-            borderRadius: '16px',
-            padding: '16px',
+            border: '1px solid var(--border)',
+            borderRadius: '12px',
+            padding: '14px',
             zIndex: 100,
-            boxShadow: '0 10px 30px rgba(0,0,0,0.5)'
+            boxShadow: '0 4px 16px rgba(0,0,0,0.2)'
           }}>
-            {/* Year Navigation - RTL: right arrow goes back, left arrow goes forward */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
               <button
                 onClick={() => setSelectedYear(y => y - 1)}
-                style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: 'var(--text-main)' }}
+                style={{ background: 'var(--hover-bg)', border: 'none', borderRadius: '6px', padding: '6px 10px', color: 'var(--text-main)', fontSize: '0.85rem' }}
               >
                 →
               </button>
-              <span style={{ fontWeight: 700, fontSize: '1.1rem' }}>{selectedYear}</span>
+              <span style={{ fontWeight: 600, fontSize: '1rem' }}>{selectedYear}</span>
               <button
                 onClick={() => setSelectedYear(y => y + 1)}
-                style={{ background: 'var(--active-bg)', border: 'none', borderRadius: '8px', padding: '8px 12px', color: 'var(--text-main)' }}
+                style={{ background: 'var(--hover-bg)', border: 'none', borderRadius: '6px', padding: '6px 10px', color: 'var(--text-main)', fontSize: '0.85rem' }}
               >
                 ←
               </button>
             </div>
 
-            {/* Month Grid */}
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '8px' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '6px' }}>
               {monthNames.map((name, index) => (
                 <button
                   key={index}
                   onClick={() => handleMonthSelect(index + 1, selectedYear)}
                   style={{
-                    padding: '12px 8px',
-                    borderRadius: '12px',
+                    padding: '10px 6px',
+                    borderRadius: '8px',
                     background: selectedMonth === index + 1 ? 'var(--accent)' : 'var(--hover-bg)',
                     border: 'none',
-                    color: selectedMonth === index + 1 ? 'var(--bg)' : '#fff',
-                    fontWeight: selectedMonth === index + 1 ? 700 : 400,
-                    fontSize: '0.9rem'
+                    color: selectedMonth === index + 1 ? '#fff' : 'var(--text-main)',
+                    fontWeight: selectedMonth === index + 1 ? 600 : 400,
+                    fontSize: '0.8rem'
                   }}
                 >
                   {name}
@@ -255,42 +226,40 @@ export default function HomePage() {
       </div>
 
       {/* Balance Card */}
-      <div className="glass-card" style={{ marginBottom: '20px', textAlign: 'center' }}>
+      <div className="card" style={{ marginBottom: '12px', textAlign: 'center' }}>
         {isLoading ? (
-          <div style={{ padding: '40px 0', color: 'var(--text-dim)' }}>טוען...</div>
+          <div style={{ padding: '30px 0', color: 'var(--text-dim)' }}>טוען...</div>
         ) : (
           <>
-            <div style={{ color: 'var(--text-dim)', fontSize: '0.9rem' }}>
-              יתרה נטו ({percentage}% נותר)
+            <div style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>
+              יתרה נטו · {percentage}% נותר
             </div>
-            <div style={{ fontSize: '2.8rem', fontWeight: 800, margin: '5px 0', color: balance >= 0 ? 'var(--text-main)' : 'var(--expense)' }}>
+            <div style={{ fontSize: '2.2rem', fontWeight: 700, margin: '4px 0', color: balance >= 0 ? 'var(--text-main)' : 'var(--expense)', letterSpacing: '-0.5px' }}>
               {formatCurrency(balance)}
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', marginTop: '20px' }}>
+            <div style={{ display: 'flex', gap: '8px', marginTop: '14px' }}>
               <div style={{
                 flex: 1,
-                padding: '16px',
-                borderRadius: '20px',
+                padding: '12px',
+                borderRadius: '10px',
                 background: 'var(--hover-bg)',
-                border: '1px solid var(--hover-bg)',
                 textAlign: 'center'
               }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', display: 'block' }}>הכנסות</span>
-                <span style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '4px', display: 'block', color: 'var(--income)' }}>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', display: 'block' }}>הכנסות</span>
+                <span style={{ fontSize: '1rem', fontWeight: 700, marginTop: '2px', display: 'block', color: 'var(--income)' }}>
                   {formatCurrency(totalIncome)}
                 </span>
               </div>
               <div style={{
                 flex: 1,
-                padding: '16px',
-                borderRadius: '20px',
+                padding: '12px',
+                borderRadius: '10px',
                 background: 'var(--hover-bg)',
-                border: '1px solid var(--hover-bg)',
                 textAlign: 'center'
               }}>
-                <span style={{ fontSize: '0.8rem', color: 'var(--text-dim)', display: 'block' }}>הוצאות</span>
-                <span style={{ fontSize: '1.1rem', fontWeight: 700, marginTop: '4px', display: 'block', color: 'var(--expense)' }}>
+                <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)', display: 'block' }}>הוצאות</span>
+                <span style={{ fontSize: '1rem', fontWeight: 700, marginTop: '2px', display: 'block', color: 'var(--expense)' }}>
                   {formatCurrency(totalExpenses)}
                 </span>
               </div>
@@ -300,18 +269,18 @@ export default function HomePage() {
       </div>
 
       {/* Quick Actions */}
-      <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+      <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
         <button
           onClick={() => !isDemo && setShowIncomeModal(true)}
           disabled={isDemo}
           style={{
             flex: 1,
-            padding: '16px',
-            borderRadius: '16px',
-            background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(74, 222, 128, 0.15)',
-            border: `1px solid ${isDemo ? 'var(--active-bg)' : 'var(--income)'}`,
+            padding: '12px',
+            borderRadius: '10px',
+            background: isDemo ? 'var(--hover-bg)' : 'rgba(34, 197, 94, 0.1)',
+            border: `1px solid ${isDemo ? 'var(--border)' : 'rgba(34, 197, 94, 0.25)'}`,
             color: isDemo ? 'var(--text-dim)' : 'var(--income)',
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             fontWeight: 600,
             cursor: isDemo ? 'not-allowed' : 'pointer',
             opacity: isDemo ? 0.5 : 1,
@@ -320,7 +289,7 @@ export default function HomePage() {
             justifyContent: 'center'
           }}
         >
-          <Plus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
+          <Plus size={16} strokeWidth={2.5} style={{ marginLeft: '4px' }} />
           הכנסה
         </button>
         <button
@@ -328,12 +297,12 @@ export default function HomePage() {
           disabled={isDemo}
           style={{
             flex: 1,
-            padding: '16px',
-            borderRadius: '16px',
-            background: isDemo ? 'rgba(255, 255, 255, 0.05)' : 'rgba(251, 113, 133, 0.15)',
-            border: `1px solid ${isDemo ? 'var(--active-bg)' : 'var(--expense)'}`,
+            padding: '12px',
+            borderRadius: '10px',
+            background: isDemo ? 'var(--hover-bg)' : 'rgba(244, 63, 94, 0.1)',
+            border: `1px solid ${isDemo ? 'var(--border)' : 'rgba(244, 63, 94, 0.25)'}`,
             color: isDemo ? 'var(--text-dim)' : 'var(--expense)',
-            fontSize: '1rem',
+            fontSize: '0.9rem',
             fontWeight: 600,
             cursor: isDemo ? 'not-allowed' : 'pointer',
             opacity: isDemo ? 0.5 : 1,
@@ -342,30 +311,28 @@ export default function HomePage() {
             justifyContent: 'center'
           }}
         >
-          <Minus size={18} strokeWidth={2.5} style={{ marginLeft: '6px' }} />
+          <Minus size={16} strokeWidth={2.5} style={{ marginLeft: '4px' }} />
           הוצאה
         </button>
       </div>
 
-      {/* Demo mode notice for disabled buttons */}
       {isDemo && (
         <div style={{
           textAlign: 'center',
-          marginBottom: '20px',
-          padding: '12px',
-          background: 'rgba(56, 189, 248, 0.1)',
-          borderRadius: '12px',
-          border: '1px solid rgba(56, 189, 248, 0.3)'
+          marginBottom: '16px',
+          padding: '10px',
+          background: 'var(--hover-bg)',
+          borderRadius: '8px',
         }}>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--accent)' }}>
-            💡 להוספת הוצאות והכנסות, התחברו עם Google
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--text-dim)' }}>
+            להוספת הוצאות והכנסות — התחברו עם Google
           </p>
         </div>
       )}
 
       {/* Transaction History */}
-      <div className="glass-card" style={{ marginBottom: '20px' }}>
-        <h3 style={{ margin: '0 0 16px 0', fontSize: '1.1rem', fontWeight: 700, color: 'var(--text-dim)' }}>
+      <div className="card" style={{ marginBottom: '16px' }}>
+        <h3 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-dim)' }}>
           פעולות אחרונות
         </h3>
         {transactions.length === 0 ? (
@@ -373,7 +340,7 @@ export default function HomePage() {
             אין פעולות בחודש זה
           </p>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
             {transactions.slice(0, 10).map((t) => (
               <div
                 key={t.id}
@@ -381,39 +348,38 @@ export default function HomePage() {
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  padding: '12px 16px',
+                  padding: '10px 12px',
                   background: 'var(--hover-bg)',
-                  borderRadius: '12px',
-                  border: '1px solid var(--hover-bg)'
+                  borderRadius: '10px',
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                   <div style={{
-                    width: '40px',
-                    height: '40px',
-                    borderRadius: '12px',
-                    background: t.type === 'INCOME' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(251, 113, 133, 0.15)',
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '8px',
+                    background: t.type === 'INCOME' ? 'rgba(34, 197, 94, 0.1)' : 'rgba(244, 63, 94, 0.1)',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     color: t.type === 'INCOME' ? 'var(--income)' : 'var(--expense)'
                   }}>
-                    {t.type === 'INCOME' ? <Coins size={20} strokeWidth={1.5} /> : <CategoryIcon name={t.category?.name} size={20} />}
+                    {t.type === 'INCOME' ? <Coins size={18} strokeWidth={1.5} /> : <CategoryIcon name={t.category?.name} size={18} />}
                   </div>
                   <div>
-                    <div style={{ fontWeight: 600, fontSize: '0.95rem' }}>
+                    <div style={{ fontWeight: 600, fontSize: '0.85rem' }}>
                       {t.type === 'INCOME' ? t.source : t.category?.name || 'אחר'}
                     </div>
-                    <div style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>
+                    <div style={{ color: 'var(--text-dim)', fontSize: '0.7rem' }}>
                       {new Date(t.date).toLocaleDateString('he-IL')}
-                      {t.description && ` • ${t.description}`}
+                      {t.description && ` · ${t.description}`}
                     </div>
                   </div>
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                   <div style={{
                     fontWeight: 700,
-                    fontSize: '1rem',
+                    fontSize: '0.9rem',
                     color: t.type === 'INCOME' ? 'var(--income)' : 'var(--expense)'
                   }}>
                     {t.type === 'INCOME' ? '+' : '-'}{formatCurrency(t.amount)}
@@ -423,34 +389,30 @@ export default function HomePage() {
                       <button
                         onClick={() => setEditingTransaction(t)}
                         style={{
-                          background: 'rgba(56, 189, 248, 0.2)',
+                          background: 'var(--hover-bg)',
                           border: 'none',
-                          borderRadius: '8px',
-                          padding: '6px 8px',
-                          color: 'var(--accent)',
+                          borderRadius: '6px',
+                          padding: '5px 6px',
+                          color: 'var(--text-dim)',
                           cursor: 'pointer',
                           display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
                         }}
                       >
-                        <Pencil size={14} strokeWidth={2} />
+                        <Pencil size={13} strokeWidth={2} />
                       </button>
                       <button
                         onClick={() => handleDeleteTransaction(t.id)}
                         style={{
-                          background: 'rgba(251, 113, 133, 0.2)',
+                          background: 'var(--hover-bg)',
                           border: 'none',
-                          borderRadius: '8px',
-                          padding: '6px 8px',
+                          borderRadius: '6px',
+                          padding: '5px 6px',
                           color: 'var(--expense)',
                           cursor: 'pointer',
                           display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center'
                         }}
                       >
-                        <Trash2 size={14} strokeWidth={2} />
+                        <Trash2 size={13} strokeWidth={2} />
                       </button>
                     </>
                   )}
@@ -640,7 +602,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
                 style={{
                   padding: '12px 8px',
                   borderRadius: '16px',
-                  background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
+                  background: categoryId === cat.id ? 'rgba(13, 148, 136, 0.15)' : 'var(--hover-bg)',
                   border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                   textAlign: 'center',
                   color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
@@ -667,7 +629,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
               style={{
                 padding: '16px',
                 borderRadius: '16px',
-                background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
+                background: paymentMethod === 'CASH' ? 'rgba(34, 197, 94, 0.15)' : 'var(--hover-bg)',
                 border: paymentMethod === 'CASH' ? '2px solid var(--income)' : '2px solid transparent',
                 color: 'var(--text-main)',
                 display: 'flex',
@@ -685,7 +647,7 @@ function ExpenseModal({ onClose, onSuccess, defaultDate }: { onClose: () => void
               style={{
                 padding: '16px',
                 borderRadius: '16px',
-                background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
+                background: paymentMethod === 'CARD' ? 'rgba(13, 148, 136, 0.15)' : 'var(--hover-bg)',
                 border: paymentMethod === 'CARD' ? '2px solid var(--accent)' : '2px solid transparent',
                 color: 'var(--text-main)',
                 display: 'flex',
@@ -1043,7 +1005,7 @@ function EditTransactionModal({
                   style={{
                     padding: '12px 8px',
                     borderRadius: '16px',
-                    background: categoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
+                    background: categoryId === cat.id ? 'rgba(13, 148, 136, 0.15)' : 'var(--hover-bg)',
                     border: categoryId === cat.id ? '2px solid var(--accent)' : '2px solid transparent',
                     textAlign: 'center',
                     color: categoryId === cat.id ? 'var(--accent)' : 'var(--text-dim)',
@@ -1072,7 +1034,7 @@ function EditTransactionModal({
                 style={{
                   padding: '16px',
                   borderRadius: '16px',
-                  background: paymentMethod === 'CASH' ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
+                  background: paymentMethod === 'CASH' ? 'rgba(34, 197, 94, 0.15)' : 'var(--hover-bg)',
                   border: paymentMethod === 'CASH' ? '2px solid var(--income)' : '2px solid transparent',
                   color: 'var(--text-main)',
                   display: 'flex',
@@ -1090,7 +1052,7 @@ function EditTransactionModal({
                 style={{
                   padding: '16px',
                   borderRadius: '16px',
-                  background: paymentMethod === 'CARD' ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
+                  background: paymentMethod === 'CARD' ? 'rgba(13, 148, 136, 0.15)' : 'var(--hover-bg)',
                   border: paymentMethod === 'CARD' ? '2px solid var(--accent)' : '2px solid transparent',
                   color: 'var(--text-main)',
                   display: 'flex',

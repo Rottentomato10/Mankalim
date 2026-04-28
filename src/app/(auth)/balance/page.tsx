@@ -203,7 +203,7 @@ export default function HomePage() {
       {/* Demo Warning Banner */}
       {isDemo && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
+          background: 'rgba(244, 63, 94, 0.15)',
           border: '1px solid var(--expense)',
           borderRadius: '12px',
           padding: '12px 16px',
@@ -217,32 +217,11 @@ export default function HomePage() {
       )}
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '24px', position: 'relative' }}>
-        <button
-          onClick={handleLogout}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: '50%',
-            transform: 'translateY(-50%)',
-            background: 'transparent',
-            border: '1px solid var(--active-bg)',
-            color: 'var(--text-dim)',
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            cursor: 'pointer'
-          }}
-        >
-          יציאה
-        </button>
-        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>מאזן</h1>
-        {isDemo && (
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
-            מצב צפייה
-          </span>
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <h1 style={{ margin: '0 0 2px 0', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-main)' }}>מאזן</h1>
+        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.8rem' }}>
+          נכסים והתחייבויות{isDemo ? ' · מצב צפייה' : ''}
+        </p>
       </div>
 
       {/* Add Asset Section */}
@@ -295,7 +274,7 @@ export default function HomePage() {
                   style={{
                     padding: '8px 14px',
                     borderRadius: '8px',
-                    background: isEditMode ? 'rgba(251, 113, 133, 0.2)' : 'var(--active-bg)',
+                    background: isEditMode ? 'rgba(244, 63, 94, 0.2)' : 'var(--active-bg)',
                     border: isEditMode ? '1px solid var(--expense)' : 'none',
                     color: isEditMode ? 'var(--expense)' : '#fff',
                     cursor: 'pointer',
@@ -363,7 +342,7 @@ export default function HomePage() {
                             padding: '10px 16px',
                             borderRadius: '10px',
                             border: '2px solid var(--accent)',
-                            background: 'rgba(56, 189, 248, 0.15)',
+                            background: 'rgba(13, 148, 136, 0.15)',
                             color: 'var(--text-main)',
                             fontSize: '0.9rem',
                             width: '120px'
@@ -387,7 +366,7 @@ export default function HomePage() {
                             paddingLeft: isEditMode ? '28px' : '16px',
                             borderRadius: '10px',
                             border: selectedCategoryId === cat.id ? '2px solid var(--accent)' : '1px solid var(--active-bg)',
-                            background: selectedCategoryId === cat.id ? 'rgba(56, 189, 248, 0.15)' : 'var(--hover-bg)',
+                            background: selectedCategoryId === cat.id ? 'rgba(13, 148, 136, 0.15)' : 'var(--hover-bg)',
                             color: selectedCategoryId === cat.id ? 'var(--accent)' : '#fff',
                             fontWeight: selectedCategoryId === cat.id ? 600 : 400,
                             cursor: 'pointer',
@@ -419,7 +398,7 @@ export default function HomePage() {
                             height: '18px',
                             borderRadius: '50%',
                             border: 'none',
-                            background: 'rgba(251, 113, 133, 0.3)',
+                            background: 'rgba(244, 63, 94, 0.3)',
                             color: 'var(--expense)',
                             fontSize: '0.7rem',
                             cursor: 'pointer',
@@ -444,7 +423,7 @@ export default function HomePage() {
                       style={{
                         padding: '10px 12px',
                         borderRadius: '10px',
-                        border: '1px dashed rgba(56, 189, 248, 0.5)',
+                        border: '1px dashed rgba(13, 148, 136, 0.5)',
                         background: 'var(--hover-bg)',
                         color: 'var(--text-main)',
                         fontSize: '0.85rem',
@@ -522,7 +501,7 @@ export default function HomePage() {
                               padding: '10px 16px',
                               borderRadius: '10px',
                               border: '2px solid var(--income)',
-                              background: 'rgba(74, 222, 128, 0.15)',
+                              background: 'rgba(34, 197, 94, 0.15)',
                               color: 'var(--text-main)',
                               fontSize: '0.9rem',
                               width: '120px'
@@ -545,7 +524,7 @@ export default function HomePage() {
                               paddingLeft: isEditMode ? '28px' : '16px',
                               borderRadius: '10px',
                               border: selectedProductId === prod.id ? '2px solid var(--income)' : '1px solid var(--active-bg)',
-                              background: selectedProductId === prod.id ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
+                              background: selectedProductId === prod.id ? 'rgba(34, 197, 94, 0.15)' : 'var(--hover-bg)',
                               color: selectedProductId === prod.id ? 'var(--income)' : '#fff',
                               fontWeight: selectedProductId === prod.id ? 600 : 400,
                               cursor: 'pointer',
@@ -577,7 +556,7 @@ export default function HomePage() {
                               height: '18px',
                               borderRadius: '50%',
                               border: 'none',
-                              background: 'rgba(251, 113, 133, 0.3)',
+                              background: 'rgba(244, 63, 94, 0.3)',
                               color: 'var(--expense)',
                               fontSize: '0.7rem',
                               cursor: 'pointer',
@@ -602,7 +581,7 @@ export default function HomePage() {
                         style={{
                           padding: '10px 12px',
                           borderRadius: '10px',
-                          border: '1px dashed rgba(74, 222, 128, 0.5)',
+                          border: '1px dashed rgba(34, 197, 94, 0.5)',
                           background: 'var(--hover-bg)',
                           color: 'var(--text-main)',
                           fontSize: '0.85rem',
@@ -734,7 +713,7 @@ export default function HomePage() {
                               height: '18px',
                               borderRadius: '50%',
                               border: 'none',
-                              background: 'rgba(251, 113, 133, 0.3)',
+                              background: 'rgba(244, 63, 94, 0.3)',
                               color: 'var(--expense)',
                               fontSize: '0.7rem',
                               cursor: 'pointer',
@@ -811,8 +790,8 @@ export default function HomePage() {
                     padding: '14px',
                     marginBottom: '12px',
                     borderRadius: '12px',
-                    background: 'rgba(56, 189, 248, 0.1)',
-                    border: '1px solid rgba(56, 189, 248, 0.3)',
+                    background: 'rgba(13, 148, 136, 0.1)',
+                    border: '1px solid rgba(13, 148, 136, 0.3)',
                   }}>
                     <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginBottom: '4px' }}>שם הנכס:</div>
                     <div style={{ fontWeight: 700, fontSize: '1.1rem', color: 'var(--accent)' }}>{getAutoAssetName()}</div>
@@ -846,7 +825,7 @@ export default function HomePage() {
                         padding: '12px',
                         borderRadius: '10px',
                         border: newItemIsLiquid ? '2px solid var(--income)' : '1px solid var(--active-bg)',
-                        background: newItemIsLiquid ? 'rgba(74, 222, 128, 0.15)' : 'var(--hover-bg)',
+                        background: newItemIsLiquid ? 'rgba(34, 197, 94, 0.15)' : 'var(--hover-bg)',
                         color: newItemIsLiquid ? 'var(--income)' : 'var(--text-dim)',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -863,7 +842,7 @@ export default function HomePage() {
                         padding: '12px',
                         borderRadius: '10px',
                         border: !newItemIsLiquid ? '2px solid var(--expense)' : '1px solid var(--active-bg)',
-                        background: !newItemIsLiquid ? 'rgba(251, 113, 133, 0.15)' : 'var(--hover-bg)',
+                        background: !newItemIsLiquid ? 'rgba(244, 63, 94, 0.15)' : 'var(--hover-bg)',
                         color: !newItemIsLiquid ? 'var(--expense)' : 'var(--text-dim)',
                         fontWeight: 600,
                         cursor: 'pointer',
@@ -942,7 +921,7 @@ export default function HomePage() {
       {/* Error */}
       {error && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
+          background: 'rgba(244, 63, 94, 0.15)',
           border: '1px solid var(--expense)',
           borderRadius: '12px',
           padding: '12px 16px',
@@ -1031,7 +1010,7 @@ export default function HomePage() {
                     alignItems: 'center',
                     justifyContent: 'space-between',
                     padding: '16px 20px',
-                    background: isExpanded ? 'rgba(56, 189, 248, 0.05)' : 'transparent',
+                    background: isExpanded ? 'rgba(13, 148, 136, 0.05)' : 'transparent',
                     border: 'none',
                     color: 'inherit',
                     cursor: 'pointer'
@@ -1039,20 +1018,20 @@ export default function HomePage() {
                 >
                   <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <span style={{
-                      color: '#38bdf8',
+                      color: '#0d9488',
                       transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
                       transition: 'transform 0.2s',
                       fontSize: '0.8rem'
                     }}>▶</span>
                     <div style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 700, fontSize: '1rem', color: '#38bdf8' }}>{ac.name}</div>
+                      <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0d9488' }}>{ac.name}</div>
                       <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>
                         {assetsCount} נכסים
                       </div>
                     </div>
                   </div>
                   <div style={{ textAlign: 'left' }}>
-                    <div style={{ fontWeight: 700, fontSize: '1rem', color: '#38bdf8' }} dir="ltr">
+                    <div style={{ fontWeight: 700, fontSize: '1rem', color: '#0d9488' }} dir="ltr">
                       ₪{formatNumber(classTotal)}
                     </div>
                     {data && Number(data.totalBalance) > 0 && (
@@ -1072,7 +1051,7 @@ export default function HomePage() {
                         <div style={{
                           padding: '10px 20px',
                           paddingRight: '36px',
-                          background: 'rgba(74, 222, 128, 0.03)',
+                          background: 'rgba(34, 197, 94, 0.03)',
                           display: 'flex',
                           alignItems: 'center',
                           gap: '8px',
@@ -1122,7 +1101,7 @@ export default function HomePage() {
                                         <span style={{
                                           fontSize: '0.65rem',
                                           color: 'var(--income)',
-                                          background: 'rgba(74, 222, 128, 0.1)',
+                                          background: 'rgba(34, 197, 94, 0.1)',
                                           padding: '2px 6px',
                                           borderRadius: '4px'
                                         }}>נזיל</span>

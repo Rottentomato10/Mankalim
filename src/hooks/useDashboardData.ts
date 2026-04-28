@@ -29,11 +29,11 @@ interface Distribution {
 interface DashboardAnalytics {
   currentTotal: number
   monthlyChange: number
-  monthlyChangePercent: number
+  monthlyChangePercent: number | null
   ytdChange: number
-  ytdChangePercent: number
+  ytdChangePercent: number | null
   yearlyChange: number
-  yearlyChangePercent: number
+  yearlyChangePercent: number | null
   avgMonthlyGrowth: number
   liquidTotal: number
   illiquidTotal: number
@@ -57,7 +57,7 @@ interface DashboardData {
 }
 
 const MONTHS = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יונ', 'יול', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ']
-const COLORS = ['#38bdf8', '#4ade80', '#fb7185', '#f59e0b', '#a78bfa', '#f472b6', '#34d399']
+const COLORS = ['#0d9488', '#22c55e', '#f43f5e', '#e59500', '#a78bfa', '#f472b6', '#34d399']
 
 export function useDashboardData(timeRange: number = 12): DashboardData {
   const [analytics, setAnalytics] = useState<DashboardAnalytics | null>(null)
@@ -181,22 +181,22 @@ export function useDashboardData(timeRange: number = 12): DashboardData {
       const prevKey = `${prevMonth}-${prevYear}`
       const prevValues = allMonthlyValues[prevKey] || {}
       const prevTotal = Object.values(prevValues).reduce((sum, v) => sum + v, 0)
-      const monthlyChange = prevTotal > 0 ? currentTotal - prevTotal : 0
-      const monthlyChangePercent = prevTotal > 0 ? (monthlyChange / prevTotal) * 100 : 0
+      const monthlyChange = currentTotal - prevTotal
+      const monthlyChangePercent = prevTotal > 0 ? (monthlyChange / prevTotal) * 100 : null
 
       // Year start data
       const yearStartKey = `1-${currentYear}`
       const yearStartValues = allMonthlyValues[yearStartKey] || {}
       const yearStartTotal = Object.values(yearStartValues).reduce((sum, v) => sum + v, 0)
-      const ytdChange = yearStartTotal > 0 ? currentTotal - yearStartTotal : 0
-      const ytdChangePercent = yearStartTotal > 0 ? (ytdChange / yearStartTotal) * 100 : 0
+      const ytdChange = currentTotal - yearStartTotal
+      const ytdChangePercent = yearStartTotal > 0 ? (ytdChange / yearStartTotal) * 100 : null
 
       // Last year same month
       const lastYearKey = `${currentMonth}-${currentYear - 1}`
       const lastYearValues = allMonthlyValues[lastYearKey] || {}
       const lastYearTotal = Object.values(lastYearValues).reduce((sum, v) => sum + v, 0)
-      const yearlyChange = lastYearTotal > 0 ? currentTotal - lastYearTotal : 0
-      const yearlyChangePercent = lastYearTotal > 0 ? (yearlyChange / lastYearTotal) * 100 : 0
+      const yearlyChange = currentTotal - lastYearTotal
+      const yearlyChangePercent = lastYearTotal > 0 ? (yearlyChange / lastYearTotal) * 100 : null
 
       // Average monthly growth
       const growthRates: number[] = []
@@ -253,8 +253,8 @@ export function useDashboardData(timeRange: number = 12): DashboardData {
         }
       })
       const liquidityDistribution: Distribution[] = [
-        { name: 'נזיל', value: liquidTotal, percent: currentTotal > 0 ? (liquidTotal / currentTotal) * 100 : 0, color: '#4ade80' },
-        { name: 'לא נזיל', value: illiquidTotal, percent: currentTotal > 0 ? (illiquidTotal / currentTotal) * 100 : 0, color: '#fb7185' },
+        { name: 'נזיל', value: liquidTotal, percent: currentTotal > 0 ? (liquidTotal / currentTotal) * 100 : 0, color: '#22c55e' },
+        { name: 'לא נזיל', value: illiquidTotal, percent: currentTotal > 0 ? (illiquidTotal / currentTotal) * 100 : 0, color: '#f43f5e' },
       ].filter(d => d.value > 0)
 
       // Asset performance

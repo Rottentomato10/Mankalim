@@ -109,7 +109,7 @@ export function MonthPicker({ month, year, onChange }: MonthPickerProps) {
                   style={{
                     padding: '12px 8px',
                     borderRadius: '12px',
-                    background: isSelected ? 'var(--accent)' : isCurrent ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)',
+                    background: isSelected ? 'var(--accent)' : isCurrent ? 'rgba(13, 148, 136, 0.15)' : 'rgba(255,255,255,0.05)',
                     border: 'none',
                     color: isSelected ? 'var(--bg)' : isCurrent ? 'var(--accent)' : isFuture ? '#374151' : '#fff',
                     fontWeight: isSelected ? 700 : 400,

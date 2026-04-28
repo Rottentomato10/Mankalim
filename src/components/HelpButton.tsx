@@ -35,7 +35,7 @@ export function HelpButton() {
           justifyContent: 'center',
           cursor: 'pointer',
           zIndex: 1001,
-          boxShadow: showOnboarding ? '0 6px 20px rgba(251, 113, 133, 0.4)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
+          boxShadow: showOnboarding ? '0 6px 20px rgba(244, 63, 94, 0.4)' : '0 4px 12px rgba(0, 0, 0, 0.3)',
           transition: 'all 0.3s ease',
         }}
         onMouseEnter={(e) => {

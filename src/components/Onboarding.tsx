@@ -34,7 +34,7 @@ const slides: OnboardingSlide[] = [
     icon: <BarChart3 size={48} strokeWidth={1.5} />,
     title: 'דשבורד וגרפים',
     description: 'קבלו תמונה ברורה של המצב הפיננסי שלכם עם גרפים וסיכומים חודשיים.',
-    color: '#f59e0b',
+    color: '#e59500',
   },
 ]
 
@@ -145,7 +145,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               width: '96px',
               height: '96px',
               margin: '0 auto 24px',
-              borderRadius: '24px',
+              borderRadius: '14px',
               background: `linear-gradient(135deg, ${slide.color}20, ${slide.color}10)`,
               border: `1px solid ${slide.color}40`,
               display: 'flex',
@@ -222,7 +222,7 @@ export function Onboarding({ onComplete }: OnboardingProps) {
               style={{
                 flex: 1,
                 padding: '16px',
-                borderRadius: '16px',
+                borderRadius: '10px',
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 color: '#fff',
@@ -244,10 +244,8 @@ export function Onboarding({ onComplete }: OnboardingProps) {
             style={{
               flex: currentSlide === 0 ? 1 : 2,
               padding: '16px',
-              borderRadius: '16px',
-              background: isLastSlide
-                ? 'linear-gradient(135deg, var(--accent), #818cf8)'
-                : 'var(--accent)',
+              borderRadius: '10px',
+              background: 'var(--accent)',
               border: 'none',
               color: '#fff',
               fontSize: '1rem',

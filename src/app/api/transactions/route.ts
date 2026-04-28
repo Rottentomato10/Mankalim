@@ -27,15 +27,24 @@ export async function GET(request: NextRequest) {
 
     // Filter by month/year if provided
     if (month && year) {
-      const startDate = new Date(parseInt(year), parseInt(month) - 1, 1)
-      const endDate = new Date(parseInt(year), parseInt(month), 0, 23, 59, 59)
+      const monthNum = parseInt(month)
+      const yearNum = parseInt(year)
+      if (isNaN(monthNum) || isNaN(yearNum) || monthNum < 1 || monthNum > 12 || yearNum < 2000 || yearNum > 2100) {
+        return NextResponse.json({ error: 'Invalid month or year' }, { status: 400 })
+      }
+      const startDate = new Date(Date.UTC(yearNum, monthNum - 1, 1))
+      const endDate = new Date(Date.UTC(yearNum, monthNum, 0, 23, 59, 59, 999))
       where.date = {
         gte: startDate,
         lte: endDate,
       }
     } else if (year) {
-      const startDate = new Date(parseInt(year), 0, 1)
-      const endDate = new Date(parseInt(year), 11, 31, 23, 59, 59)
+      const yearNum = parseInt(year)
+      if (isNaN(yearNum) || yearNum < 2000 || yearNum > 2100) {
+        return NextResponse.json({ error: 'Invalid year' }, { status: 400 })
+      }
+      const startDate = new Date(yearNum, 0, 1)
+      const endDate = new Date(yearNum, 11, 31, 23, 59, 59)
       where.date = {
         gte: startDate,
         lte: endDate,

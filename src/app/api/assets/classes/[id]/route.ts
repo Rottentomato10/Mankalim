@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getAuthSession } from '@/lib/demo-auth'
 import { prisma } from '@/lib/prisma'
 
 // PATCH /api/assets/classes/[id] - Update asset class
@@ -8,12 +8,17 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot update asset classes' }, { status: 403 })
+    }
+
+    const session = authSession
     const { id } = await params
     const body = await request.json()
     const { name, displayOrder } = body
@@ -79,12 +84,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot delete asset classes' }, { status: 403 })
+    }
+
+    const session = authSession
     const { id } = await params
 
     // Verify ownership

@@ -99,6 +99,31 @@ export async function PATCH(
 
     const data = validation.data
 
+    // Determine the effective type after update
+    const effectiveType = data.type || existing.type
+
+    // Validate required fields based on the effective type
+    if (effectiveType === 'EXPENSE') {
+      const effectiveCategoryId = data.categoryId !== undefined ? data.categoryId : existing.categoryId
+      const effectivePaymentMethod = data.paymentMethod !== undefined ? data.paymentMethod : existing.paymentMethod
+      if (!effectiveCategoryId || !effectivePaymentMethod) {
+        return NextResponse.json(
+          { error: 'הוצאה דורשת קטגוריה ואמצעי תשלום' },
+          { status: 400 }
+        )
+      }
+    }
+
+    if (effectiveType === 'INCOME') {
+      const effectiveSource = data.source !== undefined ? data.source : existing.source
+      if (!effectiveSource) {
+        return NextResponse.json(
+          { error: 'הכנסה דורשת מקור' },
+          { status: 400 }
+        )
+      }
+    }
+
     // Verify category belongs to user if provided
     if (data.categoryId) {
       const category = await prisma.category.findFirst({
@@ -115,6 +140,7 @@ export async function PATCH(
     const updated = await prisma.transaction.update({
       where: { id },
       data: {
+        type: data.type,
         amount: data.amount,
         date: data.date ? new Date(data.date) : undefined,
         paymentMethod: data.paymentMethod,

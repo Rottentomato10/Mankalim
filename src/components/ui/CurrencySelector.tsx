@@ -29,7 +29,7 @@ export function CurrencySelector({ value, onChange, disabled = false }: Currency
               ? '2px solid var(--accent)'
               : '1px solid rgba(255,255,255,0.1)',
             background: currency.code === value
-              ? 'rgba(56, 189, 248, 0.15)'
+              ? 'rgba(13, 148, 136, 0.15)'
               : 'rgba(255,255,255,0.03)',
             cursor: disabled ? 'not-allowed' : 'pointer',
             opacity: disabled ? 0.5 : 1,

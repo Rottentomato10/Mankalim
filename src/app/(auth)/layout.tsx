@@ -13,16 +13,16 @@ export default function AuthLayout({
     <AuthProvider>
       <ActivityTracker />
       <div style={{ minHeight: '100vh' }}>
-        {/* Theme Toggle - Fixed Position next to Help & Accessibility buttons */}
+        {/* Theme Toggle */}
         <div style={{
           position: 'fixed',
-          bottom: 'calc(90px + env(safe-area-inset-bottom, 0px))',
-          left: '116px',
+          bottom: 'calc(80px + env(safe-area-inset-bottom, 0px))',
+          left: '108px',
           zIndex: 1000
         }}>
           <ThemeToggle />
         </div>
-        <main style={{ paddingBottom: '80px' }}>
+        <main style={{ paddingBottom: '70px' }}>
           {children}
         </main>
         <BottomNav />

@@ -218,7 +218,7 @@ export function AssetList({ assetClasses, values, onValueChange, isLoading }: As
                                               <span style={{
                                                 fontSize: '0.7rem',
                                                 color: 'var(--accent)',
-                                                background: 'rgba(56, 189, 248, 0.1)',
+                                                background: 'rgba(13, 148, 136, 0.1)',
                                                 padding: '2px 6px',
                                                 borderRadius: '4px'
                                               }}>נזיל</span>

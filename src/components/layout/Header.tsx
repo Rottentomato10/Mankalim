@@ -33,22 +33,22 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b" style={{ background: 'var(--card-bg)', borderColor: 'var(--border)' }}>
-      <div className="flex items-center justify-between h-14 px-4 max-w-lg mx-auto">
-        <div className="w-10 flex items-center justify-start">
+    <header className="fixed top-0 left-0 right-0 z-50" style={{ background: 'var(--card-bg)', borderBottom: '1px solid var(--border)' }}>
+      <div className="flex items-center justify-between h-12 px-4 max-w-lg mx-auto">
+        <div className="w-8 flex items-center justify-start">
           {showBackButton && (
             <button
               onClick={onBackClick}
-              className="p-2 -m-2 transition-colors"
+              className="p-1.5 -m-1.5 transition-colors"
               style={{ color: 'var(--text-dim)' }}
               aria-label="חזרה"
             >
-              <ChevronRight size={20} strokeWidth={2} />
+              <ChevronRight size={18} strokeWidth={2} />
             </button>
           )}
         </div>
 
-        <h1 className="text-lg font-semibold" style={{ color: 'var(--text-main)' }}>{title}</h1>
+        <h1 className="text-sm font-semibold" style={{ color: 'var(--text-main)' }}>{title}</h1>
 
         <div className="flex items-center gap-2 justify-end relative">
           <ThemeToggle />
@@ -56,13 +56,13 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
             <>
               <button
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
-                className="w-8 h-8 rounded-full overflow-hidden ring-2 transition-all"
+                className="w-7 h-7 rounded-full overflow-hidden ring-1 transition-all"
                 style={{ '--tw-ring-color': 'var(--border)' } as React.CSSProperties}
               >
                 {user.image ? (
-                  <Image src={user.image} alt={user.name || 'משתמש'} width={32} height={32} className="w-full h-full object-cover" />
+                  <Image src={user.image} alt={user.name || 'משתמש'} width={28} height={28} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-sm font-medium" style={{ background: 'var(--accent)', opacity: 0.2, color: 'var(--accent)' }}>
+                  <div className="w-full h-full flex items-center justify-center text-xs font-medium" style={{ background: 'var(--hover-bg)', color: 'var(--text-dim)' }}>
                     {user.name?.charAt(0) || user.email?.charAt(0) || '?'}
                   </div>
                 )}
@@ -71,7 +71,7 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
               {isMenuOpen && (
                 <>
                   <div className="fixed inset-0 z-40" onClick={() => setIsMenuOpen(false)} />
-                  <div className="absolute left-0 top-full mt-2 w-48 rounded-2xl shadow-lg overflow-hidden z-50" style={{ background: 'var(--card-bg)', border: '1px solid var(--border)' }}>
+                  <div className="absolute left-0 top-full mt-1 w-44 rounded-xl overflow-hidden z-50" style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', boxShadow: '0 4px 16px rgba(0,0,0,0.15)' }}>
                     <div className="p-3" style={{ borderBottom: '1px solid var(--border)' }}>
                       <p className="text-sm font-medium truncate" style={{ color: 'var(--text-main)' }}>
                         {user.name || 'משתמש'}
@@ -86,7 +86,7 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
                         style={{ color: 'var(--text-dim)' }}
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        <Settings size={16} strokeWidth={1.5} />
+                        <Settings size={14} strokeWidth={1.5} />
                         הגדרות
                       </Link>
                       <button
@@ -94,7 +94,7 @@ export function Header({ title = 'מאזנים', showBackButton = false, onBackC
                         className="w-full flex items-center gap-3 px-3 py-2 text-sm hover:opacity-80 transition-colors"
                         style={{ color: 'var(--expense)' }}
                       >
-                        <LogOut size={16} strokeWidth={1.5} />
+                        <LogOut size={14} strokeWidth={1.5} />
                         התנתקות
                       </button>
                     </nav>

@@ -249,10 +249,10 @@ export function AccessibilityWidget() {
               style={{
                 width: '100%',
                 padding: '12px',
-                background: 'rgba(251, 113, 133, 0.15)',
-                border: '1px solid rgba(251, 113, 133, 0.3)',
+                background: 'rgba(244, 63, 94, 0.15)',
+                border: '1px solid rgba(244, 63, 94, 0.3)',
                 borderRadius: '10px',
-                color: '#fb7185',
+                color: '#f43f5e',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',

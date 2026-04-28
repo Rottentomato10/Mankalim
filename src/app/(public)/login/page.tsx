@@ -4,7 +4,7 @@ import { signIn } from 'next-auth/react'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useState, Suspense } from 'react'
 import Image from 'next/image'
-import { Shield, Smartphone, BarChart3, Eye, Download, Share } from 'lucide-react'
+import { Eye } from 'lucide-react'
 
 function LoginContent() {
   const searchParams = useSearchParams()
@@ -37,36 +37,44 @@ function LoginContent() {
   }
 
   return (
-    <div style={{ width: '100%', maxWidth: '360px' }}>
+    <div style={{ width: '100%', maxWidth: '340px' }}>
       {/* Logo and title */}
-      <div style={{ textAlign: 'center', marginBottom: '32px' }}>
+      <div style={{ textAlign: 'center', marginBottom: '40px' }}>
         <Image
           src="/logo-6.png"
           alt="פורשים כנף"
-          width={80}
-          height={80}
+          width={72}
+          height={72}
           style={{
-            margin: '0 auto 16px',
-            borderRadius: '20px',
+            margin: '0 auto 20px',
+            borderRadius: '16px',
             objectFit: 'contain'
           }}
           priority
         />
-        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>מנכ״לים</h1>
-        <p style={{ margin: '8px 0 0 0', color: 'var(--text-dim)', fontSize: '0.9rem' }}>ניהול פיננסי אישי - תזרים ונכסים</p>
+        <h1 style={{
+          margin: '0 0 6px 0',
+          fontSize: '1.75rem',
+          fontWeight: 700,
+          letterSpacing: '-0.5px',
+          color: 'var(--text-main)'
+        }}>
+          מנכ״לים
+        </h1>
+        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.85rem' }}>
+          ניהול פיננסי אישי
+        </p>
       </div>
 
       {/* Login card */}
-      <div className="glass-card">
-        {/* Error message */}
+      <div className="card" style={{ padding: '24px' }}>
         {error && (
           <div style={{
-            background: 'rgba(251, 113, 133, 0.15)',
+            background: 'rgba(244, 63, 94, 0.1)',
             border: '1px solid var(--expense)',
-            borderRadius: '12px',
-            padding: '12px 16px',
-            marginBottom: '20px',
+            borderRadius: '8px',
+            padding: '10px 14px',
+            marginBottom: '16px',
             textAlign: 'center'
           }}>
             <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
@@ -77,7 +85,6 @@ function LoginContent() {
           </div>
         )}
 
-        {/* Google sign in button */}
         <button
           onClick={handleGoogleSignIn}
           disabled={isLoading}
@@ -86,23 +93,22 @@ function LoginContent() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            padding: '14px 20px',
+            gap: '10px',
+            padding: '12px 16px',
             background: '#fff',
-            border: '2px solid #e5e7eb',
-            borderRadius: '16px',
+            border: 'none',
+            borderRadius: '10px',
             color: '#1f2937',
-            fontSize: '1rem',
+            fontSize: '0.95rem',
             fontWeight: 600,
             cursor: isLoading ? 'not-allowed' : 'pointer',
             opacity: isLoading ? 0.5 : 1,
-            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
           }}
         >
           {isLoading ? (
-            <div style={{ width: '20px', height: '20px', border: '2px solid #9ca3af', borderTopColor: '#1f2937', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            <div style={{ width: '18px', height: '18px', border: '2px solid #9ca3af', borderTopColor: '#1f2937', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
           ) : (
-            <svg style={{ width: '20px', height: '20px' }} viewBox="0 0 24 24">
+            <svg style={{ width: '18px', height: '18px' }} viewBox="0 0 24 24">
               <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
               <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
               <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
@@ -112,14 +118,12 @@ function LoginContent() {
           <span>התחברות עם Google</span>
         </button>
 
-        {/* Divider */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '20px 0' }}>
-          <div style={{ flex: 1, height: '1px', background: 'var(--active-bg)' }} />
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.8rem' }}>או</span>
-          <div style={{ flex: 1, height: '1px', background: 'var(--active-bg)' }} />
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', margin: '16px 0' }}>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+          <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem' }}>או</span>
+          <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
         </div>
 
-        {/* Demo login button */}
         <button
           onClick={handleDemoLogin}
           disabled={isDemoLoading}
@@ -128,136 +132,50 @@ function LoginContent() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '12px',
-            padding: '14px 20px',
-            background: 'rgba(56, 189, 248, 0.15)',
-            border: '1px solid var(--accent)',
-            borderRadius: '16px',
-            color: 'var(--accent)',
-            fontSize: '1rem',
-            fontWeight: 600,
+            gap: '8px',
+            padding: '12px 16px',
+            background: 'transparent',
+            border: '1px solid var(--border)',
+            borderRadius: '10px',
+            color: 'var(--text-dim)',
+            fontSize: '0.95rem',
+            fontWeight: 500,
             cursor: isDemoLoading ? 'not-allowed' : 'pointer',
             opacity: isDemoLoading ? 0.5 : 1
           }}
         >
           {isDemoLoading ? (
-            <div style={{ width: '20px', height: '20px', border: '2px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+            <div style={{ width: '18px', height: '18px', border: '2px solid var(--text-dim)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
           ) : (
-            <Eye size={20} strokeWidth={1.5} />
+            <Eye size={18} strokeWidth={1.5} />
           )}
-          <span>כניסה למצב דמו</span>
+          <span>צפייה במצב דמו</span>
         </button>
+      </div>
 
-        {/* Terms */}
-        <p style={{ margin: '20px 0 0 0', fontSize: '0.75rem', color: 'var(--text-dim)', textAlign: 'center' }}>
-          בהתחברות אתם מסכימים ל
-          <a href="https://www.porsimkanaf.com/תנאי-שימוש" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>תנאי השימוש</a>
-          ול
-          <a href="https://www.porsimkanaf.com/מדיניות-פרטיות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>מדיניות הפרטיות</a>
-          |
-          <a href="https://www.porsimkanaf.com/הצהרת-נגישות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--accent)', margin: '0 4px' }}>הצהרת נגישות</a>
+      {/* Footer */}
+      <div style={{ marginTop: '32px', textAlign: 'center' }}>
+        <p style={{ fontSize: '0.7rem', color: 'var(--text-dim)', marginBottom: '8px' }}>
+          מבית <span style={{ fontWeight: 600 }}>פורשים כנף</span> — חינוך פיננסי
         </p>
-      </div>
-
-      {/* Features */}
-      <div style={{ marginTop: '32px', display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px', textAlign: 'center' }}>
-        <div>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            margin: '0 auto 8px',
-            borderRadius: '12px',
-            background: 'var(--card-bg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--income)'
-          }}>
-            <Shield size={20} strokeWidth={1.5} />
-          </div>
-          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מאובטח</p>
-        </div>
-        <div>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            margin: '0 auto 8px',
-            borderRadius: '12px',
-            background: 'var(--card-bg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'var(--accent)'
-          }}>
-            <Smartphone size={20} strokeWidth={1.5} />
-          </div>
-          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>מותאם למובייל</p>
-        </div>
-        <div>
-          <div style={{
-            width: '40px',
-            height: '40px',
-            margin: '0 auto 8px',
-            borderRadius: '12px',
-            background: 'var(--card-bg)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#f59e0b'
-          }}>
-            <BarChart3 size={20} strokeWidth={1.5} />
-          </div>
-          <p style={{ margin: 0, fontSize: '0.75rem', color: 'var(--text-dim)' }}>דשבורד</p>
-        </div>
-      </div>
-
-      {/* Install Instructions */}
-      <div style={{
-        marginTop: '24px',
-        padding: '16px',
-        background: 'rgba(56, 189, 248, 0.08)',
-        borderRadius: '16px',
-        border: '1px solid rgba(56, 189, 248, 0.2)',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
-          <Download size={18} style={{ color: 'var(--accent)' }} />
-          <span style={{ fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-main)' }}>התקינו כאפליקציה</span>
-        </div>
-        <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
-          <div style={{ marginBottom: '12px', padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px' }}>
-            <span style={{
-              background: 'rgba(56, 189, 248, 0.15)',
-              color: 'var(--accent)',
-              borderRadius: '4px',
-              padding: '2px 6px',
-              fontSize: '0.7rem',
-              fontWeight: 600
-            }}>iPhone</span>
-            <div style={{ marginTop: '6px' }}>
-              1. לחצו <Share size={12} style={{ verticalAlign: 'middle', margin: '0 2px' }} /> בתחתית המסך
-              <br />
-              2. גללו למטה → ״הוסף למסך הבית״
-              <br />
-              3. לחצו ״הוסף״
-            </div>
-          </div>
-          <div style={{ padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px' }}>
-            <span style={{
-              background: 'rgba(74, 222, 128, 0.15)',
-              color: 'var(--income)',
-              borderRadius: '4px',
-              padding: '2px 6px',
-              fontSize: '0.7rem',
-              fontWeight: 600
-            }}>Android</span>
-            <div style={{ marginTop: '6px' }}>
-              1. לחצו ⋮ (3 נקודות) למעלה
-              <br />
-              2. לחצו ״הוסף למסך הבית״
-              <br />
-              3. לחצו ״הוסף״
-            </div>
-          </div>
+        <div style={{
+          fontSize: '0.7rem',
+          color: 'var(--text-dim)',
+          display: 'flex',
+          justifyContent: 'center',
+          gap: '12px'
+        }}>
+          <a href="https://www.porsimkanaf.com/תנאי-שימוש" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
+            תנאי שימוש
+          </a>
+          <span style={{ opacity: 0.3 }}>·</span>
+          <a href="https://www.porsimkanaf.com/מדיניות-פרטיות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
+            פרטיות
+          </a>
+          <span style={{ opacity: 0.3 }}>·</span>
+          <a href="https://www.porsimkanaf.com/הצהרת-נגישות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>
+            נגישות
+          </a>
         </div>
       </div>
     </div>
@@ -267,8 +185,8 @@ function LoginContent() {
 export default function LoginPage() {
   return (
     <Suspense fallback={
-      <div style={{ width: '100%', maxWidth: '360px', display: 'flex', justifyContent: 'center' }}>
-        <div style={{ width: '32px', height: '32px', border: '2px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+      <div style={{ width: '100%', maxWidth: '340px', display: 'flex', justifyContent: 'center' }}>
+        <div style={{ width: '24px', height: '24px', border: '2px solid var(--accent)', borderTopColor: 'transparent', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
       </div>
     }>
       <LoginContent />

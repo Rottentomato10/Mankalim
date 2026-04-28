@@ -36,11 +36,12 @@ export const createTransactionSchema = z
 
 // Update transaction schema
 export const updateTransactionSchema = z.object({
+  type: transactionTypeSchema.optional(),
   amount: z.number().positive().max(10000000).optional(),
   date: z.string().optional(),
-  categoryId: z.string().min(1).optional(),
-  paymentMethod: paymentMethodSchema.optional(),
-  source: z.string().max(100).optional(),
+  categoryId: z.string().min(1).optional().nullable(),
+  paymentMethod: paymentMethodSchema.optional().nullable(),
+  source: z.string().max(100).optional().nullable(),
   description: z.string().max(500).optional(),
 })
 

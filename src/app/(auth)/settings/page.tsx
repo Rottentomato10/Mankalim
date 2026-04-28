@@ -222,43 +222,11 @@ export default function SettingsPage() {
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '24px', position: 'relative' }}>
-        <button
-          onClick={handleSignOut}
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            background: 'transparent',
-            border: '1px solid var(--active-bg)',
-            color: 'var(--text-dim)',
-            padding: '8px 16px',
-            borderRadius: '12px',
-            fontSize: '0.9rem',
-            cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <LogOut size={16} strokeWidth={1.5} />
-          יציאה
-        </button>
-        <Image
-          src="/logo-6.png"
-          alt="פורשים כנף"
-          width={48}
-          height={48}
-          style={{ marginBottom: '8px', borderRadius: '12px' }}
-          priority
-        />
-        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.7rem', letterSpacing: '2px' }}>פורשים כנף - חינוך פיננסי</p>
-        <h1 style={{ margin: '4px 0 0 0', fontSize: '2rem', fontWeight: 800, letterSpacing: '-1px', color: 'var(--text-main)' }}>הגדרות</h1>
-        {isDemo && (
-          <span style={{ color: 'var(--text-dim)', fontSize: '0.75rem', display: 'block', marginTop: '4px' }}>
-            מצב צפייה
-          </span>
-        )}
+      <div style={{ marginBottom: '20px' }}>
+        <h1 style={{ margin: '0 0 2px 0', fontSize: '1.4rem', fontWeight: 700, color: 'var(--text-main)' }}>הגדרות</h1>
+        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.8rem' }}>
+          ניהול וקטגוריות{isDemo ? ' · מצב צפייה' : ''}
+        </p>
       </div>
 
       {/* External Link */}
@@ -280,7 +248,7 @@ export default function SettingsPage() {
       {/* Error */}
       {error && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
+          background: 'rgba(244, 63, 94, 0.08)',
           border: '1px solid var(--expense)',
           borderRadius: '12px',
           padding: '12px 16px',
@@ -294,7 +262,7 @@ export default function SettingsPage() {
       {/* Deletion pending warning */}
       {preferences?.deletionPending && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
+          background: 'rgba(244, 63, 94, 0.08)',
           border: '1px solid var(--expense)',
           borderRadius: '16px',
           padding: '16px',
@@ -338,7 +306,7 @@ export default function SettingsPage() {
               width: '64px',
               height: '64px',
               borderRadius: '20px',
-              background: 'rgba(56, 189, 248, 0.15)',
+              background: 'rgba(13, 148, 136, 0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -466,7 +434,7 @@ export default function SettingsPage() {
               style={{
                 padding: '10px 16px',
                 borderRadius: '10px',
-                background: 'rgba(56, 189, 248, 0.15)',
+                background: 'rgba(13, 148, 136, 0.1)',
                 border: '1px solid var(--accent)',
                 color: 'var(--accent)',
                 fontSize: '0.9rem',
@@ -494,7 +462,7 @@ export default function SettingsPage() {
             width: '100%',
             padding: '14px',
             borderRadius: '12px',
-            background: exportStatus === 'success' ? 'rgba(74, 222, 128, 0.15)' : 'rgba(56, 189, 248, 0.15)',
+            background: exportStatus === 'success' ? 'rgba(34, 197, 94, 0.15)' : 'rgba(13, 148, 136, 0.1)',
             border: `1px solid ${exportStatus === 'success' ? 'var(--income)' : 'var(--accent)'}`,
             color: exportStatus === 'success' ? 'var(--income)' : 'var(--accent)',
             fontSize: '0.95rem',
@@ -526,9 +494,9 @@ export default function SettingsPage() {
                 width: '100%',
                 padding: '14px',
                 borderRadius: '12px',
-                background: 'rgba(251, 191, 36, 0.15)',
-                border: '1px solid #f59e0b',
-                color: '#f59e0b',
+                background: 'rgba(229, 149, 0, 0.15)',
+                border: '1px solid #e59500',
+                color: '#e59500',
                 fontSize: '0.95rem',
                 fontWeight: 600,
                 cursor: isResetting ? 'wait' : 'pointer'
@@ -545,7 +513,7 @@ export default function SettingsPage() {
                 width: '100%',
                 padding: '14px',
                 borderRadius: '12px',
-                background: 'rgba(251, 113, 133, 0.15)',
+                background: 'rgba(244, 63, 94, 0.08)',
                 border: '1px solid var(--expense)',
                 color: 'var(--expense)',
                 fontSize: '0.95rem',

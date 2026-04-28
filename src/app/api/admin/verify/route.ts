@@ -5,6 +5,25 @@ import { getAuthSession } from '@/lib/demo-auth'
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD
 
+// GET /api/admin/verify - check if current user is admin
+export async function GET() {
+  try {
+    if (!ADMIN_EMAIL) {
+      return NextResponse.json({ isAdmin: false }, { status: 500 })
+    }
+
+    const authSession = await getAuthSession()
+
+    if (!authSession?.user?.email || authSession.user.email !== ADMIN_EMAIL) {
+      return NextResponse.json({ isAdmin: false })
+    }
+
+    return NextResponse.json({ isAdmin: true })
+  } catch {
+    return NextResponse.json({ isAdmin: false }, { status: 500 })
+  }
+}
+
 // POST /api/admin/verify
 export async function POST(request: Request) {
   try {

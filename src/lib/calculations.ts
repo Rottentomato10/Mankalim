@@ -8,7 +8,7 @@ interface AssetWithValue extends Asset {
 interface CalculationResult {
   totalBalance: number
   changeAbsolute: number
-  changePercentage: number
+  changePercentage: number | null
 }
 
 /**
@@ -40,7 +40,7 @@ export function calculateMonthlyChange(
   }
 
   const changeAbsolute = currentTotal - previousTotal
-  const changePercentage = previousTotal !== 0 ? (changeAbsolute / previousTotal) * 100 : 0
+  const changePercentage = previousTotal !== 0 ? (changeAbsolute / previousTotal) * 100 : null
 
   return {
     totalBalance: currentTotal,
@@ -228,9 +228,9 @@ export function calculateDistribution(
  * Default chart colors
  */
 export const CHART_COLORS = [
-  '#38bdf8', // sky-400
-  '#4ade80', // green-400
-  '#fb7185', // rose-400
+  '#0d9488', // sky-400
+  '#22c55e', // green-400
+  '#f43f5e', // rose-400
   '#facc15', // yellow-400
   '#a78bfa', // violet-400
   '#f97316', // orange-500

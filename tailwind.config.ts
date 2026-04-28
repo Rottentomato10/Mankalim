@@ -10,25 +10,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: '#0a0a0f',
-        foreground: '#ffffff',
-        accent: '#38bdf8',
-        success: '#4ade80',
-        error: '#fb7185',
+        background: '#111318',
+        foreground: '#e8e9ed',
+        accent: '#0d9488',
+        success: '#22c55e',
+        error: '#f43f5e',
         glass: {
-          DEFAULT: 'rgba(255, 255, 255, 0.05)',
-          border: 'rgba(255, 255, 255, 0.1)',
+          DEFAULT: 'rgba(255, 255, 255, 0.04)',
+          border: 'rgba(255, 255, 255, 0.06)',
         },
       },
       fontFamily: {
         sans: ['Heebo', 'sans-serif'],
       },
       borderRadius: {
-        '2xl': '16px',
-        '3xl': '24px',
-      },
-      backdropBlur: {
-        xl: '24px',
+        '2xl': '14px',
+        '3xl': '18px',
       },
     },
   },

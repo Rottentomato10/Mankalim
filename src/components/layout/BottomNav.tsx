@@ -29,8 +29,8 @@ export function BottomNav() {
       right: 0,
       background: 'var(--card-bg)',
       borderTop: '1px solid var(--border)',
-      padding: '12px 0',
-      paddingBottom: 'calc(20px + env(safe-area-inset-bottom, 0px))',
+      paddingTop: '8px',
+      paddingBottom: 'calc(8px + env(safe-area-inset-bottom, 0px))',
       zIndex: 100
     }}>
       <div style={{ display: 'flex', justifyContent: 'space-around', maxWidth: '480px', margin: '0 auto' }}>
@@ -45,15 +45,30 @@ export function BottomNav() {
                 display: 'flex',
                 flexDirection: 'column',
                 alignItems: 'center',
-                gap: '4px',
+                gap: '2px',
                 textDecoration: 'none',
+                padding: '4px 12px',
+                borderRadius: '8px',
                 color: isActive ? 'var(--accent)' : 'var(--text-dim)',
-                fontSize: '0.75rem',
+                fontSize: '0.65rem',
                 fontWeight: isActive ? 600 : 400,
-                transition: 'color 0.2s'
+                transition: 'color 0.15s',
+                position: 'relative',
               }}
             >
-              <Icon size={22} strokeWidth={isActive ? 2.5 : 1.5} />
+              {isActive && (
+                <div style={{
+                  position: 'absolute',
+                  top: '-8px',
+                  left: '50%',
+                  transform: 'translateX(-50%)',
+                  width: '20px',
+                  height: '2px',
+                  borderRadius: '1px',
+                  background: 'var(--accent)',
+                }} />
+              )}
+              <Icon size={20} strokeWidth={isActive ? 2 : 1.5} />
               <span>{item.label}</span>
             </Link>
           )

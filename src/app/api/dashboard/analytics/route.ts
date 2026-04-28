@@ -4,7 +4,7 @@ import { getAuthSession } from '@/lib/demo-auth'
 import { DEMO_ASSET_CLASSES, DEMO_VALUES, DEMO_PREVIOUS_VALUES } from '@/lib/demo-data'
 
 const MONTHS = ['ינו', 'פבר', 'מרץ', 'אפר', 'מאי', 'יונ', 'יול', 'אוג', 'ספט', 'אוק', 'נוב', 'דצמ']
-const COLORS = ['#38bdf8', '#4ade80', '#fb7185', '#f59e0b', '#a78bfa', '#f472b6', '#34d399']
+const COLORS = ['#0d9488', '#22c55e', '#f43f5e', '#e59500', '#a78bfa', '#f472b6', '#34d399']
 
 interface MonthlyTotal {
   month: number
@@ -116,10 +116,17 @@ export async function GET(request: Request) {
         userId: authSession.user.id,
         assetId: { in: assetIds },
         OR: [
-          // All months in range
-          {
-            year: { gte: oldestMonth.year, lte: newestMonth.year },
-          },
+          // Months in start year
+          ...(oldestMonth.year === newestMonth.year
+            ? [{ year: oldestMonth.year, month: { gte: oldestMonth.month, lte: newestMonth.month } }]
+            : [
+                { year: oldestMonth.year, month: { gte: oldestMonth.month } },
+                // Full years in between (if any)
+                ...(newestMonth.year - oldestMonth.year > 1
+                  ? [{ year: { gt: oldestMonth.year, lt: newestMonth.year } }]
+                  : []),
+                { year: newestMonth.year, month: { lte: newestMonth.month } },
+              ]),
         ],
       },
       orderBy: [{ year: 'desc' }, { month: 'desc' }],
@@ -186,22 +193,22 @@ export async function GET(request: Request) {
     const prevKey = `${prevMonth}-${prevYear}`
     const prevValues = processedValues[prevKey] || {}
     const prevTotal = Object.values(prevValues).reduce((sum, v) => sum + v, 0)
-    const monthlyChange = prevTotal > 0 ? currentTotal - prevTotal : 0
-    const monthlyChangePercent = prevTotal > 0 ? (monthlyChange / prevTotal) * 100 : 0
+    const monthlyChange = currentTotal - prevTotal
+    const monthlyChangePercent = prevTotal > 0 ? (monthlyChange / prevTotal) * 100 : null
 
     // Year start data
     const yearStartKey = `1-${currentYear}`
     const yearStartValues = processedValues[yearStartKey] || {}
     const yearStartTotal = Object.values(yearStartValues).reduce((sum, v) => sum + v, 0)
-    const ytdChange = yearStartTotal > 0 ? currentTotal - yearStartTotal : 0
-    const ytdChangePercent = yearStartTotal > 0 ? (ytdChange / yearStartTotal) * 100 : 0
+    const ytdChange = currentTotal - yearStartTotal
+    const ytdChangePercent = yearStartTotal > 0 ? (ytdChange / yearStartTotal) * 100 : null
 
     // Last year same month
     const lastYearKey = `${currentMonth}-${currentYear - 1}`
     const lastYearValues = processedValues[lastYearKey] || {}
     const lastYearTotal = Object.values(lastYearValues).reduce((sum, v) => sum + v, 0)
-    const yearlyChange = lastYearTotal > 0 ? currentTotal - lastYearTotal : 0
-    const yearlyChangePercent = lastYearTotal > 0 ? (yearlyChange / lastYearTotal) * 100 : 0
+    const yearlyChange = currentTotal - lastYearTotal
+    const yearlyChangePercent = lastYearTotal > 0 ? (yearlyChange / lastYearTotal) * 100 : null
 
     // Average monthly growth
     const growthRates: number[] = []
@@ -258,8 +265,8 @@ export async function GET(request: Request) {
       }
     })
     const liquidityDistribution: Distribution[] = [
-      { name: 'נזיל', value: liquidTotal, percent: currentTotal > 0 ? (liquidTotal / currentTotal) * 100 : 0, color: '#4ade80' },
-      { name: 'לא נזיל', value: illiquidTotal, percent: currentTotal > 0 ? (illiquidTotal / currentTotal) * 100 : 0, color: '#fb7185' },
+      { name: 'נזיל', value: liquidTotal, percent: currentTotal > 0 ? (liquidTotal / currentTotal) * 100 : 0, color: '#22c55e' },
+      { name: 'לא נזיל', value: illiquidTotal, percent: currentTotal > 0 ? (illiquidTotal / currentTotal) * 100 : 0, color: '#f43f5e' },
     ].filter(d => d.value > 0)
 
     // Asset performance
@@ -368,17 +375,17 @@ function handleDemoMode(
     fillRate: 100,
     monthlyTotals,
     classDistribution: [
-      { name: 'מזומן', value: currentTotal * 0.3, percent: 30, color: '#38bdf8' },
-      { name: 'השקעות', value: currentTotal * 0.5, percent: 50, color: '#4ade80' },
-      { name: 'נדל"ן', value: currentTotal * 0.2, percent: 20, color: '#fb7185' },
+      { name: 'מזומן', value: currentTotal * 0.3, percent: 30, color: '#0d9488' },
+      { name: 'השקעות', value: currentTotal * 0.5, percent: 50, color: '#22c55e' },
+      { name: 'נדל"ן', value: currentTotal * 0.2, percent: 20, color: '#f43f5e' },
     ],
     currencyDistribution: [
-      { name: 'ILS', value: currentTotal * 0.7, percent: 70, color: '#38bdf8' },
-      { name: 'USD', value: currentTotal * 0.3, percent: 30, color: '#4ade80' },
+      { name: 'ILS', value: currentTotal * 0.7, percent: 70, color: '#0d9488' },
+      { name: 'USD', value: currentTotal * 0.3, percent: 30, color: '#22c55e' },
     ],
     liquidityDistribution: [
-      { name: 'נזיל', value: currentTotal * 0.6, percent: 60, color: '#4ade80' },
-      { name: 'לא נזיל', value: currentTotal * 0.4, percent: 40, color: '#fb7185' },
+      { name: 'נזיל', value: currentTotal * 0.6, percent: 60, color: '#22c55e' },
+      { name: 'לא נזיל', value: currentTotal * 0.4, percent: 40, color: '#f43f5e' },
     ],
     topAsset: { assetId: 'demo-1', assetName: 'קרן השתלמות', current: currentTotal * 0.3, previous: previousTotal * 0.3, change: (currentTotal - previousTotal) * 0.3, changePercent: 5 },
     bestGrowth: { assetId: 'demo-2', assetName: 'מניות טכנולוגיה', current: currentTotal * 0.2, previous: previousTotal * 0.15, change: currentTotal * 0.05, changePercent: 12 },

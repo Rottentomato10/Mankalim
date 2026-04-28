@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getAuthSession } from '@/lib/demo-auth'
 import { prisma } from '@/lib/prisma'
 
 interface ReorderItem {
@@ -10,12 +10,17 @@ interface ReorderItem {
 // POST /api/assets/reorder - Reorder items
 export async function POST(request: Request) {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot reorder assets' }, { status: 403 })
+    }
+
+    const session = authSession
     const body = await request.json()
     const { type, items } = body as { type: string; items: ReorderItem[] }
 

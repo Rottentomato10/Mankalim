@@ -7,32 +7,31 @@ export function ThemeToggle() {
   const { theme, toggleTheme, mounted } = useTheme()
 
   if (!mounted) {
-    return <div style={{ width: '44px', height: '44px' }} />
+    return <div style={{ width: '32px', height: '32px' }} />
   }
 
   return (
     <button
       onClick={toggleTheme}
       style={{
-        width: '44px',
-        height: '44px',
-        borderRadius: '50%',
-        background: 'var(--card-bg)',
+        width: '32px',
+        height: '32px',
+        borderRadius: '8px',
+        background: 'var(--hover-bg)',
         border: '1px solid var(--border)',
-        color: theme === 'dark' ? '#facc15' : '#6366f1',
+        color: 'var(--text-dim)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
         cursor: 'pointer',
-        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
-        transition: 'all 0.2s ease',
+        transition: 'all 0.15s',
       }}
       aria-label={theme === 'dark' ? 'עבור למצב בהיר' : 'עבור למצב כהה'}
     >
       {theme === 'dark' ? (
-        <Sun size={22} strokeWidth={1.5} />
+        <Sun size={16} strokeWidth={1.5} />
       ) : (
-        <Moon size={22} strokeWidth={1.5} />
+        <Moon size={16} strokeWidth={1.5} />
       )}
     </button>
   )

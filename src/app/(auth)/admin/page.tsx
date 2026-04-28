@@ -28,8 +28,6 @@ import {
   ChevronUp,
 } from 'lucide-react'
 
-const ADMIN_EMAIL = 'spread.a.wing@gmail.com'
-
 interface UserStats {
   total: number
   online: number
@@ -153,6 +151,9 @@ export default function AdminPage() {
   const [passwordError, setPasswordError] = useState('')
   const [isVerifying, setIsVerifying] = useState(false)
 
+  // Admin status
+  const [isAdmin, setIsAdmin] = useState<boolean | null>(null)
+
   // User details modal
   const [selectedUser, setSelectedUser] = useState<UserDetails | null>(null)
   const [isLoadingUser, setIsLoadingUser] = useState(false)
@@ -169,15 +170,29 @@ export default function AdminPage() {
   useEffect(() => {
     if (status === 'loading') return
 
-    if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) {
+    if (!session?.user?.email) {
       router.push('/')
       return
     }
 
-    if (isVerified) {
+    // Check admin status via API
+    fetch('/api/admin/verify')
+      .then(res => res.json())
+      .then(data => {
+        if (!data.isAdmin) {
+          router.push('/')
+        } else {
+          setIsAdmin(true)
+        }
+      })
+      .catch(() => router.push('/'))
+  }, [session, status, router])
+
+  useEffect(() => {
+    if (isAdmin && isVerified) {
       fetchStats()
     }
-  }, [session, status, router, isVerified])
+  }, [isAdmin, isVerified])
 
   const fetchStats = async () => {
     try {
@@ -276,11 +291,19 @@ export default function AdminPage() {
     )
   }
 
-  if (session?.user?.email !== ADMIN_EMAIL) {
+  if (isAdmin === false) {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', gap: '16px' }}>
         <ShieldAlert size={48} style={{ color: 'var(--expense)' }} />
         <p style={{ color: 'var(--text-dim)' }}>אין גישה לדף זה</p>
+      </div>
+    )
+  }
+
+  if (isAdmin === null) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <Loader2 size={32} className="spin" style={{ color: 'var(--accent)' }} />
       </div>
     )
   }
@@ -307,7 +330,7 @@ export default function AdminPage() {
             width: '64px',
             height: '64px',
             borderRadius: '50%',
-            background: 'rgba(56, 189, 248, 0.15)',
+            background: 'rgba(13, 148, 136, 0.15)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -481,7 +504,7 @@ export default function AdminPage() {
           label="הצטרפו החודש"
           value={formatNumber(stats.users.thisMonth)}
           subValue={`${stats.users.today} היום`}
-          color="#f59e0b"
+          color="#e59500"
         />
         <StatCard
           icon={<Wallet size={20} />}
@@ -535,14 +558,14 @@ export default function AdminPage() {
           <div style={{ marginTop: '16px' }}>
             {/* Main averages */}
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '20px' }}>
-              <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
                 <ArrowUpRight size={20} style={{ color: 'var(--income)', marginBottom: '4px' }} />
                 <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--income)' }}>
                   {formatNumber(stats.aggregates.avgIncomePerUser)} ₪
                 </div>
                 <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ממוצע הכנסה למשתמש</div>
               </div>
-              <div style={{ background: 'rgba(251, 113, 133, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
+              <div style={{ background: 'rgba(244, 63, 94, 0.1)', padding: '16px', borderRadius: '12px', textAlign: 'center' }}>
                 <ArrowDownRight size={20} style={{ color: 'var(--expense)', marginBottom: '4px' }} />
                 <div style={{ fontSize: '1.25rem', fontWeight: 700, color: 'var(--expense)' }}>
                   {formatNumber(stats.aggregates.avgExpensePerUser)} ₪
@@ -629,7 +652,7 @@ export default function AdminPage() {
               alignItems: 'center',
               gap: '6px',
               padding: '8px 12px',
-              background: 'rgba(56, 189, 248, 0.15)',
+              background: 'rgba(13, 148, 136, 0.15)',
               border: '1px solid var(--accent)',
               borderRadius: '8px',
               color: 'var(--accent)',
@@ -769,19 +792,19 @@ export default function AdminPage() {
 
                 {/* Summary cards */}
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '12px', marginBottom: '20px' }}>
-                  <div style={{ background: 'rgba(74, 222, 128, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ background: 'rgba(34, 197, 94, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--income)' }}>
                       {formatNumber(selectedUser.summary.totalIncome)} ₪
                     </div>
                     <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>סה״כ הכנסות</div>
                   </div>
-                  <div style={{ background: 'rgba(251, 113, 133, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ background: 'rgba(244, 63, 94, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--expense)' }}>
                       {formatNumber(selectedUser.summary.totalExpense)} ₪
                     </div>
                     <div style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>סה״כ הוצאות</div>
                   </div>
-                  <div style={{ background: 'rgba(56, 189, 248, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
+                  <div style={{ background: 'rgba(13, 148, 136, 0.1)', padding: '12px', borderRadius: '10px', textAlign: 'center' }}>
                     <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--accent)' }}>
                       {formatNumber(selectedUser.summary.netCashflow)} ₪
                     </div>

@@ -4,14 +4,13 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { useAuth } from '@/hooks/useAuth'
 import { useState, useEffect } from 'react'
-import { ArrowLeftRight, Scale, BarChart3, Settings, Smartphone, ExternalLink, LogOut, Share, X, Download } from 'lucide-react'
+import { ArrowLeftRight, Scale, BarChart3, Settings, LogOut, ChevronLeft, Download, Share, Smartphone, X } from 'lucide-react'
 import { Onboarding } from '@/components/Onboarding'
 
 function InstallBanner() {
   const [show, setShow] = useState(false)
 
   useEffect(() => {
-    // Check if already installed (standalone) or dismissed
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches
     const isDismissed = localStorage.getItem('pwa-install-dismissed')
     const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent)
@@ -25,11 +24,11 @@ function InstallBanner() {
 
   return (
     <div style={{
-      background: 'linear-gradient(135deg, rgba(56, 189, 248, 0.15), rgba(129, 140, 248, 0.15))',
-      border: '1px solid rgba(56, 189, 248, 0.3)',
-      borderRadius: '16px',
-      padding: '16px',
-      marginBottom: '20px',
+      background: 'var(--card-bg)',
+      border: '1px solid var(--border)',
+      borderRadius: '12px',
+      padding: '14px',
+      marginBottom: '16px',
       position: 'relative'
     }}>
       <button
@@ -46,34 +45,21 @@ function InstallBanner() {
           color: 'var(--text-dim)',
           cursor: 'pointer',
           padding: '4px',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center'
+          display: 'flex'
         }}
       >
-        <X size={18} strokeWidth={2} />
+        <X size={16} />
       </button>
-      <div style={{ textAlign: 'center' }}>
-        <div style={{ marginBottom: '8px', display: 'flex', justifyContent: 'center' }}>
-          <Smartphone size={32} strokeWidth={1.5} style={{ color: 'var(--accent)' }} />
+      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <Smartphone size={20} style={{ color: 'var(--accent)', flexShrink: 0 }} />
+        <div>
+          <p style={{ margin: 0, fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+            התקן כאפליקציה
+          </p>
+          <p style={{ margin: '2px 0 0', fontSize: '0.75rem', color: 'var(--text-dim)' }}>
+            לחץ <Share size={12} style={{ verticalAlign: 'middle' }} /> ואז ״הוסף למסך הבית״
+          </p>
         </div>
-        <h3 style={{ margin: '0 0 8px 0', fontSize: '1rem', fontWeight: 700, color: 'var(--text-main)' }}>
-          התקן את האפליקציה
-        </h3>
-        <p style={{ margin: '0 0 12px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-          לחץ על
-          <span style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            margin: '0 6px',
-            padding: '2px 8px',
-            background: 'var(--active-bg)',
-            borderRadius: '6px'
-          }}>
-            <Share size={18} strokeWidth={2} />
-          </span>
-          ואז <strong>הוסף למסך הבית</strong>
-        </p>
       </div>
     </div>
   )
@@ -83,20 +69,17 @@ export default function HomePage() {
   const { logout, isDemo } = useAuth()
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [showInstallTip, setShowInstallTip] = useState(false)
-  const [isStandalone, setIsStandalone] = useState(true) // Hide by default until checked
+  const [isStandalone, setIsStandalone] = useState(true)
 
   useEffect(() => {
-    // Check if user has completed onboarding
     const hasCompletedOnboarding = localStorage.getItem('onboarding-completed')
     if (!hasCompletedOnboarding) {
       setShowOnboarding(true)
     }
 
-    // Check if already installed (standalone mode)
     const standalone = window.matchMedia('(display-mode: standalone)').matches
     setIsStandalone(standalone)
 
-    // Auto-show install tip on first visit (if not standalone and not dismissed)
     if (!standalone) {
       const installTipDismissed = localStorage.getItem('install-tip-dismissed')
       if (!installTipDismissed) {
@@ -113,370 +96,203 @@ export default function HomePage() {
     setShowOnboarding(false)
   }
 
+  const navItems = [
+    { href: '/cashflow', label: 'תזרים', desc: 'הכנסות והוצאות', icon: ArrowLeftRight, color: 'var(--income)' },
+    { href: '/balance', label: 'מאזן', desc: 'נכסים והתחייבויות', icon: Scale, color: 'var(--accent)' },
+    { href: '/dashboard', label: 'דשבורד', desc: 'סיכום וגרפים', icon: BarChart3, color: '#e59500' },
+    { href: '/settings', label: 'הגדרות', desc: 'ניהול וקטגוריות', icon: Settings, color: 'var(--text-dim)' },
+  ]
+
   return (
     <div style={{ padding: '20px', paddingBottom: '100px', maxWidth: '480px', margin: '0 auto', minHeight: '100vh' }}>
-      {/* Onboarding for first-time users */}
       {showOnboarding && <Onboarding onComplete={handleOnboardingComplete} />}
 
-      {/* Install PWA Banner */}
       <InstallBanner />
 
-      {/* Demo Warning Banner */}
       {isDemo && (
         <div style={{
-          background: 'rgba(251, 113, 133, 0.15)',
-          border: '1px solid var(--expense)',
-          borderRadius: '12px',
-          padding: '12px 16px',
-          marginBottom: '20px',
+          background: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.2)',
+          borderRadius: '10px',
+          padding: '10px 14px',
+          marginBottom: '16px',
           textAlign: 'center'
         }}>
-          <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--expense)' }}>
-            מצב צפייה בלבד - התחברו עם Google כדי לנהל את הכספים שלכם
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--expense)' }}>
+            מצב צפייה — התחברו עם Google לניהול מלא
           </p>
         </div>
       )}
 
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: '32px', position: 'relative' }}>
-        {/* Left buttons - Logout and Install */}
-        <div style={{
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          display: 'flex',
-          gap: '8px'
-        }}>
-          <button
-            onClick={handleLogout}
-            style={{
-              background: 'transparent',
-              border: '1px solid var(--active-bg)',
-              color: 'var(--text-dim)',
-              padding: '8px 12px',
-              borderRadius: '12px',
-              fontSize: '0.85rem',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
-            }}
-          >
-            <LogOut size={16} strokeWidth={1.5} />
-            יציאה
-          </button>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '32px' }}>
+        <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+            <Image
+              src="/logo-6.png"
+              alt="פורשים כנף"
+              width={36}
+              height={36}
+              style={{ borderRadius: '8px' }}
+              priority
+            />
+            <h1 style={{
+              margin: 0,
+              fontSize: '1.5rem',
+              fontWeight: 700,
+              letterSpacing: '-0.5px',
+              color: 'var(--text-main)',
+            }}>
+              מנכ״לים
+            </h1>
+          </div>
+          <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.75rem' }}>
+            מבית פורשים כנף
+          </p>
+        </div>
 
-          {/* Install button - only show if not in standalone mode */}
+        <div style={{ display: 'flex', gap: '8px' }}>
           {!isStandalone && (
             <button
-              onClick={() => setShowInstallTip(!showInstallTip)}
+              onClick={() => {
+                setShowInstallTip(!showInstallTip)
+              }}
               style={{
-                background: showInstallTip ? 'rgba(56, 189, 248, 0.2)' : 'rgba(56, 189, 248, 0.1)',
-                border: '1px solid rgba(56, 189, 248, 0.4)',
-                color: 'var(--accent)',
-                padding: '8px 12px',
-                borderRadius: '12px',
-                fontSize: '0.85rem',
+                background: 'var(--card-bg)',
+                border: '1px solid var(--border)',
+                color: 'var(--text-dim)',
+                padding: '8px',
+                borderRadius: '10px',
                 cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                fontWeight: 500
               }}
             >
               <Download size={16} strokeWidth={1.5} />
-              התקנה
             </button>
           )}
+          <button
+            onClick={handleLogout}
+            style={{
+              background: 'var(--card-bg)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-dim)',
+              padding: '8px',
+              borderRadius: '10px',
+              cursor: 'pointer',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <LogOut size={16} strokeWidth={1.5} />
+          </button>
         </div>
+      </div>
 
-        {/* Install Tip Popup */}
-        {showInstallTip && !isStandalone && (
-          <div style={{
-            position: 'absolute',
-            left: 0,
-            top: '50px',
-            background: 'var(--card-bg)',
-            border: '1px solid rgba(56, 189, 248, 0.4)',
-            borderRadius: '16px',
-            padding: '20px',
-            width: '260px',
-            zIndex: 100,
-            textAlign: 'right',
-            boxShadow: '0 8px 32px rgba(0,0,0,0.4)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-              <button
-                onClick={() => {
-                  localStorage.setItem('install-tip-dismissed', 'true')
-                  setShowInstallTip(false)
-                }}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  color: 'var(--text-dim)',
-                  cursor: 'pointer',
-                  padding: '2px'
-                }}
-              >
-                <X size={18} />
-              </button>
-              <span style={{ fontSize: '1rem', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-main)' }}>
-                <Download size={18} style={{ color: 'var(--accent)' }} />
-                התקינו כאפליקציה
-              </span>
-            </div>
-            <p style={{ margin: '0 0 16px 0', fontSize: '0.85rem', color: 'var(--text-dim)', lineHeight: 1.6 }}>
-              הוסיפו את האפליקציה למסך הבית לגישה מהירה וחוויה טובה יותר
-            </p>
-            <div style={{ fontSize: '0.85rem', color: 'var(--text-main)', lineHeight: 1.8 }}>
-              <div style={{
-                marginBottom: '12px',
-                padding: '12px',
-                background: 'var(--hover-bg)',
-                borderRadius: '10px'
-              }}>
-                <span style={{
-                  background: 'rgba(56, 189, 248, 0.2)',
-                  color: 'var(--accent)',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600
-                }}>iPhone</span>
-                <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
-                  1. לחצו על <Share size={14} style={{ verticalAlign: 'middle', margin: '0 2px', color: 'var(--accent)' }} /> <strong style={{ color: 'var(--text-main)' }}>בתחתית המסך</strong>
-                  <br />
-                  2. גללו למטה ברשימה
-                  <br />
-                  3. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף למסך הבית</strong>״
-                  <br />
-                  4. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף</strong>״
-                </div>
+      {/* Install Tip */}
+      {showInstallTip && !isStandalone && (
+        <div className="card" style={{ marginBottom: '16px', padding: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+            <span style={{ fontSize: '0.85rem', fontWeight: 600, color: 'var(--text-main)' }}>
+              התקינו כאפליקציה
+            </span>
+            <button
+              onClick={() => {
+                localStorage.setItem('install-tip-dismissed', 'true')
+                setShowInstallTip(false)
+              }}
+              style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', padding: '2px' }}
+            >
+              <X size={16} />
+            </button>
+          </div>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+            <div style={{ padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px', fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--accent)' }}>iPhone</span>
+              <div style={{ marginTop: '4px' }}>
+                <Share size={11} style={{ verticalAlign: 'middle' }} /> → הוסף למסך הבית
               </div>
-              <div style={{
-                padding: '12px',
-                background: 'var(--hover-bg)',
-                borderRadius: '10px'
-              }}>
-                <span style={{
-                  background: 'rgba(74, 222, 128, 0.2)',
-                  color: 'var(--income)',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '0.75rem',
-                  fontWeight: 600
-                }}>Android</span>
-                <div style={{ marginTop: '10px', color: 'var(--text-dim)', fontSize: '0.8rem', lineHeight: 1.8 }}>
-                  1. לחצו על <strong style={{ color: 'var(--text-main)' }}>⋮</strong> (3 נקודות) <strong style={{ color: 'var(--text-main)' }}>למעלה</strong>
-                  <br />
-                  2. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף למסך הבית</strong>״
-                  <br />
-                  3. לחצו ״<strong style={{ color: 'var(--text-main)' }}>הוסף</strong>״
-                </div>
+            </div>
+            <div style={{ padding: '10px', background: 'var(--hover-bg)', borderRadius: '8px', fontSize: '0.75rem', color: 'var(--text-dim)', lineHeight: 1.7 }}>
+              <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--income)' }}>Android</span>
+              <div style={{ marginTop: '4px' }}>
+                ⋮ → הוסף למסך הבית
               </div>
             </div>
           </div>
-        )}
-        <Image
-          src="/logo-6.png"
-          alt="פורשים כנף"
-          width={64}
-          height={64}
-          style={{ marginBottom: '12px', borderRadius: '16px' }}
-          priority
-        />
-        <h1 style={{
-          margin: '0 0 8px 0',
-          fontSize: '2.5rem',
-          fontWeight: 800,
-          letterSpacing: '-1px',
-          background: 'linear-gradient(135deg, #38bdf8, #818cf8)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          backgroundClip: 'text',
-        }}>
-          מנכ״לים
-        </h1>
-        <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.85rem' }}>
-          מבית <strong style={{ color: 'var(--text-main)' }}>פורשים כנף</strong> - חינוך פיננסי
-        </p>
-      </div>
+        </div>
+      )}
 
-      {/* Main Explanation Card */}
-      <div className="glass-card" style={{
-        padding: '28px 24px',
-        textAlign: 'center',
-        marginBottom: '24px',
-        background: 'rgba(56, 189, 248, 0.05)',
-        border: '1px solid rgba(56, 189, 248, 0.2)',
-      }}>
-        <h2 style={{
-          margin: '0 0 16px 0',
-          fontSize: '1.3rem',
-          fontWeight: 700,
-          color: 'var(--text-main)'
-        }}>
-          ניהול הכספים האישיים שלכם
-        </h2>
-        <p style={{
-          margin: 0,
-          color: 'var(--text-dim)',
-          fontSize: '1rem',
-          lineHeight: 1.8
-        }}>
-          עקוב אחרי ההוצאות וההכנסות החודשיות,
-          <br />
-          נהלו את כל הנכסים שלכם במקום אחד,
-          <br />
-          וקבל תמונה ברורה של המצב הפיננסי.
-        </p>
-      </div>
-
-      {/* Navigation Buttons - 2x2 Grid */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: '1fr 1fr',
-        gap: '12px',
-        marginBottom: '24px'
-      }}>
-        <Link href="/cashflow" style={{ textDecoration: 'none' }}>
-          <div className="glass-card" style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            cursor: 'pointer',
-          }}>
-            <div style={{
-              marginBottom: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              color: 'var(--income)'
-            }}>
-              <ArrowLeftRight size={28} strokeWidth={1.5} />
-            </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>תזרים</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>הכנסות והוצאות</div>
-          </div>
-        </Link>
-
-        <Link href="/balance" style={{ textDecoration: 'none' }}>
-          <div className="glass-card" style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            cursor: 'pointer',
-          }}>
-            <div style={{
-              marginBottom: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              color: 'var(--accent)'
-            }}>
-              <Scale size={28} strokeWidth={1.5} />
-            </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>מאזן</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>נכסים והתחייבויות</div>
-          </div>
-        </Link>
-
-        <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-          <div className="glass-card" style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            cursor: 'pointer',
-          }}>
-            <div style={{
-              marginBottom: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              color: '#f59e0b'
-            }}>
-              <BarChart3 size={28} strokeWidth={1.5} />
-            </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>דשבורד</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>סיכום וגרפים</div>
-          </div>
-        </Link>
-
-        <Link href="/settings" style={{ textDecoration: 'none' }}>
-          <div className="glass-card" style={{
-            padding: '24px 16px',
-            textAlign: 'center',
-            cursor: 'pointer',
-          }}>
-            <div style={{
-              marginBottom: '8px',
-              display: 'flex',
-              justifyContent: 'center',
-              color: 'var(--text-dim)'
-            }}>
-              <Settings size={28} strokeWidth={1.5} />
-            </div>
-            <div style={{ fontWeight: 600, fontSize: '1rem', marginBottom: '4px', color: 'var(--text-main)' }}>הגדרות</div>
-            <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)' }}>ניהול וקטגוריות</div>
-          </div>
-        </Link>
+      {/* Navigation */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', marginBottom: '24px' }}>
+        {navItems.map(item => {
+          const Icon = item.icon
+          return (
+            <Link key={item.href} href={item.href} style={{ textDecoration: 'none' }}>
+              <div className="card" style={{
+                padding: '16px 18px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px',
+                cursor: 'pointer',
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '10px',
+                  background: 'var(--hover-bg)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  flexShrink: 0,
+                  color: item.color
+                }}>
+                  <Icon size={20} strokeWidth={1.5} />
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 600, fontSize: '0.95rem', color: 'var(--text-main)' }}>{item.label}</div>
+                  <div style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: '1px' }}>{item.desc}</div>
+                </div>
+                <ChevronLeft size={18} style={{ color: 'var(--text-dim)', opacity: 0.4 }} />
+              </div>
+            </Link>
+          )
+        })}
       </div>
 
       {/* External Link */}
-      <div style={{ textAlign: 'center', marginBottom: '20px' }}>
-        <a
-          href="https://www.porsimkanaf.com"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '12px 24px',
-            background: 'rgba(56, 189, 248, 0.1)',
-            border: '1px solid rgba(56, 189, 248, 0.3)',
-            borderRadius: '24px',
-            color: 'var(--accent)',
-            textDecoration: 'none',
-            fontSize: '0.9rem',
-            fontWeight: 500,
-          }}
-        >
-          <ExternalLink size={16} strokeWidth={1.5} />
-          לאתר פורשים כנף
-        </a>
-      </div>
+      <a
+        href="https://www.porsimkanaf.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        style={{
+          display: 'block',
+          textAlign: 'center',
+          padding: '10px',
+          color: 'var(--text-dim)',
+          textDecoration: 'none',
+          fontSize: '0.8rem',
+          marginBottom: '8px',
+        }}
+      >
+        porsimkanaf.com ←
+      </a>
 
-      {/* Legal Links */}
+      {/* Legal */}
       <div style={{
         textAlign: 'center',
-        fontSize: '0.75rem',
+        fontSize: '0.7rem',
         color: 'var(--text-dim)',
         display: 'flex',
         justifyContent: 'center',
-        gap: '16px'
+        gap: '12px',
+        opacity: 0.6
       }}>
-        <a
-          href="https://www.porsimkanaf.com/תנאי-שימוש"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
-        >
-          תנאי שימוש
-        </a>
-        <span>|</span>
-        <a
-          href="https://www.porsimkanaf.com/מדיניות-פרטיות"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
-        >
-          מדיניות פרטיות
-        </a>
-        <span>|</span>
-        <a
-          href="https://www.porsimkanaf.com/הצהרת-נגישות"
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'var(--text-dim)', textDecoration: 'none' }}
-        >
-          הצהרת נגישות
-        </a>
+        <a href="https://www.porsimkanaf.com/תנאי-שימוש" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>תנאי שימוש</a>
+        <span>·</span>
+        <a href="https://www.porsimkanaf.com/מדיניות-פרטיות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>פרטיות</a>
+        <span>·</span>
+        <a href="https://www.porsimkanaf.com/הצהרת-נגישות" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-dim)', textDecoration: 'none' }}>נגישות</a>
       </div>
     </div>
   )

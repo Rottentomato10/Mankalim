@@ -1,15 +1,20 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getAuthSession } from '@/lib/demo-auth'
 import { prisma } from '@/lib/prisma'
 
 export async function POST() {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot cancel deletion' }, { status: 403 })
+    }
+
+    const session = authSession
     // Check if deletion is pending
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },

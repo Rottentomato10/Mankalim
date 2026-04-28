@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     const month = parseInt(searchParams.get('month') || '')
     const year = parseInt(searchParams.get('year') || '')
 
-    if (!month || !year || month < 1 || month > 12 || year < 2000) {
+    if (isNaN(month) || isNaN(year) || month < 1 || month > 12 || year < 2000 || year > 2100) {
       return NextResponse.json({ error: 'Invalid month or year' }, { status: 400 })
     }
 
@@ -42,7 +42,7 @@ export async function GET(request: Request) {
       })
 
       const changeAbsolute = currentTotal - previousTotal
-      const changePercentage = previousTotal !== 0 ? (changeAbsolute / previousTotal) * 100 : 0
+      const changePercentage = previousTotal !== 0 ? (changeAbsolute / previousTotal) * 100 : null
 
       return NextResponse.json({
         month,

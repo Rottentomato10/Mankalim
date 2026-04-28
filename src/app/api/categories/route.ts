@@ -1,10 +1,6 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/db/prisma'
-import { getCurrentUserId } from '@/lib/auth/session'
-
-function isDemo(userId: string): boolean {
-  return userId === 'demo-user-123' || userId.startsWith('demo-')
-}
+import { getCurrentUserId, isDemoUser } from '@/lib/auth/session'
 
 const DEFAULT_CATEGORIES = [
   { id: 'cat-1', name: 'דיור', displayOrder: 1 },
@@ -31,7 +27,7 @@ export async function GET() {
     }
 
     // For demo users, return mock categories
-    if (isDemo(userId)) {
+    if (isDemoUser(userId)) {
       return NextResponse.json({ categories: DEFAULT_CATEGORIES })
     }
 
@@ -107,7 +103,7 @@ export async function POST(request: Request) {
     }
 
     // Demo users can't create categories
-    if (isDemo(userId)) {
+    if (isDemoUser(userId)) {
       return NextResponse.json({ error: 'Demo mode - cannot create categories' }, { status: 403 })
     }
 

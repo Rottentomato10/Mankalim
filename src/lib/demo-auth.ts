@@ -1,5 +1,39 @@
 import { cookies } from 'next/headers'
+import { createHmac } from 'crypto'
 import { auth } from '@/lib/auth'
+
+function getSecret(): string {
+  const secret = process.env.NEXTAUTH_SECRET
+  if (!secret) throw new Error('NEXTAUTH_SECRET is not set')
+  return secret
+}
+
+function signPayload(payload: string): string {
+  return createHmac('sha256', getSecret()).update(payload).digest('base64url')
+}
+
+function createSignedCookie(data: object): string {
+  const payload = Buffer.from(JSON.stringify(data)).toString('base64url')
+  const signature = signPayload(payload)
+  return `${payload}.${signature}`
+}
+
+function verifySignedCookie(cookie: string): object | null {
+  const dotIndex = cookie.lastIndexOf('.')
+  if (dotIndex === -1) return null
+
+  const payload = cookie.slice(0, dotIndex)
+  const signature = cookie.slice(dotIndex + 1)
+
+  const expected = signPayload(payload)
+  if (signature !== expected) return null
+
+  try {
+    return JSON.parse(Buffer.from(payload, 'base64url').toString())
+  } catch {
+    return null
+  }
+}
 
 export interface DemoUser {
   id: string
@@ -20,7 +54,10 @@ export async function getDemoSession(): Promise<{ user: DemoUser } | null> {
       return null
     }
 
-    const user = JSON.parse(demoCookie.value) as DemoUser
+    const data = verifySignedCookie(demoCookie.value)
+    if (!data) return null
+
+    const user = data as DemoUser
     return { user }
   } catch {
     return null
@@ -28,7 +65,7 @@ export async function getDemoSession(): Promise<{ user: DemoUser } | null> {
 }
 
 export function isDemoUser(userId: string): boolean {
-  return userId === 'demo-user-123' || userId === 'demo-user-001'
+  return userId.startsWith('demo-')
 }
 
 // Demo cookie name
@@ -54,7 +91,7 @@ export async function createDemoSession(user: {
     notifyDay: 1,
   }
 
-  cookieStore.set(DEMO_COOKIE_NAME, JSON.stringify(sessionData), {
+  cookieStore.set(DEMO_COOKIE_NAME, createSignedCookie(sessionData), {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

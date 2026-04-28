@@ -1,15 +1,26 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getAuthSession } from '@/lib/demo-auth'
 import { prisma } from '@/lib/prisma'
 
 export async function GET() {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({
+        defaultCurrency: authSession.user.defaultCurrency || 'ILS',
+        notifyEnabled: false,
+        notifyDay: 1,
+        deletionPending: false,
+        deletionDate: null,
+      })
+    }
+
+    const session = authSession
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
@@ -39,12 +50,17 @@ export async function GET() {
 
 export async function PATCH(request: Request) {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot update preferences' }, { status: 403 })
+    }
+
+    const session = authSession
     const body = await request.json()
     const { defaultCurrency, notifyEnabled, notifyDay } = body
 

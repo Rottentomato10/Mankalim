@@ -1,16 +1,21 @@
 import { NextResponse } from 'next/server'
-import { auth } from '@/lib/auth'
+import { getAuthSession } from '@/lib/demo-auth'
 import { prisma } from '@/lib/prisma'
 
 // POST /api/assets/instruments - Create new instrument
 export async function POST(request: Request) {
   try {
-    const session = await auth()
+    const authSession = await getAuthSession()
 
-    if (!session?.user?.id) {
+    if (!authSession?.user?.id) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    if (authSession.isDemo) {
+      return NextResponse.json({ error: 'Demo mode - cannot create instruments' }, { status: 403 })
+    }
+
+    const session = authSession
     const body = await request.json()
     const { assetClassId, name } = body
 
