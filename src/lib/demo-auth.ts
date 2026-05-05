@@ -3,8 +3,8 @@ import { createHmac } from 'crypto'
 import { auth } from '@/lib/auth'
 
 function getSecret(): string {
-  const secret = process.env.NEXTAUTH_SECRET
-  if (!secret) throw new Error('NEXTAUTH_SECRET is not set')
+  const secret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET
+  if (!secret) throw new Error('AUTH_SECRET is not set')
   return secret
 }
 
