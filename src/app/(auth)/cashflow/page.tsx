@@ -52,6 +52,8 @@ export default function HomePage() {
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth() + 1) // 1-12
   const [selectedYear, setSelectedYear] = useState(new Date().getFullYear())
   const [editingTransaction, setEditingTransaction] = useState<Transaction | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const [showAll, setShowAll] = useState(false)
 
   const balance = totalIncome - totalExpenses
   const percentage = totalIncome > 0 ? Math.round((balance / totalIncome) * 100) : 0
@@ -69,9 +71,11 @@ export default function HomePage() {
         })
         setTotalIncome(inc)
         setTotalExpenses(exp)
+        setError(null)
       }
     } catch (e) {
       console.error(e)
+      setError('שגיאה בטעינת הנתונים. נסה לרענן את הדף.')
     } finally {
       setIsLoading(false)
     }
@@ -330,6 +334,20 @@ export default function HomePage() {
         </div>
       )}
 
+      {/* Error Banner */}
+      {error && (
+        <div style={{
+          background: 'rgba(244, 63, 94, 0.08)',
+          border: '1px solid rgba(244, 63, 94, 0.2)',
+          borderRadius: '10px',
+          padding: '10px 14px',
+          marginBottom: '16px',
+          textAlign: 'center'
+        }}>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: 'var(--expense)' }}>{error}</p>
+        </div>
+      )}
+
       {/* Transaction History */}
       <div className="card" style={{ marginBottom: '16px' }}>
         <h3 style={{ margin: '0 0 12px 0', fontSize: '0.9rem', fontWeight: 600, color: 'var(--text-dim)' }}>
@@ -341,7 +359,7 @@ export default function HomePage() {
           </p>
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-            {transactions.slice(0, 10).map((t) => (
+            {(showAll ? transactions : transactions.slice(0, 10)).map((t) => (
               <div
                 key={t.id}
                 style={{
@@ -419,6 +437,25 @@ export default function HomePage() {
                 </div>
               </div>
             ))}
+            {transactions.length > 10 && (
+              <button
+                onClick={() => setShowAll(!showAll)}
+                style={{
+                  width: '100%',
+                  padding: '10px',
+                  marginTop: '8px',
+                  background: 'none',
+                  border: '1px solid var(--border)',
+                  borderRadius: '8px',
+                  color: 'var(--accent)',
+                  fontSize: '0.8rem',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+              >
+                {showAll ? 'הצג פחות' : `הצג את כל הפעולות (${transactions.length})`}
+              </button>
+            )}
           </div>
         )}
       </div>

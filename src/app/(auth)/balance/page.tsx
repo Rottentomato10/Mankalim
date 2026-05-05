@@ -959,8 +959,25 @@ export default function HomePage() {
               }}>
                 <span style={{ fontSize: '1.5rem', opacity: 0.3 }}>🔍</span>
               </div>
-              <h3 style={{ margin: '0 0 8px 0', fontWeight: 600 }}>אין תוצאות</h3>
-              <p style={{ margin: 0, color: 'var(--text-dim)', fontSize: '0.9rem' }}>נסה לשנות את הפילטרים</p>
+              <h3 style={{ margin: '0 0 8px 0', fontWeight: 600 }}>אין נכסים שמתאימים לסינון</h3>
+              <p style={{ margin: '0 0 16px 0', color: 'var(--text-dim)', fontSize: '0.9rem' }}>נסה לשנות את הפילטרים</p>
+              {hasActiveFilters && (
+                <button
+                  onClick={() => setFilters({ assetClass: null, isLiquid: null, currency: null })}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    background: 'var(--accent)',
+                    border: 'none',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    fontWeight: 600,
+                    cursor: 'pointer'
+                  }}
+                >
+                  נקה סינון
+                </button>
+              )}
             </div>
           )}
 

@@ -3,6 +3,7 @@ import { BottomNav } from '@/components/layout/BottomNav'
 import { HelpButton } from '@/components/HelpButton'
 import { ActivityTracker } from '@/components/ActivityTracker'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { OfflineBanner } from '@/components/OfflineBanner'
 
 export default function AuthLayout({
   children,
@@ -12,6 +13,7 @@ export default function AuthLayout({
   return (
     <AuthProvider>
       <ActivityTracker />
+      <OfflineBanner />
       <div style={{ minHeight: '100vh' }}>
         {/* Theme Toggle */}
         <div style={{

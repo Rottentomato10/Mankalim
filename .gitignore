@@ -47,3 +47,4 @@ public/workbox-*.js
 *.tsbuildinfo
 next-env.d.ts
 .env.local.save
+.vercel
