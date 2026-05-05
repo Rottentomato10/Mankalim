@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
+import { createDemoSession, destroyDemoSession } from '@/lib/demo-auth'
 
 // Demo user data
 const DEMO_USER = {
@@ -7,30 +7,25 @@ const DEMO_USER = {
   email: 'demo@maazanim.app',
   name: 'משתמש דמו',
   image: null,
-  defaultCurrency: 'ILS',
-  notifyEnabled: false,
-  notifyDay: 1,
 }
 
 // POST /api/auth/demo - Create demo session
 export async function POST() {
-  const cookieStore = await cookies()
+  await createDemoSession(DEMO_USER)
 
-  // Set demo session cookie
-  cookieStore.set('demo-session', JSON.stringify(DEMO_USER), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
-    maxAge: 60 * 60 * 24, // 24 hours
-    path: '/',
+  return NextResponse.json({
+    success: true,
+    user: {
+      ...DEMO_USER,
+      defaultCurrency: 'ILS',
+      notifyEnabled: false,
+      notifyDay: 1,
+    }
   })
-
-  return NextResponse.json({ success: true, user: DEMO_USER })
 }
 
 // DELETE /api/auth/demo - Clear demo session
 export async function DELETE() {
-  const cookieStore = await cookies()
-  cookieStore.delete('demo-session')
+  await destroyDemoSession()
   return NextResponse.json({ success: true })
 }
